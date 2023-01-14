@@ -1,0 +1,81 @@
+package com.thesis.scheduling.modellevel.service;
+
+import java.sql.Time;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.thesis.scheduling.modellevel.entity.LeaveTeach;
+import com.thesis.scheduling.modellevel.entity.Member;
+import com.thesis.scheduling.modellevel.entity.NotTeach;
+import com.thesis.scheduling.modellevel.repository.LeaveTeachRepository;
+
+@Service
+public class LeaveTeachService {
+
+	private final LeaveTeachRepository repository;
+
+	public LeaveTeachService(LeaveTeachRepository repository) {
+		this.repository = repository;
+	}
+
+	// GET
+	public Iterable<LeaveTeach> showAllByMemberId(Member memberId) {
+		return repository.findAllByMemberId(memberId);
+	}
+
+	public Iterable<LeaveTeach> showAll() {
+		return repository.findAll();
+	}
+
+	// SET
+	public void create(Member memberId, String years, String semester, java.sql.Date dateStart, java.sql.Date dateEnd,
+			String note) {
+
+		Optional<LeaveTeach> opt = repository.findByMemberIdAndYearsAndSemesterAndDateStartAndDateEnd(memberId, years,
+				semester, dateStart, dateEnd);
+		LeaveTeach entity = new LeaveTeach();
+
+		if (!opt.isEmpty()) {
+			entity = opt.get();
+		} else {
+			entity.setMemberId(memberId);
+			entity.setYears(years);
+			entity.setSemester(semester);
+			entity.setDateStart(dateStart);
+			entity.setDateEnd(dateEnd);
+			entity.setNote(note);
+		}
+		repository.save(entity);
+	}
+
+	public void update(int leaveTeachId, String years, String semester, java.sql.Date dateStart, java.sql.Date dateEnd,
+			String note) {
+
+		Optional<LeaveTeach> opt = repository.findByLeaveTeachId(leaveTeachId);
+		LeaveTeach entity = new LeaveTeach();
+
+		if (!opt.isEmpty()) {
+			entity = opt.get();
+			entity.getYears();
+			entity.setSemester(semester);
+			entity.setDateStart(dateStart);
+			entity.setDateEnd(dateEnd);
+			entity.setNote(note);
+			repository.save(entity);
+		}
+
+	}
+
+	// DELETE
+	public void delete(int leaveTeachId) {
+		Optional<LeaveTeach> opt = repository.findByLeaveTeachId(leaveTeachId);
+		LeaveTeach entity = new LeaveTeach();
+
+		if (!opt.isEmpty()) {
+			entity = opt.get();
+			repository.delete(entity);
+		}
+	}
+
+}
