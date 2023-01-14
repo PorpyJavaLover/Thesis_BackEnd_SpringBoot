@@ -1,0 +1,5 @@
+---
+app:
+  token:
+    secret: PorpyLazy
+    issuer: BackendService
