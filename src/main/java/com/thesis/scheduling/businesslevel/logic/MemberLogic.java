@@ -47,7 +47,7 @@ public class MemberLogic {
 
 		// find user name
 		Optional<Member> opt = memberService.findByUsername(request.getUsername());
-		if (opt.isEmpty()) {
+		if (!opt.isPresent()) {
 			throw MemberException.loginFailUsernameNotFound();
 		}
 

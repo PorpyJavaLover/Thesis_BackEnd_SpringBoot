@@ -5,31 +5,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.thesis.scheduling.businesslevel.config.SecurityUtil;
 import com.thesis.scheduling.modellevel.entity.Course;
-import com.thesis.scheduling.modellevel.entity.CpeRoom;
 import com.thesis.scheduling.modellevel.entity.Group;
 import com.thesis.scheduling.modellevel.entity.Member;
 import com.thesis.scheduling.modellevel.entity.NotTeach;
-import com.thesis.scheduling.modellevel.entity.Plan;
 import com.thesis.scheduling.modellevel.entity.Room;
 import com.thesis.scheduling.modellevel.entity.Timetable;
-import com.thesis.scheduling.modellevel.mapper.MemberMapper;
-import com.thesis.scheduling.modellevel.mapper.TimetableMapper;
 import com.thesis.scheduling.modellevel.mapper.TimetableMapper;
 import com.thesis.scheduling.modellevel.model.M_Timetable_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_CreateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
-import com.thesis.scheduling.modellevel.model.M_Plan_ShowAllTeacher_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllTeacher_Response;
-import com.thesis.scheduling.modellevel.model.M_Timetable_ShowMemberTimeTeacher_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTimeRemain_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_UpdateLockerStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_Timetable_UpdateStaff_Request;
@@ -146,17 +137,6 @@ public class TimetableLogic {
 				
 			}
 		}
-		
-
-<<<<<<< HEAD
-		System.out.println("github");
-		System.out.println("github");
-		
-		System.out.println("github");
-=======
-		System.out.println("github");
->>>>>>> e0827b0c39efc7847ae78954165c0a9ff7fdc02a
-		System.out.println("github");
 
 		
 	}
@@ -187,7 +167,7 @@ public class TimetableLogic {
 		Integer dayOfWeek = request.getDay_of_week() == null  ? null : request.getDay_of_week();
 		Time startTime = request.getStart_time() == null  ? null : request.getStart_time();
 		Time endTime = request.getEnd_time() == null  ? null : request.getEnd_time();
-		Room roomId = roomService.findAllByRoomId(request.getRoom_id()).isEmpty() == true ? null
+		Room roomId = roomService.findAllByRoomId(request.getRoom_id()).isPresent() == false ? null
 				: roomService.findAllByRoomId(request.getRoom_id()).get();
 		
 		timetableService.updateStaff(year, semeter, courseId , cType , groupId, dayOfWeek, startTime, endTime, roomId);

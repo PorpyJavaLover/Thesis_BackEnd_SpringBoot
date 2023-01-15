@@ -1,13 +1,11 @@
 package com.thesis.scheduling.modellevel.service;
 
-import java.sql.Time;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.thesis.scheduling.modellevel.entity.LeaveTeach;
 import com.thesis.scheduling.modellevel.entity.Member;
-import com.thesis.scheduling.modellevel.entity.NotTeach;
 import com.thesis.scheduling.modellevel.repository.LeaveTeachRepository;
 
 @Service
@@ -36,7 +34,7 @@ public class LeaveTeachService {
 				semester, dateStart, dateEnd);
 		LeaveTeach entity = new LeaveTeach();
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 		} else {
 			entity.setMemberId(memberId);
@@ -55,7 +53,7 @@ public class LeaveTeachService {
 		Optional<LeaveTeach> opt = repository.findByLeaveTeachId(leaveTeachId);
 		LeaveTeach entity = new LeaveTeach();
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 			entity.getYears();
 			entity.setSemester(semester);
@@ -72,7 +70,7 @@ public class LeaveTeachService {
 		Optional<LeaveTeach> opt = repository.findByLeaveTeachId(leaveTeachId);
 		LeaveTeach entity = new LeaveTeach();
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 			repository.delete(entity);
 		}

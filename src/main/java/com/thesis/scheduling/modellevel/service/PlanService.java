@@ -30,7 +30,7 @@ public class PlanService {
 		
 		Optional<Plan> opt = repository.findByYearsAndSemesterAndCourseIdAndGroupId(years, semester, courseId, groupId);
 		
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 
 		} else {
@@ -51,7 +51,7 @@ public class PlanService {
 
 		Optional<Plan> opt = repository.findByYearsAndSemesterAndCourseIdAndGroupId(years, semester, courseId, groupId);
 
-		if (!opt.isEmpty()) {
+		if ( opt.isPresent()) {
 			entity = opt.get();
 			repository.delete(entity);
 		}

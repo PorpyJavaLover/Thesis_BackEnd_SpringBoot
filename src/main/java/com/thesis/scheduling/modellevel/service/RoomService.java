@@ -1,30 +1,20 @@
 package com.thesis.scheduling.modellevel.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.thesis.scheduling.modellevel.entity.Room;
-import com.thesis.scheduling.modellevel.entity.Course;
-import com.thesis.scheduling.modellevel.entity.CpeRoom;
-import com.thesis.scheduling.modellevel.entity.Group;
-import com.thesis.scheduling.modellevel.entity.Member;
-import com.thesis.scheduling.modellevel.entity.Timetable;
-import com.thesis.scheduling.modellevel.repository.CpeRoomRepository;
 import com.thesis.scheduling.modellevel.repository.RoomRepository;
 
 @Service
 public class RoomService {
 
 	private final RoomRepository repository;
-	
-	private final CpeRoomRepository cpeRepository;
 
-	public RoomService(RoomRepository repository, CpeRoomRepository cpeRepository) {
+	public RoomService(RoomRepository repository) {
 		this.repository = repository;
-		this.cpeRepository = cpeRepository;
 	}
 
 	// SET
@@ -51,7 +41,7 @@ public class RoomService {
 
 		Optional<Room> opt = repository.findAllByRoomId(roomId);
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 			repository.delete(entity);
 		}

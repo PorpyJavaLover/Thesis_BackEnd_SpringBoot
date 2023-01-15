@@ -40,7 +40,7 @@ public class NotTeachService {
 		Optional<NotTeach> opt = repository.findByMemberIdAndDayOfWeekAndTimeStartAndTimeEnd(memberId, dayOfWeek,
 				timeStart, timeEnd);
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 
 		} else {
@@ -58,7 +58,7 @@ public class NotTeachService {
 		Optional<NotTeach> opt = repository.findByNotId(notId);
 		NotTeach entity = new NotTeach();
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 			entity.setDayOfWeek(dayOfWeek);
 			entity.setTimeStart(timeStart);
@@ -73,7 +73,7 @@ public class NotTeachService {
 		Optional<NotTeach> opt = repository.findByNotId(notId);
 		NotTeach entity = new NotTeach();
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 			repository.delete(entity);
 		}

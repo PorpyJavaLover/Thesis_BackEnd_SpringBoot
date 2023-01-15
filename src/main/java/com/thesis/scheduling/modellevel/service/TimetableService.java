@@ -144,7 +144,7 @@ public class TimetableService {
 		Optional<Timetable> optA = repository.findByYearsAndSemesterAndCourseIdAndGroupIdAndCourseTypeAndMemberId(years,
 				semester, courseId, groupId, courseType, memberId);
 
-		if (!optA.isEmpty()) {
+		if (optA.isPresent()) {
 			entity = optA.get();
 		} else {
 
@@ -230,7 +230,7 @@ public class TimetableService {
 
 		Optional<Timetable> opt = repository.findByTimetableId(timetableId);
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 			repository.delete(entity);
 		}

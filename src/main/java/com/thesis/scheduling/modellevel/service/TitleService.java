@@ -45,7 +45,7 @@ public class TitleService {
 
 		Optional<Title> opt = repository.findByTitleId(titleId);
 
-		if (!opt.isEmpty()) {
+		if (opt.isPresent()) {
 			entity = opt.get();
 			repository.delete(entity);
 		}
