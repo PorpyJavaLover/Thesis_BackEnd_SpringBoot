@@ -148,10 +148,14 @@ public class TimetableLogic {
 		}
 		
 
+<<<<<<< HEAD
 		System.out.println("github");
 		System.out.println("github");
 		
 		System.out.println("github");
+=======
+		System.out.println("github");
+>>>>>>> e0827b0c39efc7847ae78954165c0a9ff7fdc02a
 		System.out.println("github");
 
 		
