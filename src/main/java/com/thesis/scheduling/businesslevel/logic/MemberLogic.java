@@ -1,9 +1,7 @@
 package com.thesis.scheduling.businesslevel.logic;
 
 import java.util.Optional;
-
 import org.springframework.stereotype.Service;
-
 import com.thesis.scheduling.businesslevel.config.token.TokenService;
 import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.exception.MemberException;

@@ -14,7 +14,6 @@ import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.logic.LeaveTeachLogic;
 import com.thesis.scheduling.modellevel.model.M_LeaveTeach_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_LeaveTeach_ShowAllTeacher_Response;
-import com.thesis.scheduling.modellevel.model.M_NotTeach_CreateTeacher_Request;
 
 @RestController
 @RequestMapping("/leaveteach")

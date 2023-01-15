@@ -170,7 +170,6 @@ public class TimetableService {
 				entity.setTimeLocker(optBSub.isTimeLocker());
 				entity.setRoomLocker(optBSub.isRoomLocker());
 			}
-
 			repository.save(entity);
 
 		}
