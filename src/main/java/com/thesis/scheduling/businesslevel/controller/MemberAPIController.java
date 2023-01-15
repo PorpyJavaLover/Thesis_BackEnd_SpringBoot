@@ -15,41 +15,38 @@ import com.thesis.scheduling.modellevel.model.M_Member_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Response;
 
-
 @RestController
 @RequestMapping("/member")
 public class MemberAPIController {
 
+    private final MemberLogic memberLogic;
 
-	private final MemberLogic memberLogic;
-	
     public MemberAPIController(MemberLogic memberlogic) {
         this.memberLogic = memberlogic;
     }
-    
-    //GET
+
+    // GET
     @GetMapping("/staff/show/all")
-    public ResponseEntity<Iterable<M_Member_ShowAllStaff_Response> > showAllStaff() throws BaseException {
-    	Iterable<M_Member_ShowAllStaff_Response>  response = memberLogic.showAllStaff();
+    public ResponseEntity<Iterable<M_Member_ShowAllStaff_Response>> showAllStaff() throws BaseException {
+        Iterable<M_Member_ShowAllStaff_Response> response = memberLogic.showAllStaff();
         return ResponseEntity.ok(response);
     }
-    
+
     @PostMapping("/anonymous/login")
-    public ResponseEntity<M_Member_Login_Response> login(@RequestBody M_Member_Login_Request request) throws BaseException {
+    public ResponseEntity<M_Member_Login_Response> login(@RequestBody M_Member_Login_Request request)
+            throws BaseException {
         M_Member_Login_Response response = memberLogic.login(request);
         return ResponseEntity.ok(response);
     }
-    
-    
-	//SET
+
+    // SET
     @PostMapping("/anonymous/register")
-    public ResponseEntity<M_Member_Register_Response> register(@RequestBody M_Member_Register_Request request) throws BaseException {
+    public ResponseEntity<M_Member_Register_Response> register(@RequestBody M_Member_Register_Request request)
+            throws BaseException {
         M_Member_Register_Response response = memberLogic.register(request);
         return ResponseEntity.ok(response);
     }
-    
-    
-    //DELETE
-	
+
+    // DELETE
 
 }

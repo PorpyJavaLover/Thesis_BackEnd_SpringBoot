@@ -67,7 +67,8 @@ public class TimetableService {
 			throw new IllegalArgumentException("No values can be null");
 		}
 
-		Collection<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years, semester,
+		Collection<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+				semester,
 				courseId, courseType, groupId);
 
 		Collection<Member> targetB = new ArrayList<Member>();
@@ -84,11 +85,13 @@ public class TimetableService {
 	public Iterable<Timetable> findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(String years,
 			String semester, Course courseId, Integer courseType, Group groupId, Integer dayOfWeek) {
 
-		if (years == null || semester == null || courseId == null || courseType == null || groupId == null || dayOfWeek == null) {
+		if (years == null || semester == null || courseId == null || courseType == null || groupId == null
+				|| dayOfWeek == null) {
 			throw new IllegalArgumentException("No values can be null");
 		}
 
-		Collection<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years, semester,
+		Collection<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+				semester,
 				courseId, courseType, groupId);
 
 		Collection<Timetable> targetB = new ArrayList<Timetable>();
@@ -105,7 +108,8 @@ public class TimetableService {
 
 	}
 
-	public Iterable<Timetable> findAllCollectionRoomByDayOfWeek(String years, String semester, Course courseId, Integer courseType,
+	public Iterable<Timetable> findAllCollectionRoomByDayOfWeek(String years, String semester, Course courseId,
+			Integer courseType,
 			Group groupId, Integer dayOfWeek, Time startTime, Time endTime) {
 
 		if (endTime == null || startTime == null || dayOfWeek == null) {
@@ -126,7 +130,8 @@ public class TimetableService {
 			}
 		}
 
-		Collection<Timetable> targetC = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years, semester,
+		Collection<Timetable> targetC = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+				semester,
 				courseId, courseType, groupId);
 
 		Collection<Timetable> targetD = relativeComplementBInA(targetB, targetC);
@@ -148,15 +153,13 @@ public class TimetableService {
 			entity = optA.get();
 		} else {
 
-
-
 			entity.setYears(years);
 			entity.setSemester(semester);
 			entity.setCourseId(courseId);
 			entity.setGroupId(groupId);
 			entity.setCourseType(courseType);
 			entity.setMemberId(memberId);
-			
+
 			Collection<Timetable> optB = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
 					semester, courseId, courseType, groupId);
 
@@ -204,14 +207,15 @@ public class TimetableService {
 
 	}
 
-	public void updateLockerStaff(String year, String semeter, Course courseId, Integer courseType, Group groupId, boolean timeLocker,
-			boolean roomLocker) {
+	public void updateLockerStaff(String year, String semeter, Course courseId, Integer courseType, Group groupId,
+			boolean timeLocker, boolean roomLocker) {
 
 		if (year == null || semeter == null || courseId == null || groupId == null) {
 			throw new IllegalArgumentException("One or more parameters are empty in method updateLockerStaff");
 		}
 
-		Iterable<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(year, semeter, courseId, courseType,
+		Iterable<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(year, semeter,
+				courseId, courseType,
 				groupId);
 
 		for (Timetable targetASub : targetA) {
@@ -236,9 +240,11 @@ public class TimetableService {
 
 	}
 
-	public void deleteForPlan(String years, String semester, Course courseId, Integer courseType , Group groupId, Member memberId) {
+	public void deleteForPlan(String years, String semester, Course courseId, Integer courseType, Group groupId,
+			Member memberId) {
 
-		Iterable<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndMemberId(years,
+		Iterable<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndMemberId(
+				years,
 				semester, courseId, courseType, groupId, memberId);
 
 		for (Timetable targetASub : targetA) {
@@ -247,8 +253,7 @@ public class TimetableService {
 
 	}
 
-	// util function
-
+	// Util function
 	public Collection<Timetable> relativeComplementBInA(Collection<Timetable> cA, Collection<Timetable> cB) {
 
 		Collection<Timetable> result = new ArrayList<Timetable>();
