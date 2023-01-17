@@ -149,7 +149,11 @@ public class TimetableService {
 		Optional<Timetable> optA = repository.findByYearsAndSemesterAndCourseIdAndGroupIdAndCourseTypeAndMemberId(years,
 				semester, courseId, groupId, courseType, memberId);
 
+<<<<<<< Updated upstream
 		if (optA.isPresent()) {
+=======
+		if (!optA.isPresent()) {
+>>>>>>> Stashed changes
 			entity = optA.get();
 		} else {
 
@@ -233,7 +237,11 @@ public class TimetableService {
 
 		Optional<Timetable> opt = repository.findByTimetableId(timetableId);
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 			repository.delete(entity);
 		}

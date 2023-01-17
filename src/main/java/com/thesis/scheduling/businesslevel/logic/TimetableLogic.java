@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 import org.springframework.stereotype.Service;
 
 import com.thesis.scheduling.businesslevel.config.SecurityUtil;
@@ -137,6 +140,14 @@ public class TimetableLogic {
 				
 			}
 		}
+<<<<<<< Updated upstream
+=======
+		
+
+
+		System.out.println("github");
+>>>>>>> Stashed changes
+
 
 		
 	}
@@ -167,7 +178,11 @@ public class TimetableLogic {
 		Integer dayOfWeek = request.getDay_of_week() == null  ? null : request.getDay_of_week();
 		Time startTime = request.getStart_time() == null  ? null : request.getStart_time();
 		Time endTime = request.getEnd_time() == null  ? null : request.getEnd_time();
+<<<<<<< Updated upstream
 		Room roomId = roomService.findAllByRoomId(request.getRoom_id()).isPresent() == false ? null
+=======
+		Room roomId = roomService.findAllByRoomId(request.getRoom_id()).isPresent() == true ? null
+>>>>>>> Stashed changes
 				: roomService.findAllByRoomId(request.getRoom_id()).get();
 		
 		timetableService.updateStaff(year, semeter, courseId , cType , groupId, dayOfWeek, startTime, endTime, roomId);

@@ -45,7 +45,11 @@ public class TitleService {
 
 		Optional<Title> opt = repository.findByTitleId(titleId);
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 			repository.delete(entity);
 		}

@@ -40,7 +40,11 @@ public class NotTeachService {
 		Optional<NotTeach> opt = repository.findByMemberIdAndDayOfWeekAndTimeStartAndTimeEnd(memberId, dayOfWeek,
 				timeStart, timeEnd);
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 
 		} else {
@@ -58,7 +62,11 @@ public class NotTeachService {
 		Optional<NotTeach> opt = repository.findByNotId(notId);
 		NotTeach entity = new NotTeach();
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 			entity.setDayOfWeek(dayOfWeek);
 			entity.setTimeStart(timeStart);
@@ -73,7 +81,11 @@ public class NotTeachService {
 		Optional<NotTeach> opt = repository.findByNotId(notId);
 		NotTeach entity = new NotTeach();
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 			repository.delete(entity);
 		}

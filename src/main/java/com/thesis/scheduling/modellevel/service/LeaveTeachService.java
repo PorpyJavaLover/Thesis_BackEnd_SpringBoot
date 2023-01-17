@@ -34,7 +34,11 @@ public class LeaveTeachService {
 				semester, dateStart, dateEnd);
 		LeaveTeach entity = new LeaveTeach();
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 		} else {
 			entity.setMemberId(memberId);
@@ -53,7 +57,11 @@ public class LeaveTeachService {
 		Optional<LeaveTeach> opt = repository.findByLeaveTeachId(leaveTeachId);
 		LeaveTeach entity = new LeaveTeach();
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 			entity.getYears();
 			entity.setSemester(semester);
@@ -70,7 +78,11 @@ public class LeaveTeachService {
 		Optional<LeaveTeach> opt = repository.findByLeaveTeachId(leaveTeachId);
 		LeaveTeach entity = new LeaveTeach();
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 			repository.delete(entity);
 		}

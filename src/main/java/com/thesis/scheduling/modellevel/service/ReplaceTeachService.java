@@ -35,7 +35,11 @@ public class ReplaceTeachService {
 				essTimetableId, memberReplaceId);
 		ReplaceTeach entity = new ReplaceTeach();
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 		} else {
 			entity.setLeaveTeachId(leaveTeachId);
@@ -50,7 +54,11 @@ public class ReplaceTeachService {
 		Optional<ReplaceTeach> opt = repository.findByReplaceTeachId(replaceTeachId);
 		ReplaceTeach entity = new ReplaceTeach();
 
+<<<<<<< Updated upstream
 		if (opt.isPresent()) {
+=======
+		if (!opt.isPresent()) {
+>>>>>>> Stashed changes
 			entity = opt.get();
 			repository.delete(entity);
 		}
