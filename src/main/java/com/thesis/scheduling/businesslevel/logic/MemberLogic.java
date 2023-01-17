@@ -45,11 +45,7 @@ public class MemberLogic {
 
 		// find user name
 		Optional<Member> opt = memberService.findByUsername(request.getUsername());
-<<<<<<< Updated upstream
 		if (!opt.isPresent()) {
-=======
-		if (opt.isPresent()) {
->>>>>>> Stashed changes
 			throw MemberException.loginFailUsernameNotFound();
 		}
 

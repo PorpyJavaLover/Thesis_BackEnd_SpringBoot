@@ -4,16 +4,12 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
-
 import org.springframework.stereotype.Service;
-
 import com.thesis.scheduling.modellevel.entity.Course;
 import com.thesis.scheduling.modellevel.entity.Group;
 import com.thesis.scheduling.modellevel.entity.Member;
-import com.thesis.scheduling.modellevel.entity.Plan;
 import com.thesis.scheduling.modellevel.entity.Room;
 import com.thesis.scheduling.modellevel.entity.Timetable;
-import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTimeRemain_Response;
 import com.thesis.scheduling.modellevel.repository.TimetableRepository;
 
 @Service
@@ -149,11 +145,7 @@ public class TimetableService {
 		Optional<Timetable> optA = repository.findByYearsAndSemesterAndCourseIdAndGroupIdAndCourseTypeAndMemberId(years,
 				semester, courseId, groupId, courseType, memberId);
 
-<<<<<<< Updated upstream
 		if (optA.isPresent()) {
-=======
-		if (!optA.isPresent()) {
->>>>>>> Stashed changes
 			entity = optA.get();
 		} else {
 
@@ -237,11 +229,7 @@ public class TimetableService {
 
 		Optional<Timetable> opt = repository.findByTimetableId(timetableId);
 
-<<<<<<< Updated upstream
 		if (opt.isPresent()) {
-=======
-		if (!opt.isPresent()) {
->>>>>>> Stashed changes
 			entity = opt.get();
 			repository.delete(entity);
 		}

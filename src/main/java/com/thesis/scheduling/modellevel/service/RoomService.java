@@ -41,11 +41,7 @@ public class RoomService {
 
 		Optional<Room> opt = repository.findAllByRoomId(roomId);
 
-<<<<<<< Updated upstream
 		if (opt.isPresent()) {
-=======
-		if (!opt.isPresent()) {
->>>>>>> Stashed changes
 			entity = opt.get();
 			repository.delete(entity);
 		}

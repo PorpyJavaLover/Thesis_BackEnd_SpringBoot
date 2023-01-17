@@ -30,11 +30,7 @@ public class PlanService {
 		
 		Optional<Plan> opt = repository.findByYearsAndSemesterAndCourseIdAndGroupId(years, semester, courseId, groupId);
 		
-<<<<<<< Updated upstream
 		if (opt.isPresent()) {
-=======
-		if (!opt.isPresent()) {
->>>>>>> Stashed changes
 			entity = opt.get();
 
 		} else {
@@ -55,11 +51,7 @@ public class PlanService {
 
 		Optional<Plan> opt = repository.findByYearsAndSemesterAndCourseIdAndGroupId(years, semester, courseId, groupId);
 
-<<<<<<< Updated upstream
 		if ( opt.isPresent()) {
-=======
-		if (!opt.isPresent()) {
->>>>>>> Stashed changes
 			entity = opt.get();
 			repository.delete(entity);
 		}
