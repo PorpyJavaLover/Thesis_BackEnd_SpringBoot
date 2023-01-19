@@ -63,7 +63,7 @@ public class TimetableService {
 			throw new IllegalArgumentException("No values can be null");
 		}
 
-		Collection<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
 				semester,
 				courseId, courseType, groupId);
 
@@ -78,6 +78,24 @@ public class TimetableService {
 
 	}
 
+	public  Timetable findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years,
+			String semester, Course courseId, Integer courseType, Group groupId) {
+
+		if (years == null || semester == null || courseId == null || courseType == null || groupId == null) {
+			throw new IllegalArgumentException("No values can be null");
+		}
+
+		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+				semester,courseId, courseType, groupId);
+
+		if (!targetA.isEmpty()) {
+			return targetA.iterator().next();
+		} else {
+			return null;
+		}
+
+	}
+
 	public Iterable<Timetable> findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(String years,
 			String semester, Course courseId, Integer courseType, Group groupId, Integer dayOfWeek) {
 
@@ -86,7 +104,7 @@ public class TimetableService {
 			throw new IllegalArgumentException("No values can be null");
 		}
 
-		Collection<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
 				semester,
 				courseId, courseType, groupId);
 
@@ -126,7 +144,7 @@ public class TimetableService {
 			}
 		}
 
-		Collection<Timetable> targetC = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+		Collection<Timetable> targetC = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
 				semester,
 				courseId, courseType, groupId);
 
@@ -156,7 +174,7 @@ public class TimetableService {
 			entity.setCourseType(courseType);
 			entity.setMemberId(memberId);
 
-			Collection<Timetable> optB = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+			Collection<Timetable> optB = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
 					semester, courseId, courseType, groupId);
 
 			if (!optB.isEmpty()) {
@@ -182,7 +200,7 @@ public class TimetableService {
 			throw new IllegalArgumentException("One or more parameters are empty");
 		}
 
-		Iterable<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+		Iterable<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
 				semester, courseId, courseType, groupId);
 
 		for (Timetable targetASub : targetA) {
@@ -210,7 +228,8 @@ public class TimetableService {
 			throw new IllegalArgumentException("One or more parameters are empty in method updateLockerStaff");
 		}
 
-		Iterable<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(year, semeter,
+		Iterable<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(year,
+				semeter,
 				courseId, courseType,
 				groupId);
 

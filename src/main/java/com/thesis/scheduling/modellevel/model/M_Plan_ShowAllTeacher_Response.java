@@ -22,5 +22,9 @@ public class M_Plan_ShowAllTeacher_Response {
 	private boolean selected_lect;
 	
 	private boolean selected_perf;
+
+	private boolean disable_lect;
+
+	private boolean disable_perf;
 }
 

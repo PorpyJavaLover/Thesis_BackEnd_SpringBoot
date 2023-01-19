@@ -31,6 +31,8 @@ public class PlanMapper {
 			targetSub.setGroup_name(sourceTmp.getGroupId().getGroup_name().toString());
 			targetSub.setSelected_lect(false);
 			targetSub.setSelected_perf(false);
+			targetSub.setDisable_lect((sourceTmp.getCourseId().getCourseLect() == 0 ? true : false));
+			targetSub.setDisable_perf((sourceTmp.getCourseId().getCoursePerf() == 0 ? true : false));
 			target.add(targetSub);
 		}
 		return target;
@@ -55,6 +57,8 @@ public class PlanMapper {
 			targetSub.setGroup_name(sourceTmp.getGroupId().getGroup_name().toString());
 			targetSub.setSelected_lect(false);
 			targetSub.setSelected_perf(false);
+			targetSub.setDisable_lect((sourceTmp.getCourseId().getCourseLect() == 0 ? true : false));
+			targetSub.setDisable_perf((sourceTmp.getCourseId().getCoursePerf() == 0 ? true : false));
 			target.add(targetSub);
 		}
 		
