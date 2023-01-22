@@ -100,8 +100,8 @@ public class TimetableMapper {
 		return target;
 	}
 
-	public Iterable<M_Timetable_ShowTimeRemain_Response> toMTimeStartOptionStaff(Iterable<Timetable> source,
-			Collection<NotTeach> sourceC, Timetable sourceD, String sourceB) {
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartOptionStaff(Iterable<Timetable> source,
+			Collection<NotTeach> sourceC, Timetable sourceD) {
 
 		if (source == null) {
 			return null;
@@ -180,7 +180,7 @@ public class TimetableMapper {
 	}
 
 	public Iterable<M_Timetable_ShowTimeRemain_Response> toMTimeEndOptionStaff(Iterable<Timetable> source,
-			Collection<NotTeach> sourceC, Timetable sourceD, String sourceB) {
+			Collection<NotTeach> sourceC, Timetable sourceD) {
 
 		if (source == null) {
 			return null;

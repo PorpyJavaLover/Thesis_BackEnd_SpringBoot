@@ -76,9 +76,9 @@ public class TimetableLogic {
 				.toMTimetableTeacher(timetableService.findAllByMemberId(memberService.findByMemberId(memberId).get()));
 	}
 
-	public Iterable<M_Timetable_ShowTimeRemain_Response> showStartTimeOptionStaff(String yId, String sId, Long cId,
+	public Collection<M_Timetable_ShowTimeRemain_Response> showStartTimeOptionStaff(String yId, String sId, Long cId,
 			Integer cType, Long gId,
-			Integer dayOfWeek, String endTime) {
+			Integer dayOfWeek) {
 
 		Iterable<Timetable> sourceA = timetableService
 				.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId, sId,
@@ -97,12 +97,12 @@ public class TimetableLogic {
 			sourceC.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
 		}
 
-		return mapper.toMTimeStartOptionStaff(sourceA, sourceC, sourceD, endTime);
+		return mapper.toMTimeStartOptionStaff(sourceA, sourceC, sourceD);
 	}
 
 	public Iterable<M_Timetable_ShowTimeRemain_Response> showEndTimeOptionStaff(String yId, String sId, Long cId,
 			Integer cType, Long gId,
-			Integer dayOfWeek, String startTime) {
+			Integer dayOfWeek) {
 
 		Iterable<Timetable> sourceA = timetableService
 				.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId, sId,
@@ -120,7 +120,7 @@ public class TimetableLogic {
 			sourceC.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
 		}
 
-		return mapper.toMTimeEndOptionStaff(sourceA, sourceC, sourceD, startTime);
+		return mapper.toMTimeEndOptionStaff(sourceA, sourceC, sourceD);
 
 	}
 
@@ -161,20 +161,28 @@ public class TimetableLogic {
 	public void autoPilot() {
 
 		Collection<Timetable> sourceA = timetableService.findAll();
-		
-        ArrayList<Timetable> list = new ArrayList<>(sourceA);
-		
-        Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId()));
+
+		ArrayList<Timetable> list = new ArrayList<>(sourceA);
+
+		Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId()));
 
 		Collections.reverse(list);
 
 		for (Timetable listTmp : list) {
-			 if(listTmp.getDayOfWeek() == null || listTmp.getStartTime() == null || listTmp.getEndTime() == null){
-				
-			 }
+			if (listTmp.getDayOfWeek() == null || listTmp.getStartTime() == null || listTmp.getEndTime() == null) {
+				Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+				targetA = showStartTimeOptionStaff(listTmp.getYears(),
+						listTmp.getSemester(), listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+						listTmp.getGroupId().getGroupId(), 1);
+
+				updateAutoPilotStaff(listTmp.getYears(),listTmp.getSemester(), 
+				listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+				listTmp.getGroupId().getGroupId(), 1 ,targetA.iterator().next().getValue() , ,null );
+
+			}
 		}
 
-	
 	}
 
 	// SET
@@ -209,6 +217,23 @@ public class TimetableLogic {
 
 		timetableService.updateStaff(year, semeter, courseId, cType, groupId, dayOfWeek, startTime, endTime, roomId);
 
+	}
+
+	public void updateAutoPilotStaff(String yId, String sId, Long cId, Integer cType, Long gId,
+	Integer day, Time start, Time end , Integer room) {
+
+		String year = yId;
+		String semeter = sId;
+		Course courseId = courseService.findByCourseId(cId).get();
+		Group groupId = groupService.findByGroupId(gId).get();
+		Integer dayOfWeek = day;
+		Time startTime = start;
+		Time endTime = end;
+		Room roomId = roomService.findAllByRoomId(room).isPresent() == false ? null
+				: roomService.findAllByRoomId(room).get();
+
+		timetableService.updateStaff(year, semeter, courseId, cType, groupId, dayOfWeek, startTime, endTime, roomId);
+		
 	}
 
 	public void updateLockerStaff(String yId, String sId, Long cId, Integer cType, Long gId,

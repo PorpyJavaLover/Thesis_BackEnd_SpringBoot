@@ -62,7 +62,7 @@ public class TimetableAPIController {
 			throws BaseException {
 		Iterable<M_Timetable_ShowTimeRemain_Response> response = timetableLogic.showStartTimeOptionStaff(yId, sId, cId,
 				cType, gId,
-				dayOfWeek, endTime);
+				dayOfWeek);
 		return ResponseEntity.ok(response);
 	}
 
@@ -75,7 +75,7 @@ public class TimetableAPIController {
 			throws BaseException {
 		Iterable<M_Timetable_ShowTimeRemain_Response> response = timetableLogic.showEndTimeOptionStaff(yId, sId, cId,
 				cType, gId,
-				dayOfWeek, startTime);
+				dayOfWeek);
 		return ResponseEntity.ok(response);
 	}
 
