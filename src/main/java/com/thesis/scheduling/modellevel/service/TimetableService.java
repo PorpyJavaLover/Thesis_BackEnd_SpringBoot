@@ -22,7 +22,7 @@ public class TimetableService {
 	}
 
 	// GET
-	public Iterable<Timetable> findAll() {
+	public Collection<Timetable> findAll() {
 		return repository.findAll();
 	}
 

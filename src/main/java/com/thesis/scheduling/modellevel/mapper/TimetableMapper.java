@@ -144,7 +144,7 @@ public class TimetableMapper {
 		}
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetB = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-		for (int i = 1; i <= 13; i++) {
+		for (int i = 1; i <= 14; i++) {
 			M_Timetable_ShowTimeRemain_Response targetSubB = new M_Timetable_ShowTimeRemain_Response();
 			targetSubB.setId(i);
 			targetSubB.setValue(convertStartTime(i));
@@ -223,7 +223,7 @@ public class TimetableMapper {
 		}
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetB = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-		for (int i = 1; i <= 13; i++) {
+		for (int i = 1; i <= 14; i++) {
 			M_Timetable_ShowTimeRemain_Response targetSubC = new M_Timetable_ShowTimeRemain_Response();
 			targetSubC.setId(i);
 			targetSubC.setValue(convertEndTime(i));
@@ -489,6 +489,9 @@ public class TimetableMapper {
 			case "20:00:00":
 				output = 13;
 				break;
+			case "21:00:00":
+				output = 14;
+				break;
 		}
 		return output;
 	}
@@ -534,6 +537,9 @@ public class TimetableMapper {
 				break;
 			case 13:
 				output = "20:00:00";
+				break;
+			case 14:
+				output = "21:00:00";
 				break;
 		}
 		return output;
@@ -582,6 +588,9 @@ public class TimetableMapper {
 			case "21:00:00":
 				output = 13;
 				break;
+			case "22:00:00":
+				output = 14;
+				break;
 		}
 		return output;
 	}
@@ -627,6 +636,9 @@ public class TimetableMapper {
 				break;
 			case 13:
 				output = "21:00:00";
+				break;
+			case 14:
+				output = "22:00:00";
 				break;
 		}
 		return output;

@@ -3,6 +3,8 @@ package com.thesis.scheduling.businesslevel.logic;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -158,13 +160,21 @@ public class TimetableLogic {
 
 	public void autoPilot() {
 
-		Iterable<Timetable> sourceA = timetableService.findAll();
+		Collection<Timetable> sourceA = timetableService.findAll();
+		
+        ArrayList<Timetable> list = new ArrayList<>(sourceA);
+		
+        Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId()));
 
-		for (Timetable sourceATmp : sourceA) {
-			if (sourceATmp.isTimeLocker() == false) {
+		Collections.reverse(list);
 
-			}
+		for (Timetable listTmp : list) {
+			 if(listTmp.getDayOfWeek() == null || listTmp.getStartTime() == null || listTmp.getEndTime() == null){
+				
+			 }
 		}
+
+	
 	}
 
 	// SET
