@@ -245,6 +245,33 @@ public class TimetableLogic {
 		}
 		System.out.println("auto done");
 
+		for (Timetable listTmp : list) {
+			if (!listTmp.isRoomLocker()) {
+
+
+				Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
+
+				targetA = showRoomStaff(listTmp.getYears(), listTmp.getSemester(),
+				listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+				listTmp.getGroupId().getGroupId(),listTmp.getDayOfWeek(),listTmp.getStartTime(),listTmp.getEndTime());
+
+				Integer timevalueStart = null;
+				
+				for (M_For_Selection_Response targetATmp : targetA) {
+					if(targetATmp.getText().substring(0, 1).equals("0")
+					|| targetATmp.getText().substring(0, 1).equals("1")
+					|| targetATmp.getText().substring(0, 1).equals("2")){
+						timevalueStart = Integer.parseInt(targetATmp.getValue());
+						break;
+					}
+				}
+
+				updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
+						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+						listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(), listTmp.getEndTime(), timevalueStart);
+			}
+		}
+
 	}
 
 	// SET
