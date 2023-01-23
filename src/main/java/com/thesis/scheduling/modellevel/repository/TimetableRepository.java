@@ -16,7 +16,10 @@ import com.thesis.scheduling.modellevel.entity.Timetable;
 @Repository
 public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
+<<<<<<< Updated upstream
 	
+=======
+>>>>>>> Stashed changes
 	Collection<Timetable> findAll();
 
 	Collection<Timetable> findAllByMemberId(Member memberId);

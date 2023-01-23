@@ -251,9 +251,13 @@ public class TimetableLogic {
 
 				Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
 
+<<<<<<< Updated upstream
 				targetA = showRoomStaff(listTmp.getYears(), listTmp.getSemester(),
 				listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
 				listTmp.getGroupId().getGroupId(),listTmp.getDayOfWeek(),listTmp.getStartTime(),listTmp.getEndTime());
+=======
+		Collection<Timetable> sourceA = timetableService.findAll();
+>>>>>>> Stashed changes
 
 				Integer timevalueStart = null;
 				
