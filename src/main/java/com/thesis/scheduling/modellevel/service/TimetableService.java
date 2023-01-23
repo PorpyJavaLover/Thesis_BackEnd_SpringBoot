@@ -78,7 +78,7 @@ public class TimetableService {
 
 	}
 
-	public  Timetable findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years,
+	public Timetable findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years,
 			String semester, Course courseId, Integer courseType, Group groupId) {
 
 		if (years == null || semester == null || courseId == null || courseType == null || groupId == null) {
@@ -86,7 +86,7 @@ public class TimetableService {
 		}
 
 		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
-				semester,courseId, courseType, groupId);
+				semester, courseId, courseType, groupId);
 
 		if (!targetA.isEmpty()) {
 			return targetA.iterator().next();
@@ -204,18 +204,15 @@ public class TimetableService {
 				semester, courseId, courseType, groupId);
 
 		for (Timetable targetASub : targetA) {
-			if (day_of_week != null) {
-				targetASub.setDayOfWeek(day_of_week);
-			}
-			if (start_time != null) {
-				targetASub.setStartTime(start_time);
-			}
-			if (end_time != null) {
-				targetASub.setEndTime(end_time);
-			}
-			if (room_id != null) {
-				targetASub.setRoomId(room_id);
-			}
+
+			targetASub.setDayOfWeek(day_of_week);
+
+			targetASub.setStartTime(start_time);
+
+			targetASub.setEndTime(end_time);
+
+			targetASub.setRoomId(room_id);
+
 			repository.save(targetASub);
 		}
 

@@ -1,6 +1,7 @@
 package com.thesis.scheduling.businesslevel.controller;
 
 import java.sql.Time;
+import java.text.ParseException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -114,7 +115,7 @@ public class TimetableAPIController {
 	}
 
 	@GetMapping("/staff/auto_pilot")
-	public void autoPilot() throws BaseException {
+	public void autoPilot() throws BaseException, ParseException {
 		timetableLogic.autoPilot();
 	}
 

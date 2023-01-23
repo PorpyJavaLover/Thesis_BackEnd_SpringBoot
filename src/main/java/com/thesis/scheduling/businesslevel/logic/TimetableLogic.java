@@ -1,6 +1,9 @@
 package com.thesis.scheduling.businesslevel.logic;
 
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -158,7 +161,7 @@ public class TimetableLogic {
 				roomA);
 	}
 
-	public void autoPilot() {
+	public void autoPilot() throws ParseException {
 
 		Collection<Timetable> sourceA = timetableService.findAll();
 
@@ -168,20 +171,79 @@ public class TimetableLogic {
 
 		Collections.reverse(list);
 
+		Integer dayA = 1;
+
+		Long listTmpTmp = null;
+
 		for (Timetable listTmp : list) {
-			if (listTmp.getDayOfWeek() == null || listTmp.getStartTime() == null || listTmp.getEndTime() == null) {
-				Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-
-				targetA = showStartTimeOptionStaff(listTmp.getYears(),
-						listTmp.getSemester(), listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-						listTmp.getGroupId().getGroupId(), 1);
-
-				updateAutoPilotStaff(listTmp.getYears(),listTmp.getSemester(), 
-				listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-				listTmp.getGroupId().getGroupId(), 1 ,targetA.iterator().next().getValue() , ,null );
-
+			if (!listTmp.isTimeLocker()) {
+				updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
+						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+						listTmp.getGroupId().getGroupId(), null, null, null, null);
 			}
 		}
+
+		for (Timetable listTmp : list) {
+
+			while (dayA <= 7) {
+
+				if (listTmpTmp != null) {
+					if (listTmpTmp != listTmp.getGroupId().getGroupId()) {
+						dayA = 1;
+					}
+				}
+
+				listTmpTmp = listTmp.getGroupId().getGroupId();
+
+				if (listTmp.getDayOfWeek() == null && !listTmp.isTimeLocker()) {
+
+					Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+					Integer timeRun;
+					if (listTmp.getCourseType() == 0) {
+						timeRun = listTmp.getCourseId().getCourseLect() + 1;
+					} else {
+						timeRun = listTmp.getCourseId().getCoursePerf() + 1;
+					}
+
+					targetA = showStartTimeOptionStaff(listTmp.getYears(),
+							listTmp.getSemester(), listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+							listTmp.getGroupId().getGroupId(), dayA);
+
+					DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+					Time timevalueStart = null;
+					Time timeValueEnd = new Time(0, 0, 0);
+
+					for (M_Timetable_ShowTimeRemain_Response targetATmp : targetA) {
+						System.out.println(targetATmp.getText().substring(0, 1));
+						if ((targetATmp.getText().substring(0, 1).equals("0")
+								|| targetATmp.getText().substring(0, 1).equals("1")
+								|| targetATmp.getText().substring(0, 1).equals("2"))
+								&& targetATmp.getId() != 5) {
+							timevalueStart = new Time(formatter.parse(targetATmp.getValue()).getTime());
+							break;
+						}
+					}
+
+					timeValueEnd.setHours(timevalueStart.getHours() + timeRun);
+
+					if (timeValueEnd.getHours() <= 18) {
+						updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
+								listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+								listTmp.getGroupId().getGroupId(), dayA, timevalueStart, timeValueEnd, null);
+						break;
+					} else {
+						dayA++;
+					}
+				} else {
+					dayA = 1;
+					break;
+				}
+
+			}
+
+		}
+		System.out.println("auto done");
 
 	}
 
@@ -220,7 +282,7 @@ public class TimetableLogic {
 	}
 
 	public void updateAutoPilotStaff(String yId, String sId, Long cId, Integer cType, Long gId,
-	Integer day, Time start, Time end , Integer room) {
+			Integer day, Time start, Time end, Integer room) {
 
 		String year = yId;
 		String semeter = sId;
@@ -233,7 +295,7 @@ public class TimetableLogic {
 				: roomService.findAllByRoomId(room).get();
 
 		timetableService.updateStaff(year, semeter, courseId, cType, groupId, dayOfWeek, startTime, endTime, roomId);
-		
+
 	}
 
 	public void updateLockerStaff(String yId, String sId, Long cId, Integer cType, Long gId,
