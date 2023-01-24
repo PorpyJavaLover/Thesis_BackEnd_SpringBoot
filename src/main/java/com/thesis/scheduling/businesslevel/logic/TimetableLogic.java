@@ -83,20 +83,22 @@ public class TimetableLogic {
 			Integer cType, Long gId,
 			Integer dayOfWeek) {
 
+		//หา sourceA = อาจารย์ที่สอนร่วมกัน
 		Iterable<Timetable> sourceA = timetableService
 				.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId, sId,
 						courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(),
 						dayOfWeek);
-
+		//หา sourceB = อาจารย์แต่ละคน
 		Iterable<Member> sourceB = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupId(yId,
 				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
-
+		//sourceC = หาวันที่ไม่สะดวกสอน
 		Collection<NotTeach> sourceC = new ArrayList<NotTeach>();
 
+		//หา sourceD = ประเภทวิชา
 		Timetable sourceD = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(yId, sId,
 				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
 
-		for (Member sourceBTmp : sourceB) {
+		for (Member sourceBTmp : sourceB) { 
 			sourceC.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
 		}
 
@@ -155,6 +157,18 @@ public class TimetableLogic {
 		Iterable<Room> roomA = roomService.findAll();
 
 		return mapper.toMRoomStaff(
+				timetableService.findAllCollectionRoomByDayOfWeek(yId, sId, courseService.findByCourseId(cId).get(),
+						cType,
+						groupService.findByGroupId(gId).get(), dayOfWeek, startTime, endTime),
+				roomA);
+	}
+
+	public Iterable<M_For_Selection_Response> showRoomStaffAuto(String yId, String sId, Long cId, Integer cType, Long gId,
+			Integer dayOfWeek, Time startTime, Time endTime) {
+
+		Iterable<Room> roomA = roomService.findAll();
+
+		return mapper.toMRoomStaffAuto(
 				timetableService.findAllCollectionRoomByDayOfWeek(yId, sId, courseService.findByCourseId(cId).get(),
 						cType,
 						groupService.findByGroupId(gId).get(), dayOfWeek, startTime, endTime),
@@ -251,21 +265,17 @@ public class TimetableLogic {
 
 				Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
 
-<<<<<<< Updated upstream
-				targetA = showRoomStaff(listTmp.getYears(), listTmp.getSemester(),
+				targetA = showRoomStaffAuto(listTmp.getYears(), listTmp.getSemester(),
 				listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
 				listTmp.getGroupId().getGroupId(),listTmp.getDayOfWeek(),listTmp.getStartTime(),listTmp.getEndTime());
-=======
-		Collection<Timetable> sourceA = timetableService.findAll();
->>>>>>> Stashed changes
 
 				Integer timevalueStart = null;
 				
 				for (M_For_Selection_Response targetATmp : targetA) {
-					if(targetATmp.getText().substring(0, 1).equals("0")
-					|| targetATmp.getText().substring(0, 1).equals("1")
-					|| targetATmp.getText().substring(0, 1).equals("2")){
+					System.out.println(targetATmp.getText() );
+					if(!targetATmp.getText().substring(0, 1).equals("!")){
 						timevalueStart = Integer.parseInt(targetATmp.getValue());
+						System.out.println("<---------------------"+targetATmp.getText());
 						break;
 					}
 				}

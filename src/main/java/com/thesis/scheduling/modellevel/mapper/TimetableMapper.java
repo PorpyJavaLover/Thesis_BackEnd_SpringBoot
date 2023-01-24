@@ -342,6 +342,37 @@ public class TimetableMapper {
 		return targetE;
 	}
 
+	public Collection<M_For_Selection_Response> toMRoomStaffAuto(Iterable<Timetable> sourceD, Iterable<Room> sourceA) {
+
+		if (sourceD == null) {
+			return null;
+		}
+
+		Collection<M_For_Selection_Response> targetD = new ArrayList<M_For_Selection_Response>();
+
+		for (Timetable sourceDTmp : sourceD) {
+			M_For_Selection_Response targetSub = new M_For_Selection_Response();
+			targetSub.setId(sourceDTmp.getRoomId().getRoomId());
+			targetSub.setValue(sourceDTmp.getRoomId().getRoomId().toString());
+			targetSub.setText(sourceDTmp.getRoomId().getName());
+			targetD.add(targetSub);
+		}
+
+		Collection<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
+
+		for (Room sourceATmp : sourceA) {
+			M_For_Selection_Response targetSub = new M_For_Selection_Response();
+			targetSub.setId(sourceATmp.getRoomId());
+			targetSub.setValue(sourceATmp.getRoomId().toString());
+			targetSub.setText(sourceATmp.getName());
+			targetA.add(targetSub);
+		}
+
+		Collection<M_For_Selection_Response> targetE = relaComplementBInAAuto(targetA, targetD);
+
+		return targetE;
+	}
+
 	public Collection<M_Timetable_ShowTimeRemain_Response> relativeComplementBInAWarring(
 			Collection<M_Timetable_ShowTimeRemain_Response> cA, Collection<M_Timetable_ShowTimeRemain_Response> cB) {
 
@@ -434,6 +465,32 @@ public class TimetableMapper {
 
 		for (M_For_Selection_Response subCB : cD) {
 			subCB.setText("⚠️" + subCB.getText());
+		}
+
+		cA.addAll(cD);
+
+		ArrayList<M_For_Selection_Response> list = new ArrayList<>(cA);
+
+		Collections.sort(list, Comparator.comparing(M_For_Selection_Response::getId));
+
+		result.addAll(list);
+
+		return result;
+	}
+
+	public Collection<M_For_Selection_Response> relaComplementBInAAuto(
+			Collection<M_For_Selection_Response> cA, Collection<M_For_Selection_Response> cB) {
+
+		Collection<M_For_Selection_Response> result = new ArrayList<M_For_Selection_Response>();
+
+		Collection<M_For_Selection_Response> cD = new ArrayList<M_For_Selection_Response>(cA);
+
+		cA.removeAll(cB);
+
+		cD.removeAll(cA);
+
+		for (M_For_Selection_Response subCB : cD) {
+			subCB.setText("!" + subCB.getText());
 		}
 
 		cA.addAll(cD);
