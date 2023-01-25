@@ -123,30 +123,16 @@ public class TimetableService {
 	}
 
 	public Iterable<Timetable> findAllCollectionMemberBGroupIdAndDayOfWeek(String years,
-			String semester, Course courseId, Integer courseType, Group groupId, Integer dayOfWeek) {
+			String semester,  Group groupId, Integer dayOfWeek) {
 
-		if (years == null || semester == null || courseId == null || courseType == null || groupId == null
-				|| dayOfWeek == null) {
+		if (years == null || semester == null  || groupId == null || dayOfWeek == null) {
 			throw new IllegalArgumentException("No values can be null");
 		}
 
-		/* 
-		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
-				semester,
-				courseId, courseType, groupId);
+		
+		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndGroupIdAndDayOfWeek(years,semester, groupId , dayOfWeek);
 
-		Collection<Timetable> targetB = new ArrayList<Timetable>();
-
-		for (Timetable targetASub : targetA) {
-			Collection<Timetable> targetC = repository.findAllByMemberIdAndDayOfWeek(targetASub.getMemberId(),
-					dayOfWeek);
-			targetB.addAll(targetC);
-		}
-
-		Collection<Timetable> targetD = relativeComplementBInA(targetB, targetA);
-		*/
-
-		return null;
+		return targetA;
 
 	}
 

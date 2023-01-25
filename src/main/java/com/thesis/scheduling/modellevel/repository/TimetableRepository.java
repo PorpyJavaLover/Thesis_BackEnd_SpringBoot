@@ -16,7 +16,6 @@ import com.thesis.scheduling.modellevel.entity.Timetable;
 @Repository
 public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
-	
 	Collection<Timetable> findAll();
 
 	Collection<Timetable> findAllByMemberId(Member memberId);
@@ -25,6 +24,8 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Collection<Timetable> findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years, String semester,
 			Course courseId, Integer courseType, Group groupId);
+
+	Collection<Timetable> findAllByYearsAndSemesterAndGroupIdAndDayOfWeek( String years, String semester, Group groupId , Integer dayOfWeek);
 
 	Collection<Timetable> findAllByYearsAndSemesterAndCourseIdAndGroupIdAndMemberId(String years, String semester,
 			Course courseId, Group groupId, Member memberId);
@@ -43,7 +44,7 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 			Course courseId, Group groupId);
 
 	Optional<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years, String semester,
-			Course courseId, Integer courseType,  Group groupId);
+			Course courseId, Integer courseType, Group groupId);
 
 	Optional<Timetable> findByYearsAndSemesterAndCourseIdAndGroupIdAndCourseTypeAndMemberId(String years,
 			String semester,

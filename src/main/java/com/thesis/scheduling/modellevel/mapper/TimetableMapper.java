@@ -100,16 +100,16 @@ public class TimetableMapper {
 		return target;
 	}
 
-	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartOptionStaff(Iterable<Timetable> source,
-			Collection<NotTeach> sourceC, Timetable sourceD) {
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartOptionStaff(Iterable<Timetable> sourceA,
+			Collection<NotTeach> sourceC, Timetable sourceD , Iterable<Timetable> sourceE) {
 
-		if (source == null) {
+		if (sourceA == null) {
 			return null;
 		}
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
-		for (Timetable sourceTmp : source) {
+		for (Timetable sourceTmp : sourceA) {
 
 			int interim = deconvertStartTime(sourceTmp.getEndTime().toString())
 					- deconvertStartTime(sourceTmp.getStartTime().toString());
