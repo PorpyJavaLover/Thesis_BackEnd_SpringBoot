@@ -438,16 +438,16 @@ public class TimetableMapper {
 
 		cG.removeAll(cF);
 
-		for (M_Timetable_ShowTimeRemain_Response subCB : cD) {
-			subCB.setText("🟧" + subCB.getText());
+		for (M_Timetable_ShowTimeRemain_Response subCD : cD) {
+			subCD.setText("🟧" + subCD.getText());
 		}
 
-		for (M_Timetable_ShowTimeRemain_Response subCB : cF) {
-			subCB.setText("🟧🟨" + subCB.getText());
+		for (M_Timetable_ShowTimeRemain_Response subCF : cF) {
+			subCF.setText("🟧🟨" + subCF.getText());
 		}
 
-		for (M_Timetable_ShowTimeRemain_Response subCB : cG) {
-			subCB.setText("🟨" + subCB.getText());
+		for (M_Timetable_ShowTimeRemain_Response subCG : cG) {
+			subCG.setText("🟨" + subCG.getText());
 		}
 
 		cF.addAll(cG);
