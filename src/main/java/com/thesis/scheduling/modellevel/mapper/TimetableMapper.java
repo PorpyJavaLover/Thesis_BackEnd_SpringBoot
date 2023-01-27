@@ -144,6 +144,7 @@ public class TimetableMapper {
 		}
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetB = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
 		for (int i = 1; i <= 14; i++) {
 			M_Timetable_ShowTimeRemain_Response targetSubB = new M_Timetable_ShowTimeRemain_Response();
 			targetSubB.setId(i);
@@ -152,8 +153,18 @@ public class TimetableMapper {
 			targetB.add(targetSubB);
 		}
 
+		Collection<M_Timetable_ShowTimeRemain_Response> targetH = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+		
+		for (Timetable sourceSubE : sourceE) {
+			M_Timetable_ShowTimeRemain_Response targetSubH  = new M_Timetable_ShowTimeRemain_Response();
+			targetSubH .setId(deconvertStartTime(sourceSubE.getStartTime().toString()));
+			targetSubH .setValue(sourceSubE.getStartTime().toString());
+			targetSubH .setText(sourceSubE.getStartTime().toString());
+			targetH.add(targetSubH);
+		}
+
 		Collection<M_Timetable_ShowTimeRemain_Response> targetF = relativeComplementBInABussy(targetB, targetA,
-				targetE);
+				targetE , targetH);
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetD = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
@@ -232,7 +243,7 @@ public class TimetableMapper {
 		}
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetF = relativeComplementBInABussy(targetB, targetA,
-				targetE);
+				targetE , null);
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetD = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
@@ -401,7 +412,7 @@ public class TimetableMapper {
 
 	public Collection<M_Timetable_ShowTimeRemain_Response> relativeComplementBInABussy(
 			Collection<M_Timetable_ShowTimeRemain_Response> cA, Collection<M_Timetable_ShowTimeRemain_Response> cB,
-			Collection<M_Timetable_ShowTimeRemain_Response> cC) {
+			Collection<M_Timetable_ShowTimeRemain_Response> cC , Collection<M_Timetable_ShowTimeRemain_Response> cH) {
 
 		Collection<M_Timetable_ShowTimeRemain_Response> result = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
@@ -428,15 +439,15 @@ public class TimetableMapper {
 		cG.removeAll(cF);
 
 		for (M_Timetable_ShowTimeRemain_Response subCB : cD) {
-			subCB.setText("⚠️" + subCB.getText());
+			subCB.setText("🟧" + subCB.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response subCB : cF) {
-			subCB.setText("⚠️📌" + subCB.getText());
+			subCB.setText("🟧🟨" + subCB.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response subCB : cG) {
-			subCB.setText("📌" + subCB.getText());
+			subCB.setText("🟨" + subCB.getText());
 		}
 
 		cF.addAll(cG);

@@ -105,8 +105,7 @@ public class TimetableLogic {
 
 		// หา sourceA = ราบเรียนของกลุ่มเรียนในวันนี้
 		Iterable<Timetable> sourceE = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
-		 groupService.findByGroupId(gId).get(),
-						dayOfWeek);
+		 groupService.findByGroupId(gId).get(), dayOfWeek);
 
 		return mapper.toMTimeStartOptionStaff(sourceA, sourceC, sourceD , sourceE);
 	}
