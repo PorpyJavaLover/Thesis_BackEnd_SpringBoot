@@ -93,7 +93,23 @@ public class TimetableService {
 		} else {
 			return null;
 		}
+	}
 
+	public Timetable findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years,
+			String semester, Course courseId, Integer courseType, Group groupId ,Integer dayOfWeek ) {
+
+		if (years == null || semester == null || courseId == null || courseType == null || groupId == null) {
+			throw new IllegalArgumentException("No values can be null");
+		}
+
+		Optional<Timetable> opt = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(years,
+				semester, courseId, courseType, groupId , dayOfWeek);
+
+		if (opt.isPresent()) {
+			return opt.get();
+		} else {
+			return null;
+		}
 	}
 
 	public Iterable<Timetable> findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(String years,
@@ -122,15 +138,15 @@ public class TimetableService {
 
 	}
 
-	public Iterable<Timetable> findAllCollectionMemberBGroupIdAndDayOfWeek(String years,
-			String semester,  Group groupId, Integer dayOfWeek) {
+	public Collection<Timetable> findAllCollectionMemberBGroupIdAndDayOfWeek(String years,
+			String semester, Group groupId, Integer dayOfWeek) {
 
-		if (years == null || semester == null  || groupId == null || dayOfWeek == null) {
+		if (years == null || semester == null || groupId == null || dayOfWeek == null) {
 			throw new IllegalArgumentException("No values can be null");
 		}
 
-		
-		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndGroupIdAndDayOfWeek(years,semester, groupId , dayOfWeek);
+		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndGroupIdAndDayOfWeek(years, semester,
+				groupId, dayOfWeek);
 
 		return targetA;
 

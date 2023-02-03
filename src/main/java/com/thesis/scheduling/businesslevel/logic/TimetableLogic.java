@@ -104,10 +104,13 @@ public class TimetableLogic {
 		}
 
 		// หา sourceA = ราบเรียนของกลุ่มเรียนในวันนี้
-		Iterable<Timetable> sourceE = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
-		 groupService.findByGroupId(gId).get(), dayOfWeek);
+		Collection<Timetable> sourceE = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
+				groupService.findByGroupId(gId).get(), dayOfWeek);
+		Timetable sourceF = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId, sId,
+				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
+		sourceE.remove(sourceF);
 
-		return mapper.toMTimeStartOptionStaff(sourceA, sourceC, sourceD , sourceE);
+		return mapper.toMTimeStartOptionStaff(sourceA, sourceC, sourceD, sourceE);
 	}
 
 	public Iterable<M_Timetable_ShowTimeRemain_Response> showEndTimeOptionStaff(String yId, String sId, Long cId,

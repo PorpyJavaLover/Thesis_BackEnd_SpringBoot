@@ -101,7 +101,7 @@ public class TimetableMapper {
 	}
 
 	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartOptionStaff(Iterable<Timetable> sourceA,
-			Collection<NotTeach> sourceC, Timetable sourceD , Iterable<Timetable> sourceE) {
+			Collection<NotTeach> sourceC, Timetable sourceD , Collection<Timetable> sourceE) {
 
 		if (sourceA == null) {
 			return null;
@@ -124,6 +124,13 @@ public class TimetableMapper {
 				targetA.add(targetSubA);
 			}
 		}
+
+		ArrayList<M_Timetable_ShowTimeRemain_Response> list = new ArrayList<>(targetA);
+
+		Collections.sort(list, Comparator.comparing(M_Timetable_ShowTimeRemain_Response::getId));
+
+		Collection<M_Timetable_ShowTimeRemain_Response> resultA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+		resultA.addAll(list);
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetE = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
@@ -156,14 +163,25 @@ public class TimetableMapper {
 		Collection<M_Timetable_ShowTimeRemain_Response> targetH = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 		
 		for (Timetable sourceSubE : sourceE) {
-			M_Timetable_ShowTimeRemain_Response targetSubH  = new M_Timetable_ShowTimeRemain_Response();
-			targetSubH .setId(deconvertStartTime(sourceSubE.getStartTime().toString()));
-			targetSubH .setValue(sourceSubE.getStartTime().toString());
-			targetSubH .setText(sourceSubE.getStartTime().toString());
-			targetH.add(targetSubH);
+			Integer j = 0;
+			if(sourceSubE.getCourseType() == 0){
+				j = sourceSubE.getCourseId().getCourseLect();
+			} else if(sourceSubE.getCourseType() == 1){
+				j = sourceSubE.getCourseId().getCoursePerf();
+			}
+			for(int i = 0 ; i < j+1 ;i++){
+				M_Timetable_ShowTimeRemain_Response targetSubH  = new M_Timetable_ShowTimeRemain_Response();
+				targetSubH .setId(deconvertStartTime(sourceSubE.getStartTime().toString()) + i);
+				targetSubH .setValue(convertStartTime(deconvertStartTime(sourceSubE.getStartTime().toString()) + i));
+				targetSubH .setText(convertStartTime(deconvertStartTime(sourceSubE.getStartTime().toString())+ i));
+				targetH.add(targetSubH);
+				System.out.println("444444 : ------->  "+ targetSubH.getId());
+				System.out.println("555555  : ------->  "+ targetSubH.getValue());
+				System.out.println("666666  : ------->  "+ targetSubH.getText());
+			}
 		}
 
-		Collection<M_Timetable_ShowTimeRemain_Response> targetF = relativeComplementBInABussy(targetB, targetA,
+		Collection<M_Timetable_ShowTimeRemain_Response> targetF = neoRelativeComplementBInABussy(targetB, resultA,
 				targetE , targetH);
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetD = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
@@ -411,34 +429,34 @@ public class TimetableMapper {
 	}
 
 	public Collection<M_Timetable_ShowTimeRemain_Response> relativeComplementBInABussy(
-			Collection<M_Timetable_ShowTimeRemain_Response> cA, Collection<M_Timetable_ShowTimeRemain_Response> cB,
-			Collection<M_Timetable_ShowTimeRemain_Response> cC , Collection<M_Timetable_ShowTimeRemain_Response> cH) {
+			Collection<M_Timetable_ShowTimeRemain_Response> cSum, Collection<M_Timetable_ShowTimeRemain_Response> cA,
+			Collection<M_Timetable_ShowTimeRemain_Response> cB , Collection<M_Timetable_ShowTimeRemain_Response> cC) {
 
 		Collection<M_Timetable_ShowTimeRemain_Response> result = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
-		Collection<M_Timetable_ShowTimeRemain_Response> cD = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cA);
+		Collection<M_Timetable_ShowTimeRemain_Response> cSumTemp = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cSum);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> cE = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cC);
+		Collection<M_Timetable_ShowTimeRemain_Response> cBTemp = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cB);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> cG = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cC);
+		Collection<M_Timetable_ShowTimeRemain_Response> cG = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cB);
 
-		cA.removeAll(cB);
+		cSum.removeAll(cA);
 
-		cD.removeAll(cA);
+		cSumTemp.removeAll(cSum);
 
-		cA.removeAll(cC);
+		cSum.removeAll(cB);
 
-		cE.removeAll(cA);
+		cBTemp.removeAll(cSum);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> cF = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cD);
+		Collection<M_Timetable_ShowTimeRemain_Response> cF = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cSumTemp);
 
-		cD.removeAll(cE);
+		cSumTemp.removeAll(cBTemp);
 
-		cF.removeAll(cD);
+		cF.removeAll(cSumTemp);
 
 		cG.removeAll(cF);
 
-		for (M_Timetable_ShowTimeRemain_Response subCD : cD) {
+		for (M_Timetable_ShowTimeRemain_Response subCD : cSumTemp) {
 			subCD.setText("🟧" + subCD.getText());
 		}
 
@@ -451,13 +469,116 @@ public class TimetableMapper {
 		}
 
 		cF.addAll(cG);
-		cD.addAll(cF);
-		cA.addAll(cD);
+		cSumTemp.addAll(cF);
+		cSum.addAll(cSumTemp);
 
-		ArrayList<M_Timetable_ShowTimeRemain_Response> list = new ArrayList<>(cA);
+		ArrayList<M_Timetable_ShowTimeRemain_Response> list = new ArrayList<>(cSum);
 
 		Collections.sort(list, Comparator.comparing(M_Timetable_ShowTimeRemain_Response::getId));
 
+		result.addAll(list);
+
+		return result;
+	}
+
+	public Collection<M_Timetable_ShowTimeRemain_Response> neoRelativeComplementBInABussy(
+			Collection<M_Timetable_ShowTimeRemain_Response> cSum, Collection<M_Timetable_ShowTimeRemain_Response> cA,
+			Collection<M_Timetable_ShowTimeRemain_Response> cB , Collection<M_Timetable_ShowTimeRemain_Response> cC) {
+
+		cSum.removeAll(cA); //<--------------------------------
+		cSum.removeAll(cB);
+		cSum.removeAll(cC);
+
+		Collection<M_Timetable_ShowTimeRemain_Response> AB = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cA);
+		AB.addAll(cB);
+		AB.retainAll(cA);
+		AB.retainAll(cB);
+
+		Collection<M_Timetable_ShowTimeRemain_Response> BC= new ArrayList<M_Timetable_ShowTimeRemain_Response>(cB);
+		BC.addAll(cC);
+		BC.retainAll(cB);
+		BC.retainAll(cC);
+
+		Collection<M_Timetable_ShowTimeRemain_Response> AC= new ArrayList<M_Timetable_ShowTimeRemain_Response>(cA);
+		AC.addAll(cC); //<---------------- เป็นอะไร
+		AC.retainAll(cA);
+		AC.retainAll(cC);
+
+
+		Collection<M_Timetable_ShowTimeRemain_Response> ABC= new ArrayList<M_Timetable_ShowTimeRemain_Response>(AB);
+		ABC.addAll(cC);
+		ABC.retainAll(cA);
+		ABC.retainAll(cB);
+		ABC.retainAll(cC);
+
+		AB.removeAll(ABC);
+		BC.removeAll(ABC);
+		AC.removeAll(ABC);
+
+		Collection<M_Timetable_ShowTimeRemain_Response> A = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cA);
+		A.removeAll(AB);
+		A.removeAll(AC);
+		A.removeAll(ABC);
+
+		Collection<M_Timetable_ShowTimeRemain_Response> B= new ArrayList<M_Timetable_ShowTimeRemain_Response>(cB);
+		B.removeAll(AB);
+		B.removeAll(BC);
+		B.removeAll(ABC);
+
+		Collection<M_Timetable_ShowTimeRemain_Response> C= new ArrayList<M_Timetable_ShowTimeRemain_Response>(cC);
+		C.removeAll(AC);
+		C.removeAll(BC);
+		C.removeAll(ABC);
+
+
+		for (M_Timetable_ShowTimeRemain_Response ASub : A) {
+			ASub.setText("🟨" + ASub.getText());
+			System.out.println("1"+ASub.getText());
+		}
+
+		for (M_Timetable_ShowTimeRemain_Response BSub : B) {
+			BSub.setText("🟦" + BSub.getText());
+			System.out.println("2"+BSub.getText());
+		}
+
+		for (M_Timetable_ShowTimeRemain_Response CSub : C) {
+			CSub.setText("🟥" + CSub.getText());
+			System.out.println("3"+CSub.getText());
+		}
+
+		for (M_Timetable_ShowTimeRemain_Response ABSub : AB) {
+			ABSub.setText("🟨🟦" + ABSub.getText());
+			System.out.println("4"+ABSub.getText());
+		}
+
+		for (M_Timetable_ShowTimeRemain_Response ACSub : AC) {
+			System.out.println("5"+ACSub.getText());
+			ACSub.setText("🟥🟨" + ACSub.getText());
+		}
+
+		for (M_Timetable_ShowTimeRemain_Response BCSub : BC) {
+			BCSub.setText("🟥🟦" + BCSub.getText());
+			System.out.println("6"+BCSub.getText());
+		}
+
+		for (M_Timetable_ShowTimeRemain_Response ABCSub : ABC) {
+			ABCSub.setText("🟥🟨🟦" + ABCSub.getText());
+			System.out.println("7"+ABCSub.getText());
+		}
+
+		cSum.addAll(A);
+		cSum.addAll(B);
+		cSum.addAll(C);
+		cSum.addAll(AB);
+		cSum.addAll(AC);
+		cSum.addAll(BC);
+		cSum.addAll(ABC);
+
+		ArrayList<M_Timetable_ShowTimeRemain_Response> list = new ArrayList<>(cSum);
+
+		Collections.sort(list, Comparator.comparing(M_Timetable_ShowTimeRemain_Response::getId));
+
+		Collection<M_Timetable_ShowTimeRemain_Response> result = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 		result.addAll(list);
 
 		return result;
