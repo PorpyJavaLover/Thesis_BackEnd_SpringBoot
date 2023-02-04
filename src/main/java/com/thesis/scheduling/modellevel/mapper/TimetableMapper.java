@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.springframework.stereotype.Component;
 
@@ -181,7 +182,7 @@ public class TimetableMapper {
 			}
 		}
 
-		Collection<M_Timetable_ShowTimeRemain_Response> targetF = neoRelativeComplementBInABussy(targetB, resultA,
+		Collection<M_Timetable_ShowTimeRemain_Response> targetF = SetOperate(targetB, resultA,
 				targetE , targetH);
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetD = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
@@ -481,31 +482,31 @@ public class TimetableMapper {
 		return result;
 	}
 
-	public Collection<M_Timetable_ShowTimeRemain_Response> neoRelativeComplementBInABussy(
+	public Collection<M_Timetable_ShowTimeRemain_Response> SetOperate(
 			Collection<M_Timetable_ShowTimeRemain_Response> cSum, Collection<M_Timetable_ShowTimeRemain_Response> cA,
 			Collection<M_Timetable_ShowTimeRemain_Response> cB , Collection<M_Timetable_ShowTimeRemain_Response> cC) {
 
-		cSum.removeAll(cA); //<--------------------------------
+		cSum.removeAll(cA);
 		cSum.removeAll(cB);
 		cSum.removeAll(cC);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> AB = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cA);
+		Collection<M_Timetable_ShowTimeRemain_Response> AB = new TreeSet<M_Timetable_ShowTimeRemain_Response>(cA);
 		AB.addAll(cB);
 		AB.retainAll(cA);
 		AB.retainAll(cB);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> BC= new ArrayList<M_Timetable_ShowTimeRemain_Response>(cB);
+		Collection<M_Timetable_ShowTimeRemain_Response> BC= new TreeSet<M_Timetable_ShowTimeRemain_Response>(cB);
 		BC.addAll(cC);
 		BC.retainAll(cB);
 		BC.retainAll(cC);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> AC= new ArrayList<M_Timetable_ShowTimeRemain_Response>(cA);
-		AC.addAll(cC); //<---------------- เป็นอะไร
+		Collection<M_Timetable_ShowTimeRemain_Response> AC= new TreeSet<M_Timetable_ShowTimeRemain_Response>(cA);
+		AC.addAll(cC); 
 		AC.retainAll(cA);
 		AC.retainAll(cC);
 
 
-		Collection<M_Timetable_ShowTimeRemain_Response> ABC= new ArrayList<M_Timetable_ShowTimeRemain_Response>(AB);
+		Collection<M_Timetable_ShowTimeRemain_Response> ABC= new TreeSet<M_Timetable_ShowTimeRemain_Response>(AB);
 		ABC.addAll(cC);
 		ABC.retainAll(cA);
 		ABC.retainAll(cB);
@@ -515,54 +516,54 @@ public class TimetableMapper {
 		BC.removeAll(ABC);
 		AC.removeAll(ABC);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> A = new ArrayList<M_Timetable_ShowTimeRemain_Response>(cA);
+		Collection<M_Timetable_ShowTimeRemain_Response> A = new TreeSet<M_Timetable_ShowTimeRemain_Response>(cA);
 		A.removeAll(AB);
 		A.removeAll(AC);
 		A.removeAll(ABC);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> B= new ArrayList<M_Timetable_ShowTimeRemain_Response>(cB);
+		Collection<M_Timetable_ShowTimeRemain_Response> B= new TreeSet<M_Timetable_ShowTimeRemain_Response>(cB);
 		B.removeAll(AB);
 		B.removeAll(BC);
 		B.removeAll(ABC);
 
-		Collection<M_Timetable_ShowTimeRemain_Response> C= new ArrayList<M_Timetable_ShowTimeRemain_Response>(cC);
+		Collection<M_Timetable_ShowTimeRemain_Response> C= new TreeSet<M_Timetable_ShowTimeRemain_Response>(cC);
 		C.removeAll(AC);
 		C.removeAll(BC);
 		C.removeAll(ABC);
 
 
 		for (M_Timetable_ShowTimeRemain_Response ASub : A) {
-			ASub.setText("🟨" + ASub.getText());
+			ASub.setText("🟡 " + ASub.getText());
 			System.out.println("1"+ASub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response BSub : B) {
-			BSub.setText("🟦" + BSub.getText());
+			BSub.setText("⚪️ " + BSub.getText());
 			System.out.println("2"+BSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response CSub : C) {
-			CSub.setText("🟥" + CSub.getText());
+			CSub.setText("🔴 " + CSub.getText());
 			System.out.println("3"+CSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ABSub : AB) {
-			ABSub.setText("🟨🟦" + ABSub.getText());
+			ABSub.setText("🟡⚪️ " + ABSub.getText());
 			System.out.println("4"+ABSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ACSub : AC) {
 			System.out.println("5"+ACSub.getText());
-			ACSub.setText("🟥🟨" + ACSub.getText());
+			ACSub.setText("🔴🟡 " + ACSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response BCSub : BC) {
-			BCSub.setText("🟥🟦" + BCSub.getText());
+			BCSub.setText("🔴⚪️ " + BCSub.getText());
 			System.out.println("6"+BCSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ABCSub : ABC) {
-			ABCSub.setText("🟥🟨🟦" + ABCSub.getText());
+			ABCSub.setText("🔴🟡⚪️ " + ABCSub.getText());
 			System.out.println("7"+ABCSub.getText());
 		}
 
