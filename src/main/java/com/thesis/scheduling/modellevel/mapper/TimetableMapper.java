@@ -585,6 +585,53 @@ public class TimetableMapper {
 		return result;
 	}
 
+	public Collection<M_Timetable_ShowTimeRemain_Response> NeoSetOperate(
+			Collection<M_Timetable_ShowTimeRemain_Response> cSum, Collection<M_Timetable_ShowTimeRemain_Response> cA,
+			Collection<M_Timetable_ShowTimeRemain_Response> cB , Collection<M_Timetable_ShowTimeRemain_Response> cC) {
+
+		cSum.removeAll(cA);
+
+		Collection<M_Timetable_ShowTimeRemain_Response> A = new TreeSet<M_Timetable_ShowTimeRemain_Response>(cA);
+
+		for (M_Timetable_ShowTimeRemain_Response ASub : A) {
+			ASub.setText("🟡 " + ASub.getText());
+			System.out.println("1"+ASub.getText());
+		}
+
+		cSum.removeAll(cB);
+		cSum.removeAll(cC);
+
+		
+		Collection<M_Timetable_ShowTimeRemain_Response> B= new TreeSet<M_Timetable_ShowTimeRemain_Response>(cB);
+
+		Collection<M_Timetable_ShowTimeRemain_Response> C= new TreeSet<M_Timetable_ShowTimeRemain_Response>(cA);
+
+		
+
+		for (M_Timetable_ShowTimeRemain_Response BSub : B) {
+			BSub.setText("⚪️ " + BSub.getText());
+			System.out.println("2"+BSub.getText());
+		}
+
+		for (M_Timetable_ShowTimeRemain_Response CSub : C) {
+			CSub.setText("🔴 " + CSub.getText());
+			System.out.println("3"+CSub.getText());
+		}
+
+		cSum.addAll(A);
+		cSum.addAll(B);
+		cSum.addAll(C);
+
+		ArrayList<M_Timetable_ShowTimeRemain_Response> list = new ArrayList<>(cSum);
+
+		Collections.sort(list, Comparator.comparing(M_Timetable_ShowTimeRemain_Response::getId));
+
+		Collection<M_Timetable_ShowTimeRemain_Response> result = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+		result.addAll(list);
+
+		return result;
+	}
+
 	public Collection<M_For_Selection_Response> relaComplementBInA(
 			Collection<M_For_Selection_Response> cA, Collection<M_For_Selection_Response> cB) {
 
