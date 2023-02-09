@@ -79,9 +79,8 @@ public class TimetableLogic {
 				.toMTimetableTeacher(timetableService.findAllByMemberId(memberService.findByMemberId(memberId).get()));
 	}
 
-	public Collection<M_Timetable_ShowTimeRemain_Response> showStartTimeOptionStaff(String yId, String sId, Long cId,
-			Integer cType, Long gId,
-			Integer dayOfWeek) {
+	public Collection<M_Timetable_ShowTimeRemain_Response> showStartTimeOptionStaff(boolean mode , String yId, String sId, Long cId,
+			Integer cType, Long gId, Integer dayOfWeek) {
 
 		// หา sourceA = อาจารย์ที่สอนร่วมกัน
 		Iterable<Timetable> sourceA = timetableService
@@ -106,34 +105,47 @@ public class TimetableLogic {
 		// หา sourceA = ราบเรียนของกลุ่มเรียนในวันนี้
 		Collection<Timetable> sourceE = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
 				groupService.findByGroupId(gId).get(), dayOfWeek);
-		Timetable sourceF = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId, sId,
+		Timetable sourceF = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId,
+				sId,
 				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
 		sourceE.remove(sourceF);
 
-		return mapper.toMTimeStartOptionStaff(sourceA, sourceC, sourceD, sourceE);
+		return mapper.toMTimeStartOptionStaff( mode ,sourceA, sourceC, sourceD, sourceE);
 	}
 
 	public Iterable<M_Timetable_ShowTimeRemain_Response> showEndTimeOptionStaff(String yId, String sId, Long cId,
 			Integer cType, Long gId,
 			Integer dayOfWeek) {
 
+		// หา sourceA = อาจารย์ที่สอนร่วมกัน
 		Iterable<Timetable> sourceA = timetableService
 				.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId, sId,
-						courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(),
-						dayOfWeek);
+						courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
 
+		// หา sourceB = อาจารย์แต่ละคน
 		Iterable<Member> sourceB = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupId(yId,
 				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
 
+		// sourceC = หาวันที่ไม่สะดวกสอน
 		Collection<NotTeach> sourceC = new ArrayList<NotTeach>();
 
+		// หา sourceD = ประเภทวิชา
 		Timetable sourceD = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(yId, sId,
 				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
+
 		for (Member sourceBTmp : sourceB) {
 			sourceC.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
 		}
 
-		return mapper.toMTimeEndOptionStaff(sourceA, sourceC, sourceD);
+		// หา sourceA = ราบเรียนของกลุ่มเรียนในวันนี้
+		Collection<Timetable> sourceE = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
+				groupService.findByGroupId(gId).get(), dayOfWeek);
+
+		Timetable sourceF = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId,
+				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
+		sourceE.remove(sourceF);
+
+		return mapper.toMTimeEndOptionStaff(sourceA, sourceC, sourceD, sourceE);
 
 	}
 
@@ -159,32 +171,18 @@ public class TimetableLogic {
 
 	}
 
-	public Iterable<M_For_Selection_Response> showRoomStaff(String yId, String sId, Long cId, Integer cType, Long gId,
+	public Iterable<M_For_Selection_Response> showRoomStaff(boolean mode, String yId, String sId, Long cId, Integer cType, Long gId,
 			Integer dayOfWeek, Time startTime, Time endTime) {
 
 		Iterable<Room> roomA = roomService.findAll();
 
-		return mapper.toMRoomStaff(
-				timetableService.findAllCollectionRoomByDayOfWeek(yId, sId, courseService.findByCourseId(cId).get(),
-						cType,
-						groupService.findByGroupId(gId).get(), dayOfWeek, startTime, endTime),
-				roomA);
-	}
-
-	public Iterable<M_For_Selection_Response> showRoomStaffAuto(String yId, String sId, Long cId, Integer cType,
-			Long gId,
-			Integer dayOfWeek, Time startTime, Time endTime) {
-
-		Iterable<Room> roomA = roomService.findAll();
-
-		return mapper.toMRoomStaffAuto(
-				timetableService.findAllCollectionRoomByDayOfWeek(yId, sId, courseService.findByCourseId(cId).get(),
-						cType,
-						groupService.findByGroupId(gId).get(), dayOfWeek, startTime, endTime),
-				roomA);
+		return mapper.toMRoomStaff(mode, timetableService.findAllCollectionRoomByDayOfWeek(yId, sId, courseService.findByCourseId(cId).get(),
+		cType, groupService.findByGroupId(gId).get(), dayOfWeek, startTime, endTime),roomA);
 	}
 
 	public void autoPilot() throws ParseException {
+		
+		//<---------------------------------------
 
 		Collection<Timetable> sourceA = timetableService.findAll();
 
@@ -229,7 +227,7 @@ public class TimetableLogic {
 						timeRun = listTmp.getCourseId().getCoursePerf() + 1;
 					}
 
-					targetA = showStartTimeOptionStaff(listTmp.getYears(),
+					targetA = showStartTimeOptionStaff(false , listTmp.getYears(),
 							listTmp.getSemester(), listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
 							listTmp.getGroupId().getGroupId(), dayA);
 
@@ -239,10 +237,7 @@ public class TimetableLogic {
 
 					for (M_Timetable_ShowTimeRemain_Response targetATmp : targetA) {
 						System.out.println(targetATmp.getText().substring(0, 1));
-						if ((targetATmp.getText().substring(0, 1).equals("0")
-								|| targetATmp.getText().substring(0, 1).equals("1")
-								|| targetATmp.getText().substring(0, 1).equals("2"))
-								&& targetATmp.getId() != 5) {
+						if (!targetATmp.getText().substring(0, 1).equals("!")) {
 							timevalueStart = new Time(formatter.parse(targetATmp.getValue()).getTime());
 							break;
 						}
@@ -273,7 +268,7 @@ public class TimetableLogic {
 
 				Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
 
-				targetA = showRoomStaffAuto(listTmp.getYears(), listTmp.getSemester(),
+				targetA = showRoomStaff(false, listTmp.getYears(), listTmp.getSemester(),
 						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
 						listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(),
 						listTmp.getEndTime());
@@ -284,7 +279,6 @@ public class TimetableLogic {
 					System.out.println(targetATmp.getText());
 					if (!targetATmp.getText().substring(0, 1).equals("!")) {
 						timevalueStart = Integer.parseInt(targetATmp.getValue());
-						System.out.println("<---------------------" + targetATmp.getText());
 						break;
 					}
 				}
@@ -342,8 +336,7 @@ public class TimetableLogic {
 		Integer dayOfWeek = day;
 		Time startTime = start;
 		Time endTime = end;
-		Room roomId = roomService.findAllByRoomId(room).isPresent() == false ? null
-				: roomService.findAllByRoomId(room).get();
+		Room roomId = roomService.findAllByRoomId(room).isPresent() == false ? null : roomService.findAllByRoomId(room).get();
 
 		timetableService.updateStaff(year, semeter, courseId, cType, groupId, dayOfWeek, startTime, endTime, roomId);
 

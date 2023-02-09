@@ -61,7 +61,7 @@ public class TimetableAPIController {
 			@PathVariable("gId") Long gId,
 			@PathVariable("dayOfWeek") Integer dayOfWeek, @PathVariable("endTime") String endTime)
 			throws BaseException {
-		Iterable<M_Timetable_ShowTimeRemain_Response> response = timetableLogic.showStartTimeOptionStaff(yId, sId, cId,
+		Iterable<M_Timetable_ShowTimeRemain_Response> response = timetableLogic.showStartTimeOptionStaff(true, yId, sId, cId,
 				cType, gId,
 				dayOfWeek);
 		return ResponseEntity.ok(response);
@@ -109,7 +109,7 @@ public class TimetableAPIController {
 			@PathVariable("gId") Long gId,
 			@PathVariable("dayOfWeek") Integer dayOfWeek, @PathVariable("startTime") Time startTime,
 			@PathVariable("endTime") Time endTime) throws BaseException {
-		Iterable<M_For_Selection_Response> response = timetableLogic.showRoomStaff(yId, sId, cId, cType, gId,
+		Iterable<M_For_Selection_Response> response = timetableLogic.showRoomStaff(true, yId, sId, cId, cType, gId,
 				dayOfWeek, startTime, endTime);
 		return ResponseEntity.ok(response);
 	}

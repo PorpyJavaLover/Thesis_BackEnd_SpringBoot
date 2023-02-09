@@ -64,8 +64,7 @@ public class TimetableService {
 		}
 
 		Collection<Timetable> targetA = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
-				semester,
-				courseId, courseType, groupId);
+				semester, courseId, courseType, groupId);
 
 		Collection<Member> targetB = new ArrayList<Member>();
 
@@ -105,6 +104,7 @@ public class TimetableService {
 		Optional<Timetable> opt = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(years,
 				semester, courseId, courseType, groupId , dayOfWeek);
 
+				
 		if (opt.isPresent()) {
 			return opt.get();
 		} else {
