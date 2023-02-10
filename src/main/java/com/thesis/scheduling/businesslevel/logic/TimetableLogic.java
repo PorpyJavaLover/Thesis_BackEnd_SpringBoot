@@ -102,7 +102,7 @@ public class TimetableLogic {
 			sourceC.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
 		}
 
-		// หา sourceA = ราบเรียนของกลุ่มเรียนในวันนี้
+		// หา sourceE = ราบเรียนของกลุ่มเรียนในวันนี้
 		Collection<Timetable> sourceE = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
 				groupService.findByGroupId(gId).get(), dayOfWeek);
 		Timetable sourceF = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId,

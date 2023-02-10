@@ -101,41 +101,44 @@ public class TimetableMapper {
 		return target;
 	}
 
-	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartOptionStaff(boolean mode, Iterable<Timetable> sourceA,
-			Collection<NotTeach> sourceC, Timetable sourceD, Collection<Timetable> sourceE) {
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartOptionStaff(boolean mode,
+			Iterable<Timetable> sourceA, Collection<NotTeach> sourceB, Timetable sourceC, Collection<Timetable> sourceD) {
 
 		if (sourceA == null) {
 			return null;
 		}
 
+		Collection<M_Timetable_ShowTimeRemain_Response> rawBase = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+		for (int i = 1; i <= 14; i++) {
+			M_Timetable_ShowTimeRemain_Response targetSubBase = new M_Timetable_ShowTimeRemain_Response();
+			targetSubBase.setId(i);
+			targetSubBase.setValue(convertStartTime(i));
+			targetSubBase.setText(convertStartTime(i));
+			rawBase.add(targetSubBase);
+		}
+
 		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
-		for (Timetable sourceTmp : sourceA) {
+		for (Timetable sourceATmp : sourceA) {
 
-			int interim = deconvertStartTime(sourceTmp.getEndTime().toString())
-					- deconvertStartTime(sourceTmp.getStartTime().toString());
+			int interim = deconvertStartTime(sourceATmp.getEndTime().toString())
+					- deconvertStartTime(sourceATmp.getStartTime().toString());
 
 			for (int i = 0; i < interim; i++) {
 				M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
-				targetSubA.setId(deconvertStartTime(sourceTmp.getStartTime().toString()) + (interim - 1 - i));
+				targetSubA.setId(deconvertStartTime(sourceATmp.getStartTime().toString()) + (interim - 1 - i));
 				targetSubA.setValue(
-						convertStartTime(deconvertStartTime(sourceTmp.getStartTime().toString()) + (interim - 1 - i)));
+						convertStartTime(deconvertStartTime(sourceATmp.getStartTime().toString()) + (interim - 1 - i)));
 				targetSubA.setText(
-						convertStartTime(deconvertStartTime(sourceTmp.getStartTime().toString()) + (interim - 1 - i)));
+						convertStartTime(deconvertStartTime(sourceATmp.getStartTime().toString()) + (interim - 1 - i)));
 				targetA.add(targetSubA);
 			}
 		}
 
-		ArrayList<M_Timetable_ShowTimeRemain_Response> list = new ArrayList<>(targetA);
+		Collection<M_Timetable_ShowTimeRemain_Response> targetInconvenient = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
-		Collections.sort(list, Comparator.comparing(M_Timetable_ShowTimeRemain_Response::getId));
-
-		Collection<M_Timetable_ShowTimeRemain_Response> resultA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-		resultA.addAll(list);
-
-		Collection<M_Timetable_ShowTimeRemain_Response> targetE = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-
-		for (NotTeach sourceTmp : sourceC) {
+		for (NotTeach sourceTmp : sourceB) {
 
 			int interim = deconvertStartTime(sourceTmp.getTimeEnd().toString())
 					- deconvertStartTime(sourceTmp.getTimeStart().toString());
@@ -147,23 +150,13 @@ public class TimetableMapper {
 						convertStartTime(deconvertStartTime(sourceTmp.getTimeStart().toString()) + (interim - 1 - i)));
 				targetSubE.setText(
 						convertStartTime(deconvertStartTime(sourceTmp.getTimeStart().toString()) + (interim - 1 - i)));
-				targetE.add(targetSubE);
+				targetInconvenient.add(targetSubE);
 			}
-		}
-
-		Collection<M_Timetable_ShowTimeRemain_Response> targetB = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-
-		for (int i = 1; i <= 14; i++) {
-			M_Timetable_ShowTimeRemain_Response targetSubB = new M_Timetable_ShowTimeRemain_Response();
-			targetSubB.setId(i);
-			targetSubB.setValue(convertStartTime(i));
-			targetSubB.setText(convertStartTime(i));
-			targetB.add(targetSubB);
 		}
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetH = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
-		for (Timetable sourceSubE : sourceE) {
+		for (Timetable sourceSubE : sourceD) {
 			Integer j = 0;
 			if (sourceSubE.getCourseType() == 0) {
 				j = sourceSubE.getCourseId().getCourseLect();
@@ -179,24 +172,20 @@ public class TimetableMapper {
 			}
 		}
 
-		Collection<M_Timetable_ShowTimeRemain_Response> targetF;
+		Collection<M_Timetable_ShowTimeRemain_Response> targetD;
 
-		if(mode){
-			targetF = DayAndTimeComplement(targetB, resultA, targetE, targetH);
-		}else{
-			targetF = DayAndTimeComplementForAuto(targetB, resultA, targetE, targetH);
+		if (mode) {
+			targetD = DayAndTimeComplement(rawBase, targetA, targetInconvenient, targetH);
+		} else {
+			targetD = DayAndTimeComplementForAuto(rawBase, targetA, targetInconvenient, targetH);
 		}
-
-		Collection<M_Timetable_ShowTimeRemain_Response> targetD = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-
-		targetD = targetF;
 
 		int x;
 
-		if (sourceD.getCourseType() == 0) {
-			x = sourceD.getCourseId().getCourseLect();
+		if (sourceC.getCourseType() == 0) {
+			x = sourceC.getCourseId().getCourseLect();
 		} else {
-			x = sourceD.getCourseId().getCoursePerf();
+			x = sourceC.getCourseId().getCoursePerf();
 		}
 
 		List<M_Timetable_ShowTimeRemain_Response> subList = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) targetD)
@@ -212,7 +201,7 @@ public class TimetableMapper {
 	}
 
 	public Iterable<M_Timetable_ShowTimeRemain_Response> toMTimeEndOptionStaff(Iterable<Timetable> source,
-			Collection<NotTeach> sourceC, Timetable sourceD , Collection<Timetable> sourceE) {
+			Collection<NotTeach> sourceC, Timetable sourceD, Collection<Timetable> sourceE) {
 
 		if (source == null) {
 			return null;
@@ -361,7 +350,8 @@ public class TimetableMapper {
 		return targetA;
 	}
 
-	public Collection<M_For_Selection_Response> toMRoomStaff(boolean mode , Iterable<Timetable> sourceD, Iterable<Room> sourceA) {
+	public Collection<M_For_Selection_Response> toMRoomStaff(boolean mode, Iterable<Timetable> sourceD,
+			Iterable<Room> sourceA) {
 
 		if (sourceD == null) {
 			return null;
@@ -389,10 +379,11 @@ public class TimetableMapper {
 
 		Collection<M_For_Selection_Response> targetE;
 
-		if(mode){
+		if (mode) {
 			targetE = RoomComplement(targetA, targetD);
-		}else{
-			targetE = RoomComplementForAuto(targetA, targetD);;
+		} else {
+			targetE = RoomComplementForAuto(targetA, targetD);
+			;
 		}
 
 		return targetE;
