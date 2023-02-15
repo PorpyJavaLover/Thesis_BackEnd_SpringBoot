@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 
 import org.springframework.stereotype.Service;
 
@@ -79,79 +81,128 @@ public class TimetableLogic {
 				.toMTimetableTeacher(timetableService.findAllByMemberId(memberService.findByMemberId(memberId).get()));
 	}
 
-	public Collection<M_Timetable_ShowTimeRemain_Response> showStartTimeOptionStaff(boolean mode, String yId,
+	public Collection<M_Timetable_ShowTimeRemain_Response> showStartTimeOptionStaff(boolean modeForAutoPilot,
+			String yId,
 			String sId, Long cId,
 			Integer cType, Long gId, Integer dayOfWeek) {
 
-		Iterable<Timetable> sourceA; //อาจารย์ที่สอนร่วมกัน
-		Iterable<Member> sourceB; //อาจารย์แต่ละคน
-		Collection<NotTeach> sourceC; //หาวันที่ไม่สะดวกสอน
-		Timetable sourceD; //ประเภทวิชา
-		Collection<Timetable> sourceE; //ราบเรียนของกลุ่มเรียนในวันนี้
-		Timetable sourceF; //รายการตัวเอง
+		Iterable<Timetable> sourceCoTeach; // อาจารย์ที่สอนร่วมกัน
+		Iterable<Member> sourceEachTeacher; // อาจารย์แต่ละคน
+		Collection<NotTeach> sourceInconvenientTeach; // หาวันที่ไม่สะดวกสอน
+		Integer sourceCourseType; // ประเภทวิชา
+		Collection<Timetable> sourceEachClassToDay; // คาบเรียนของกลุ่มเรียนในวันนี้
+		Collection<Timetable> sourceSelfTimetable; // รายการตัวเอง
 
-		sourceA = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId, sId,
-						courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
+		Collection<M_Timetable_ShowTimeRemain_Response> MBase;
+		Collection<M_Timetable_ShowTimeRemain_Response> MCoTeach;
+		Collection<M_Timetable_ShowTimeRemain_Response> MInconvenientTeach;
+		Collection<M_Timetable_ShowTimeRemain_Response> MEachClassToDay;
+		Collection<M_Timetable_ShowTimeRemain_Response> MUnion;
+		List<M_Timetable_ShowTimeRemain_Response> MUnionSort;
+		Collection<M_Timetable_ShowTimeRemain_Response> MUnionSorted;
 
-						
-
-		sourceB = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupId(yId,
+		sourceCoTeach = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId,
+				sId,
+				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
+		sourceEachTeacher = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupId(yId,
 				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
-
-		sourceC = new ArrayList<NotTeach>();
-
-		sourceD = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(yId, sId,
-				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
-
-		for (Member sourceBTmp : sourceB) {
-			sourceC.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
+		sourceInconvenientTeach = new ArrayList<NotTeach>();
+		for (Member sourceBTmp : sourceEachTeacher) {
+			sourceInconvenientTeach.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
 		}
-
-		sourceE = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
+		sourceCourseType = timetableService.getCourseType(yId, sId, courseService.findByCourseId(cId).get(), cType,
+				groupService.findByGroupId(gId).get());
+		sourceEachClassToDay = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
 				groupService.findByGroupId(gId).get(), dayOfWeek);
-
-		sourceF = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId,
+		sourceSelfTimetable = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId,
 				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
 
-		sourceE.remove(sourceF);
+		if (sourceSelfTimetable != null) {
+			sourceEachClassToDay.removeAll(sourceSelfTimetable);
+		}
 
-		return mapper.toMTimeStartOptionStaff(mode, sourceA, sourceC, sourceD, sourceE);
+		MBase = mapper.getMTimeStartBase();
+		MCoTeach = mapper.toMTimeStartCoTeach(sourceCoTeach);
+		MInconvenientTeach = mapper.toMTimeStartInconvenient(sourceInconvenientTeach);
+		MEachClassToDay = mapper.toMTimeStartEachClassToDay(sourceEachClassToDay);
+
+		if (modeForAutoPilot) {
+			MUnion = mapper.UnionDayAndTimeForAuto(MBase, MCoTeach, MInconvenientTeach, MEachClassToDay);
+		} else {
+			MUnion = mapper.UnionDayAndTime(MBase, MCoTeach, MInconvenientTeach, MEachClassToDay);
+		}
+
+		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(0,
+				MUnion.size() - (sourceCourseType));
+		MUnionSorted = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+		MUnionSorted.addAll(MUnion);
+		MUnion.removeAll(MUnionSort);
+		MUnionSorted.removeAll(MUnion);
+
+		return MUnionSorted;
+
+		// return mapper.toMTimeStartOptionStaff(mode,
+		// sourceCoTeach,sourceInconvenientTeach,
+		// sourceCourseType,sourceEachClassToDay);
 	}
 
 	public Iterable<M_Timetable_ShowTimeRemain_Response> showEndTimeOptionStaff(String yId, String sId, Long cId,
-			Integer cType, Long gId,
-			Integer dayOfWeek) {
+			Integer cType, Long gId, Integer dayOfWeek) {
 
-		// หา sourceA = อาจารย์ที่สอนร่วมกัน
-		Iterable<Timetable> sourceA = timetableService
-				.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId, sId,
-						courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(),
-						dayOfWeek);
+		Iterable<Timetable> sourceCoTeach; // อาจารย์ที่สอนร่วมกัน
+		Iterable<Member> sourceEachTeacher; // อาจารย์แต่ละคน
+		Collection<NotTeach> sourceInconvenientTeach; // หาวันที่ไม่สะดวกสอน
+		Integer sourceCourseType; // ประเภทวิชา
+		Collection<Timetable> sourceEachClassToDay; // คาบเรียนของกลุ่มเรียนในวันนี้
+		Collection<Timetable> sourceSelfTimetable; // รายการตัวเอง
 
-		// หา sourceB = อาจารย์แต่ละคน
-		Iterable<Member> sourceB = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupId(yId,
+		Collection<M_Timetable_ShowTimeRemain_Response> MBase;
+		Collection<M_Timetable_ShowTimeRemain_Response> MCoTeach;
+		Collection<M_Timetable_ShowTimeRemain_Response> MInconvenientTeach;
+		Collection<M_Timetable_ShowTimeRemain_Response> MEachClassToDay;
+		Collection<M_Timetable_ShowTimeRemain_Response> MUnion;
+		List<M_Timetable_ShowTimeRemain_Response> MUnionSort;
+		Collection<M_Timetable_ShowTimeRemain_Response> MUnionSorted;
+
+		sourceCoTeach = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId,
+				sId,
+				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
+		sourceEachTeacher = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupId(yId,
 				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
+		sourceInconvenientTeach = new ArrayList<NotTeach>();
+		for (Member sourceBTmp : sourceEachTeacher) {
+			sourceInconvenientTeach.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
+		}
+		sourceCourseType = timetableService.getCourseType(yId, sId, courseService.findByCourseId(cId).get(), cType,
+				groupService.findByGroupId(gId).get());
+		sourceEachClassToDay = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
+				groupService.findByGroupId(gId).get(), dayOfWeek);
+		sourceSelfTimetable = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId,
+				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
 
-		// sourceC = หาวันที่ไม่สะดวกสอน
-		Collection<NotTeach> sourceC = new ArrayList<NotTeach>();
-
-		// หา sourceD = ประเภทวิชา
-		Timetable sourceD = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(yId, sId,
-				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
-
-		for (Member sourceBTmp : sourceB) {
-			sourceC.addAll(notTeachService.findAllByMemberIdAndDayOfWeek(sourceBTmp, dayOfWeek));
+		if (sourceSelfTimetable != null) {
+			sourceEachClassToDay.removeAll(sourceSelfTimetable);
 		}
 
-		// หา sourceA = ราบเรียนของกลุ่มเรียนในวันนี้
-		Collection<Timetable> sourceE = timetableService.findAllCollectionMemberBGroupIdAndDayOfWeek(yId, sId,
-				groupService.findByGroupId(gId).get(), dayOfWeek);
+		MBase = mapper.getMTimeEndBase();
+		MCoTeach = mapper.toMTimeEndCoTeach(sourceCoTeach);
+		MInconvenientTeach = mapper.toMTimeEndInconvenient(sourceInconvenientTeach);
+		MEachClassToDay = mapper.toMTimeEndEachClassToDay(sourceEachClassToDay);
 
-		Timetable sourceF = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(yId,
-				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
-		sourceE.remove(sourceF);
+		MUnion = mapper.UnionDayAndTime(MBase, MCoTeach, MInconvenientTeach, MEachClassToDay);
 
-		return mapper.toMTimeEndOptionStaff(sourceA, sourceC, sourceD, sourceE);
+		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType, MUnion.size());
+		MUnionSorted = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+		MUnionSorted.addAll(MUnion);
+		MUnion.removeAll(MUnionSort);
+		MUnionSorted.removeAll(MUnion);
+
+		return MUnionSorted;
+
+		// return mapper.toMTimeEndOptionStaff(sourceCoTeach,sourceInconvenientTeach,
+		// sourceCourseType ,sourceEachClassToDay);
 
 	}
 
@@ -177,32 +228,28 @@ public class TimetableLogic {
 
 	}
 
-	public Iterable<M_For_Selection_Response> showRoomStaff(boolean mode, String yId, String sId, Long cId,
+	public Iterable<M_For_Selection_Response> showRoomStaff(boolean modeForAutoPilot, String yId, String sId, Long cId,
 			Integer cType, Long gId,
 			Integer dayOfWeek, Time startTime, Time endTime) {
 
 		Iterable<Room> roomA = roomService.findAll();
 
-		return mapper.toMRoomStaff(mode, timetableService.findAllCollectionRoomByDayOfWeek(yId, sId, courseService.findByCourseId(cId).get(),
-						cType, groupService.findByGroupId(gId).get(), dayOfWeek, startTime, endTime), roomA);
+		return mapper.toMRoomStaff(modeForAutoPilot,
+				timetableService.findAllCollectionRoomByDayOfWeek(yId, sId, courseService.findByCourseId(cId).get(),
+						cType, groupService.findByGroupId(gId).get(), dayOfWeek, startTime, endTime),
+				roomA);
 
 	}
 
 	public void autoPilot() throws ParseException {
 
-		// <---------------------------------------
-
 		Collection<Timetable> sourceA = timetableService.findAll();
-
 		ArrayList<Timetable> list = new ArrayList<>(sourceA);
+		Integer dayA = 1;
+		Long listTmpTmp = null;
 
 		Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId()));
-
 		Collections.reverse(list);
-
-		Integer dayA = 1;
-
-		Long listTmpTmp = null;
 
 		for (Timetable listTmp : list) {
 			if (!listTmp.isTimeLocker()) {
@@ -226,37 +273,47 @@ public class TimetableLogic {
 
 				if (listTmp.getDayOfWeek() == null && !listTmp.isTimeLocker()) {
 
-					Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-
+					ArrayList<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 					Integer timeRun;
-					if (listTmp.getCourseType() == 0) {
-						timeRun = listTmp.getCourseId().getCourseLect() + 1;
-					} else {
-						timeRun = listTmp.getCourseId().getCoursePerf() + 1;
-					}
-
-					targetA = showStartTimeOptionStaff(false, listTmp.getYears(),
-							listTmp.getSemester(), listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-							listTmp.getGroupId().getGroupId(), dayA);
-
+					Integer j = 0;
 					DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-					Time timevalueStart = null;
+					Time timeValueStart = null;
 					Time timeValueEnd = new Time(0, 0, 0);
 
-					for (M_Timetable_ShowTimeRemain_Response targetATmp : targetA) {
-						System.out.println(targetATmp.getText().substring(0, 1));
-						if (!targetATmp.getText().substring(0, 1).equals("!")) {
-							timevalueStart = new Time(formatter.parse(targetATmp.getValue()).getTime());
-							break;
-						}
+					if (listTmp.getCourseType() == 0) {
+						timeRun = listTmp.getCourseId().getCourseLect();
+					} else {
+						timeRun = listTmp.getCourseId().getCoursePerf();
 					}
 
-					timeValueEnd.setHours(timevalueStart.getHours() + timeRun);
+					targetA = new ArrayList<>(showStartTimeOptionStaff(true, listTmp.getYears(),
+							listTmp.getSemester(), listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+							listTmp.getGroupId().getGroupId(), dayA));
+
+					for (M_Timetable_ShowTimeRemain_Response targetATmp : targetA) {
+
+						if (!targetATmp.getText().substring(0, 1).equals("!")) {
+							boolean notBussy = true;
+							for (int i = 1; i < timeRun - 1; i++) {
+								if (targetA.get(j + i).getText().substring(0, 1).equals("!")) {
+									notBussy = false;
+									break;
+								}
+							}
+							if (notBussy) {
+								timeValueStart = new Time(formatter.parse(targetATmp.getValue()).getTime());
+								break;
+							}
+						}
+						j++;
+					}
+
+					timeValueEnd.setHours(timeValueStart.getHours() + timeRun + 1);
 
 					if (timeValueEnd.getHours() <= 18) {
 						updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
 								listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-								listTmp.getGroupId().getGroupId(), dayA, timevalueStart, timeValueEnd, null);
+								listTmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd, null);
 						break;
 					} else {
 						dayA++;
@@ -269,19 +326,17 @@ public class TimetableLogic {
 			}
 
 		}
-		System.out.println("auto done");
 
 		for (Timetable listTmp : list) {
 			if (!listTmp.isRoomLocker()) {
 
 				Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
+				Integer timevalueStart = null;
 
-				targetA = showRoomStaff(false, listTmp.getYears(), listTmp.getSemester(),
+				targetA = showRoomStaff(true, listTmp.getYears(), listTmp.getSemester(),
 						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
 						listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(),
 						listTmp.getEndTime());
-
-				Integer timevalueStart = null;
 
 				for (M_For_Selection_Response targetATmp : targetA) {
 					System.out.println(targetATmp.getText());
@@ -378,5 +433,7 @@ public class TimetableLogic {
 		timetableService.deleteForPlan(yId, sId, courseService.findByCourseId(cId).get(), courseType,
 				groupService.findByGroupId(gId).get(), memberService.findByMemberId(memberId).get());
 	}
+
+	// Utill
 
 }

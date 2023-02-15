@@ -101,11 +101,87 @@ public class TimetableMapper {
 		return target;
 	}
 
+	public Collection<M_Timetable_ShowTimeRemain_Response> getMTimeStartBase() {
 
-	
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+		for (int i = 1; i <= 14; i++) {
+			M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
+			targetSubA.setId(i);
+			targetSubA.setValue(convertStartTime(i));
+			targetSubA.setText(convertStartTime(i));
+			targetA.add(targetSubA);
+		}
+		return targetA;
+	}
+
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartCoTeach(Iterable<Timetable> sourceA) {
+
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+		for (Timetable sourceATmp : sourceA) {
+
+			int interim = deconvertStartTime(sourceATmp.getEndTime().toString())
+					- deconvertStartTime(sourceATmp.getStartTime().toString());
+
+			for (int i = 0; i < interim; i++) {
+				M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
+				targetSubA.setId(deconvertStartTime(sourceATmp.getStartTime().toString()) + (interim - 1 - i));
+				targetSubA.setValue(
+						convertStartTime(deconvertStartTime(sourceATmp.getStartTime().toString()) + (interim - 1 - i)));
+				targetSubA.setText(
+						convertStartTime(deconvertStartTime(sourceATmp.getStartTime().toString()) + (interim - 1 - i)));
+				targetA.add(targetSubA);
+			}
+		}
+		return targetA;
+	}
+
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartInconvenient(Collection<NotTeach> sourceA) {
+
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+		for (NotTeach sourceATmp : sourceA) {
+
+			int interim = deconvertStartTime(sourceATmp.getTimeEnd().toString())
+					- deconvertStartTime(sourceATmp.getTimeStart().toString());
+
+			for (int i = 0; i < interim; i++) {
+				M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
+				targetSubA.setId(deconvertStartTime(sourceATmp.getTimeStart().toString()) + (interim - 1 - i));
+				targetSubA.setValue(
+						convertStartTime(deconvertStartTime(sourceATmp.getTimeStart().toString()) + (interim - 1 - i)));
+				targetSubA.setText(
+						convertStartTime(deconvertStartTime(sourceATmp.getTimeStart().toString()) + (interim - 1 - i)));
+				targetA.add(targetSubA);
+			}
+		}
+		return targetA;
+	}
+
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartEachClassToDay(Collection<Timetable> sourceA) {
+
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+		for (Timetable sourceSubA : sourceA) {
+			Integer j = 0;
+			if (sourceSubA.getCourseType() == 0) {
+				j = sourceSubA.getCourseId().getCourseLect();
+			} else if (sourceSubA.getCourseType() == 1) {
+				j = sourceSubA.getCourseId().getCoursePerf();
+			}
+			for (int i = 0; i < j + 1; i++) {
+				M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
+				targetSubA.setId(deconvertStartTime(sourceSubA.getStartTime().toString()) + i);
+				targetSubA.setValue(convertStartTime(deconvertStartTime(sourceSubA.getStartTime().toString()) + i));
+				targetSubA.setText(convertStartTime(deconvertStartTime(sourceSubA.getStartTime().toString()) + i));
+				targetA.add(targetSubA);
+			}
+		}
+		return targetA;
+	}
+
+
 
 	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeStartOptionStaff(boolean mode,
-			Iterable<Timetable> sourceA, Collection<NotTeach> sourceB, Timetable sourceC, Collection<Timetable> sourceD) {
+			Iterable<Timetable> sourceA, Collection<NotTeach> sourceB, Integer sourceC,
+			Collection<Timetable> sourceD) {
 
 		if (sourceA == null) {
 			return null;
@@ -178,21 +254,13 @@ public class TimetableMapper {
 		Collection<M_Timetable_ShowTimeRemain_Response> targetD;
 
 		if (mode) {
-			targetD = DayAndTimeComplement(rawBase, targetA, targetInconvenient, targetH);
+			targetD = UnionDayAndTime(rawBase, targetA, targetInconvenient, targetH);
 		} else {
-			targetD = DayAndTimeComplementForAuto(rawBase, targetA, targetInconvenient, targetH);
-		}
-
-		int x;
-
-		if (sourceC.getCourseType() == 0) {
-			x = sourceC.getCourseId().getCourseLect();
-		} else {
-			x = sourceC.getCourseId().getCoursePerf();
+			targetD = UnionDayAndTimeForAuto(rawBase, targetA, targetInconvenient, targetH);
 		}
 
 		List<M_Timetable_ShowTimeRemain_Response> subList = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) targetD)
-				.subList(0, targetD.size() - (x));
+				.subList(0, targetD.size() - (sourceC));
 		Collection<M_Timetable_ShowTimeRemain_Response> targetG = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
 		targetG.addAll(targetD);
@@ -203,8 +271,88 @@ public class TimetableMapper {
 
 	}
 
+	public Collection<M_Timetable_ShowTimeRemain_Response> getMTimeEndBase() {
+
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+		for (int i = 1; i <= 14; i++) {
+			M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
+			targetSubA.setId(i);
+			targetSubA.setValue(convertEndTime(i));
+			targetSubA.setText(convertEndTime(i));
+			targetA.add(targetSubA);
+		}
+		return targetA;
+	}
+
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeEndCoTeach(Iterable<Timetable> sourceA) {
+
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+		for (Timetable sourceATmp : sourceA) {
+
+			int interim = deconvertEndTime(sourceATmp.getEndTime().toString())
+					- deconvertEndTime(sourceATmp.getStartTime().toString());
+
+			for (int i = 0; i < interim; i++) {
+				M_Timetable_ShowTimeRemain_Response targetASub = new M_Timetable_ShowTimeRemain_Response();
+				targetASub.setId(deconvertEndTime(sourceATmp.getStartTime().toString()) + (interim - i));
+				targetASub.setValue(
+						convertEndTime(deconvertEndTime(sourceATmp.getStartTime().toString()) + (interim - i)));
+				targetASub
+						.setText(convertEndTime(deconvertEndTime(sourceATmp.getStartTime().toString()) + (interim - i)));
+				targetA.add(targetASub);
+			}
+		}
+
+		return targetA;
+	}
+
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeEndInconvenient(Collection<NotTeach> sourceA) {
+
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+		for (NotTeach sourceATmp : sourceA) {
+
+			int interim = deconvertEndTime(sourceATmp.getTimeEnd().toString())
+					- deconvertEndTime(sourceATmp.getTimeStart().toString());
+
+			for (int i = 0; i < interim; i++) {
+				M_Timetable_ShowTimeRemain_Response targetASub = new M_Timetable_ShowTimeRemain_Response();
+				targetASub.setId(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i));
+				targetASub.setValue(
+						convertEndTime(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i)));
+				targetASub
+						.setText(convertEndTime(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i)));
+				targetA.add(targetASub);
+			}
+		}
+		return targetA;
+	}
+
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeEndEachClassToDay(Collection<Timetable> sourceA) {
+
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+		for (Timetable sourceATmp : sourceA) {
+			Integer j = 0;
+			if (sourceATmp.getCourseType() == 0) {
+				j = sourceATmp.getCourseId().getCourseLect();
+			} else if (sourceATmp.getCourseType() == 1) {
+				j = sourceATmp.getCourseId().getCoursePerf();
+			}
+			for (int i = 0; i < j + 1; i++) {
+				M_Timetable_ShowTimeRemain_Response targetASub = new M_Timetable_ShowTimeRemain_Response();
+				targetASub.setId(deconvertEndTime(sourceATmp.getEndTime().toString()) - i);
+				targetASub.setValue(convertEndTime(deconvertEndTime(sourceATmp.getEndTime().toString()) - i));
+				targetASub.setText(convertEndTime(deconvertEndTime(sourceATmp.getEndTime().toString()) - i));
+				targetA.add(targetASub);
+			}
+		}
+		return targetA;
+	}
+
 	public Iterable<M_Timetable_ShowTimeRemain_Response> toMTimeEndOptionStaff(Iterable<Timetable> source,
-			Collection<NotTeach> sourceC, Timetable sourceD, Collection<Timetable> sourceE) {
+			Collection<NotTeach> sourceC, Integer sourceD, Collection<Timetable> sourceE) {
 
 		if (source == null) {
 			return null;
@@ -212,18 +360,18 @@ public class TimetableMapper {
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
-		for (Timetable sourceTmp : source) {
+		for (Timetable sourceATmp : source) {
 
-			int interim = deconvertEndTime(sourceTmp.getEndTime().toString())
-					- deconvertEndTime(sourceTmp.getStartTime().toString());
+			int interim = deconvertEndTime(sourceATmp.getEndTime().toString())
+					- deconvertEndTime(sourceATmp.getStartTime().toString());
 
 			for (int i = 0; i < interim; i++) {
 				M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
-				targetSubA.setId(deconvertEndTime(sourceTmp.getStartTime().toString()) + (interim - i));
+				targetSubA.setId(deconvertEndTime(sourceATmp.getStartTime().toString()) + (interim - i));
 				targetSubA.setValue(
-						convertEndTime(deconvertEndTime(sourceTmp.getStartTime().toString()) + (interim - i)));
+						convertEndTime(deconvertEndTime(sourceATmp.getStartTime().toString()) + (interim - i)));
 				targetSubA
-						.setText(convertEndTime(deconvertEndTime(sourceTmp.getStartTime().toString()) + (interim - i)));
+						.setText(convertEndTime(deconvertEndTime(sourceATmp.getStartTime().toString()) + (interim - i)));
 				targetA.add(targetSubA);
 			}
 		}
@@ -273,23 +421,15 @@ public class TimetableMapper {
 			}
 		}
 
-		Collection<M_Timetable_ShowTimeRemain_Response> targetF = DayAndTimeComplement(targetB, targetA,
+		Collection<M_Timetable_ShowTimeRemain_Response> targetF = UnionDayAndTime(targetB, targetA,
 				targetE, targetH);
 
 		Collection<M_Timetable_ShowTimeRemain_Response> targetD = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
-		targetD = targetF;
-
-		int x;
-
-		if (sourceD.getCourseType() == 0) {
-			x = sourceD.getCourseId().getCourseLect();
-		} else {
-			x = sourceD.getCourseId().getCoursePerf();
-		}
+		targetD = targetF; 
 
 		List<M_Timetable_ShowTimeRemain_Response> subList = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) targetD)
-				.subList(x, targetD.size());
+				.subList(sourceD, targetD.size());
 		Collection<M_Timetable_ShowTimeRemain_Response> targetG = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
 		targetG.addAll(targetD);
@@ -353,7 +493,7 @@ public class TimetableMapper {
 		return targetA;
 	}
 
-	public Collection<M_For_Selection_Response> toMRoomStaff(boolean mode, Iterable<Timetable> sourceD,
+	public Collection<M_For_Selection_Response> toMRoomStaff(boolean modeForAutoPilot, Iterable<Timetable> sourceD,
 			Iterable<Room> sourceA) {
 
 		if (sourceD == null) {
@@ -382,17 +522,16 @@ public class TimetableMapper {
 
 		Collection<M_For_Selection_Response> targetE;
 
-		if (mode) {
-			targetE = RoomComplement(targetA, targetD);
+		if (modeForAutoPilot) {
+			targetE = UnionRoomForAuto(targetA, targetD);
 		} else {
-			targetE = RoomComplementForAuto(targetA, targetD);
-			;
+			targetE = UnionRoom(targetA, targetD);
 		}
 
 		return targetE;
 	}
 
-	public Collection<M_Timetable_ShowTimeRemain_Response> DayAndTimeComplement(
+	public Collection<M_Timetable_ShowTimeRemain_Response> UnionDayAndTime(
 			Collection<M_Timetable_ShowTimeRemain_Response> cSum, Collection<M_Timetable_ShowTimeRemain_Response> cA,
 			Collection<M_Timetable_ShowTimeRemain_Response> cB, Collection<M_Timetable_ShowTimeRemain_Response> cC) {
 
@@ -486,7 +625,7 @@ public class TimetableMapper {
 		return result;
 	}
 
-	public Collection<M_Timetable_ShowTimeRemain_Response> DayAndTimeComplementForAuto(
+	public Collection<M_Timetable_ShowTimeRemain_Response> UnionDayAndTimeForAuto(
 			Collection<M_Timetable_ShowTimeRemain_Response> cSum, Collection<M_Timetable_ShowTimeRemain_Response> cA,
 			Collection<M_Timetable_ShowTimeRemain_Response> cB, Collection<M_Timetable_ShowTimeRemain_Response> cC) {
 
@@ -580,7 +719,7 @@ public class TimetableMapper {
 		return result;
 	}
 
-	public Collection<M_For_Selection_Response> RoomComplement(
+	public Collection<M_For_Selection_Response> UnionRoom(
 			Collection<M_For_Selection_Response> cA, Collection<M_For_Selection_Response> cB) {
 
 		Collection<M_For_Selection_Response> result = new ArrayList<M_For_Selection_Response>();
@@ -606,7 +745,7 @@ public class TimetableMapper {
 		return result;
 	}
 
-	public Collection<M_For_Selection_Response> RoomComplementForAuto(
+	public Collection<M_For_Selection_Response> UnionRoomForAuto(
 			Collection<M_For_Selection_Response> cA, Collection<M_For_Selection_Response> cB) {
 
 		Collection<M_For_Selection_Response> result = new ArrayList<M_For_Selection_Response>();

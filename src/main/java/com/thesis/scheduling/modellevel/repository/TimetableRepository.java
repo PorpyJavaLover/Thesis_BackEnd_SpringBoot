@@ -52,6 +52,6 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Optional<Timetable> findByTimetableId(int timetableId);
 
-	Optional<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years, String semester,
+	Collection<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years, String semester,
 	Course courseId, Integer courseType, Group groupId , Integer dayOfWeek);
 }
