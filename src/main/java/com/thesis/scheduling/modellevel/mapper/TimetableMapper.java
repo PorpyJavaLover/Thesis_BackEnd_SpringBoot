@@ -457,7 +457,7 @@ public class TimetableMapper {
 		}
 
 		y = deconvertEndTime(Endtime);
-		z = y - x;
+		z = y - x + 1;
 
 		targetA.setId(z);
 		targetA.setValue(convertStartTime(z));
@@ -484,7 +484,7 @@ public class TimetableMapper {
 		}
 
 		y = deconvertStartTime(startTime);
-		z = x + y;
+		z = x + y - 1;
 
 		targetA.setId(z);
 		targetA.setValue(convertEndTime(z));

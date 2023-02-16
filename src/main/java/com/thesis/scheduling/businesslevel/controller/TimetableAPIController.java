@@ -164,4 +164,10 @@ public class TimetableAPIController {
 			throws BaseException {
 		timetableLogic.deleteForPlanStaff(yId, sId, cId, cType, gId, memberId);
 	}
+
+	@DeleteMapping("/staff/clean/all")
+	public void cleanAll() throws BaseException{
+		timetableLogic.cleanAll();
+	}
+
 }

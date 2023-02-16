@@ -133,7 +133,7 @@ public class TimetableLogic {
 		}
 
 		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(0,
-				MUnion.size() - (sourceCourseType));
+				MUnion.size() - (sourceCourseType) + 1);
 		MUnionSorted = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
 		MUnionSorted.addAll(MUnion);
@@ -141,10 +141,6 @@ public class TimetableLogic {
 		MUnionSorted.removeAll(MUnion);
 
 		return MUnionSorted;
-
-		// return mapper.toMTimeStartOptionStaff(mode,
-		// sourceCoTeach,sourceInconvenientTeach,
-		// sourceCourseType,sourceEachClassToDay);
 	}
 
 	public Iterable<M_Timetable_ShowTimeRemain_Response> showEndTimeOptionStaff(String yId, String sId, Long cId,
@@ -192,7 +188,7 @@ public class TimetableLogic {
 
 		MUnion = mapper.UnionDayAndTime(MBase, MCoTeach, MInconvenientTeach, MEachClassToDay);
 
-		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType, MUnion.size());
+		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType - 1, MUnion.size());
 		MUnionSorted = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
 		MUnionSorted.addAll(MUnion);
@@ -200,10 +196,6 @@ public class TimetableLogic {
 		MUnionSorted.removeAll(MUnion);
 
 		return MUnionSorted;
-
-		// return mapper.toMTimeEndOptionStaff(sourceCoTeach,sourceInconvenientTeach,
-		// sourceCourseType ,sourceEachClassToDay);
-
 	}
 
 	public M_Timetable_ShowTimeRemain_Response showStartTimeStaff(String yId, String sId, Long cId, Integer cType,
@@ -241,6 +233,22 @@ public class TimetableLogic {
 
 	}
 
+	public void cleanAll() {
+
+		Collection<Timetable> sourceA = timetableService.findAll();
+		ArrayList<Timetable> list = new ArrayList<>(sourceA);
+
+		for (Timetable listTmp : list) {
+			if (!listTmp.isTimeLocker()) {
+				updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
+						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+						listTmp.getGroupId().getGroupId(), null, null, null, null);
+			}
+		}
+
+	}
+
+
 	public void autoPilot() throws ParseException {
 
 		Collection<Timetable> sourceA = timetableService.findAll();
@@ -251,13 +259,7 @@ public class TimetableLogic {
 		Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId()));
 		Collections.reverse(list);
 
-		for (Timetable listTmp : list) {
-			if (!listTmp.isTimeLocker()) {
-				updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
-						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-						listTmp.getGroupId().getGroupId(), null, null, null, null);
-			}
-		}
+		cleanAll();
 
 		for (Timetable listTmp : list) {
 
@@ -308,7 +310,7 @@ public class TimetableLogic {
 						j++;
 					}
 
-					timeValueEnd.setHours(timeValueStart.getHours() + timeRun + 1);
+					timeValueEnd.setHours(timeValueStart.getHours() + timeRun);
 
 					if (timeValueEnd.getHours() <= 18) {
 						updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
