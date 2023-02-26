@@ -61,7 +61,8 @@ public class TimetableAPIController {
 			@PathVariable("gId") Long gId,
 			@PathVariable("dayOfWeek") Integer dayOfWeek, @PathVariable("endTime") String endTime)
 			throws BaseException {
-		Iterable<M_Timetable_ShowTimeRemain_Response> response = timetableLogic.showStartTimeOptionStaff(false, yId, sId, cId, cType, gId, dayOfWeek);
+		Iterable<M_Timetable_ShowTimeRemain_Response> response = timetableLogic.showStartTimeOptionStaff(false, yId,
+				sId, cId, cType, gId, dayOfWeek);
 		return ResponseEntity.ok(response);
 	}
 
@@ -165,8 +166,18 @@ public class TimetableAPIController {
 		timetableLogic.deleteForPlanStaff(yId, sId, cId, cType, gId, memberId);
 	}
 
+	@DeleteMapping("/staff/clean/{yId}/{sId}/{cId}/{cType}/{gId}/{dayOfWeek}/{startTime}/{endTime}/{room}/{timeLocker}/{roomLocker}")
+	public void clean(@PathVariable("yId") String yId, @PathVariable("sId") String sId,
+			@PathVariable("cId") Long cId, @PathVariable("cType") Integer cType, @PathVariable("gId") Long gId,
+			@PathVariable("dayOfWeek") Integer dayOfWeek, @PathVariable("startTime") Time startTime,
+			@PathVariable("endTime") Time endTime, @PathVariable("room") Integer roomId,
+			@PathVariable("timeLocker") boolean timeLocker, @PathVariable("roomLocker") boolean roomLocker)
+			throws BaseException {
+		timetableLogic.clean(yId, sId, cId, cType, gId, dayOfWeek, startTime, endTime, roomId, timeLocker, roomLocker);
+	}
+
 	@DeleteMapping("/staff/clean/all")
-	public void cleanAll() throws BaseException{
+	public void cleanAll() throws BaseException {
 		timetableLogic.cleanAll();
 	}
 

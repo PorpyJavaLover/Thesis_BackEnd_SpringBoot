@@ -188,7 +188,8 @@ public class TimetableLogic {
 
 		MUnion = mapper.UnionDayAndTime(MBase, MCoTeach, MInconvenientTeach, MEachClassToDay);
 
-		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType - 1, MUnion.size());
+		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType - 1,
+				MUnion.size());
 		MUnionSorted = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
 		MUnionSorted.addAll(MUnion);
@@ -233,21 +234,52 @@ public class TimetableLogic {
 
 	}
 
+	public void clean(String yId, String sId, Long cId, Integer cType, Long gId, Integer dayOfWeek,Time startTime,Time endTime,Integer roomId , boolean timeLocker, boolean roomLocker) {
+
+			Integer sourceDay = dayOfWeek;
+			Time sourceStartTime = startTime;
+			Time sourceEndTime = endTime;
+			Integer sourceRoom = roomId;
+
+			if (!timeLocker) {
+				sourceDay = null;
+				sourceStartTime = null;
+				sourceEndTime = null;
+			}
+			if (!roomLocker) {
+				sourceRoom = null;
+			}
+
+			updateAutoPilotStaff(yId, sId, cId, cType, gId, sourceDay, sourceStartTime, sourceEndTime, sourceRoom);
+	}
+
 	public void cleanAll() {
 
 		Collection<Timetable> sourceA = timetableService.findAll();
-		ArrayList<Timetable> list = new ArrayList<>(sourceA);
 
-		for (Timetable listTmp : list) {
-			if (!listTmp.isTimeLocker()) {
-				updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
-						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-						listTmp.getGroupId().getGroupId(), null, null, null, null);
+		for (Timetable sourceATmp : sourceA) {
+
+			Integer sourceDay = null;
+			Time sourceStartTime = null;
+			Time sourceEndTime = null;
+			Integer sourceRoom = null;
+
+			if (sourceATmp.isTimeLocker()) {
+				sourceDay = sourceATmp.getDayOfWeek() == null ? null : sourceATmp.getDayOfWeek();
+				sourceStartTime = sourceATmp.getStartTime() == null ? null : sourceATmp.getStartTime();
+				sourceEndTime = sourceATmp.getEndTime() == null ? null : sourceATmp.getEndTime();
 			}
+			if (sourceATmp.isRoomLocker()) {
+				sourceRoom = sourceATmp.getRoomId() == null ?  null : sourceATmp.getRoomId().getRoomId();
+			}
+
+			updateAutoPilotStaff(sourceATmp.getYears(), sourceATmp.getSemester(),
+					sourceATmp.getCourseId().getCourseId(), sourceATmp.getCourseType(),
+					sourceATmp.getGroupId().getGroupId(), sourceDay, sourceStartTime, sourceEndTime, sourceRoom);
+
 		}
 
 	}
-
 
 	public void autoPilot() throws ParseException {
 
@@ -315,7 +347,7 @@ public class TimetableLogic {
 					if (timeValueEnd.getHours() <= 18) {
 						updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
 								listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-								listTmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd, null);
+								listTmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd, listTmp.getRoomId() == null ?  null : listTmp.getRoomId().getRoomId());
 						break;
 					} else {
 						dayA++;
@@ -330,7 +362,7 @@ public class TimetableLogic {
 		}
 
 		for (Timetable listTmp : list) {
-			if (!listTmp.isRoomLocker()) {
+			if ( !listTmp.isRoomLocker()) {
 
 				Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
 				Integer timevalueStart = null;
