@@ -1,6 +1,8 @@
 package com.thesis.scheduling.modellevel.model;
 
 import java.sql.Time;
+import java.util.Collection;
+import java.util.HashMap;
 
 import lombok.Data;
 
@@ -16,6 +18,8 @@ public class M_Timetable_ShowAllStaff_Response {
 	private String course_id;
 	
 	private String course_name;
+
+	private String course_code;
 	
 	private Integer course_type;
 	
@@ -30,6 +34,8 @@ public class M_Timetable_ShowAllStaff_Response {
 	private String member_name;
 	
 	private Integer day_of_week;
+
+	private String day_of_week_name;
 	
 	private Time start_time;
 	
@@ -42,6 +48,6 @@ public class M_Timetable_ShowAllStaff_Response {
 	private boolean time_locker;
 	
 	private boolean room_locker;
-	
-	
+
+	private Collection<HashMap<String, String>> member;
 }

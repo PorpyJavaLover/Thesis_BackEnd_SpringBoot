@@ -79,7 +79,7 @@ public class Member implements Serializable  {
     @Column(nullable = true)
     @JsonIgnore
     private List<LeaveTeach> leaveTeach;
-    
+
 
 
 }

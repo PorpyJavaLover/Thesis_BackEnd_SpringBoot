@@ -36,6 +36,12 @@ public class TimetableService {
 				memberId);
 	}
 
+	public Collection<Timetable> findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years,
+	String semester, Course courseId, Integer courseType, Group groupId) {
+		return repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+		semester, courseId, courseType, groupId);
+	}
+
 	public Iterable<Timetable> findAllByMemberId(Member memberId) {
 		return repository.findAllByMemberId(memberId);
 	}

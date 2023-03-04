@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.stereotype.Service;
 
@@ -73,7 +74,44 @@ public class TimetableLogic {
 	}
 
 	public Iterable<M_Timetable_ShowAllStaff_Response> showAllStaff() {
-		return mapper.toMTimetableStaff(timetableService.findAll());
+		Collection<Timetable> sourceA = new ArrayList<Timetable>(timetableService.findAll());
+		Collection<Timetable> sourceForRemove = new ArrayList<Timetable>();
+		Collection<M_Timetable_ShowAllStaff_Response> sourceD = new ArrayList<M_Timetable_ShowAllStaff_Response>();; 
+		for (Timetable sourceATmp : sourceA) {
+			Collection<Timetable> sourceCoopTeacher;
+			String sourceYId = sourceATmp.getYears() ;
+			String sourceSId = sourceATmp.getSemester() ;
+			Course sourceCId = courseService.findByCourseId(sourceATmp.getCourseId().getCourseId()).get();
+			Integer sourceCType = sourceATmp.getCourseType();
+			Group sourceGId =  groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get() ;
+			sourceCoopTeacher =  timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId, sourceCType,sourceGId);
+			for(Timetable sourceCoopTeacherTmp : sourceCoopTeacher){
+				boolean SameTimetable = true;
+				for(Timetable sourceForRemoveTmp : sourceForRemove){
+					if(sourceForRemoveTmp.equals(sourceATmp)){
+						SameTimetable = false;
+						break;
+					}
+				}
+				if(SameTimetable && !sourceCoopTeacherTmp.equals(sourceATmp)){
+					sourceForRemove.add(sourceCoopTeacherTmp);
+				}
+			}
+		}
+
+		sourceA.removeAll(sourceForRemove);
+
+		for (Timetable sourceATmp : sourceA) {
+			String sourceYId = sourceATmp.getYears() ;
+			String sourceSId = sourceATmp.getSemester() ;
+			Course sourceCId = courseService.findByCourseId(sourceATmp.getCourseId().getCourseId()).get();
+			Integer sourceCType = sourceATmp.getCourseType();
+			Group sourceGId =  groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get() ;
+			Collection<Timetable> sourceC =  timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId, sourceCType,sourceGId);
+			M_Timetable_ShowAllStaff_Response sourceDTmp =  mapper.toMTimetableStaff(sourceATmp , sourceC);
+			sourceD.add(sourceDTmp);
+		}
+		return sourceD;
 	}
 
 	public Iterable<M_Timetable_ShowAllTeacher_Response> showAllStaffByMemberIdForPlan(Integer memberId) {
@@ -188,8 +226,7 @@ public class TimetableLogic {
 
 		MUnion = mapper.UnionDayAndTime(MBase, MCoTeach, MInconvenientTeach, MEachClassToDay);
 
-		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType - 1,
-				MUnion.size());
+		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType - 1, MUnion.size());
 		MUnionSorted = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
 		MUnionSorted.addAll(MUnion);
@@ -234,23 +271,24 @@ public class TimetableLogic {
 
 	}
 
-	public void clean(String yId, String sId, Long cId, Integer cType, Long gId, Integer dayOfWeek,Time startTime,Time endTime,Integer roomId , boolean timeLocker, boolean roomLocker) {
+	public void clean(String yId, String sId, Long cId, Integer cType, Long gId, Integer dayOfWeek, Time startTime,
+			Time endTime, Integer roomId, boolean timeLocker, boolean roomLocker) {
 
-			Integer sourceDay = dayOfWeek;
-			Time sourceStartTime = startTime;
-			Time sourceEndTime = endTime;
-			Integer sourceRoom = roomId;
+		Integer sourceDay = dayOfWeek;
+		Time sourceStartTime = startTime;
+		Time sourceEndTime = endTime;
+		Integer sourceRoom = roomId;
 
-			if (!timeLocker) {
-				sourceDay = null;
-				sourceStartTime = null;
-				sourceEndTime = null;
-			}
-			if (!roomLocker) {
-				sourceRoom = null;
-			}
+		if (!timeLocker) {
+			sourceDay = null;
+			sourceStartTime = null;
+			sourceEndTime = null;
+		}
+		if (!roomLocker) {
+			sourceRoom = null;
+		}
 
-			updateAutoPilotStaff(yId, sId, cId, cType, gId, sourceDay, sourceStartTime, sourceEndTime, sourceRoom);
+		updateAutoPilotStaff(yId, sId, cId, cType, gId, sourceDay, sourceStartTime, sourceEndTime, sourceRoom);
 	}
 
 	public void cleanAll() {
@@ -270,7 +308,7 @@ public class TimetableLogic {
 				sourceEndTime = sourceATmp.getEndTime() == null ? null : sourceATmp.getEndTime();
 			}
 			if (sourceATmp.isRoomLocker()) {
-				sourceRoom = sourceATmp.getRoomId() == null ?  null : sourceATmp.getRoomId().getRoomId();
+				sourceRoom = sourceATmp.getRoomId() == null ? null : sourceATmp.getRoomId().getRoomId();
 			}
 
 			updateAutoPilotStaff(sourceATmp.getYears(), sourceATmp.getSemester(),
@@ -328,8 +366,8 @@ public class TimetableLogic {
 
 						if (!targetATmp.getText().substring(0, 1).equals("!")) {
 							boolean notBussy = true;
-							for (int i = 1; i < timeRun - 1; i++) {
-								if (targetA.get(j + i).getText().substring(0, 1).equals("!")) {
+							for (int i = 1; i < timeRun; i++) {
+								if((j + i) > (targetA.size() - timeRun) || (j + i) > 10 || targetA.get(j + i).getText().substring(0, 1).equals("!") ){
 									notBussy = false;
 									break;
 								}
@@ -342,14 +380,17 @@ public class TimetableLogic {
 						j++;
 					}
 
-					timeValueEnd.setHours(timeValueStart.getHours() + timeRun);
-
-					if (timeValueEnd.getHours() <= 18) {
-						updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
-								listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-								listTmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd, listTmp.getRoomId() == null ?  null : listTmp.getRoomId().getRoomId());
-						break;
-					} else {
+					if(timeValueStart != null){
+						timeValueEnd.setHours(timeValueStart.getHours() + timeRun);
+						if (timeValueStart != null && timeValueEnd.getHours() <= 18) {
+							updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
+									listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+									listTmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd,
+									listTmp.getRoomId() == null ? null : listTmp.getRoomId().getRoomId());
+							break;
+						}
+					}
+					else {
 						dayA++;
 					}
 				} else {
@@ -362,7 +403,7 @@ public class TimetableLogic {
 		}
 
 		for (Timetable listTmp : list) {
-			if ( !listTmp.isRoomLocker()) {
+			if (!listTmp.isRoomLocker()) {
 
 				Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
 				Integer timevalueStart = null;
