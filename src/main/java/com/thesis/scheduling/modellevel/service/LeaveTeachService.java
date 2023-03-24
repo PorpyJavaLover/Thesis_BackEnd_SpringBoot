@@ -1,5 +1,6 @@
 package com.thesis.scheduling.modellevel.service;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -26,8 +27,12 @@ public class LeaveTeachService {
 		return repository.findAll();
 	}
 
+	public LeaveTeach findByLeaveTeachId(int leaveTeachId) {
+		return repository.findByLeaveTeachId(leaveTeachId).get();
+	}
+
 	// SET
-	public void create(Member memberId, String years, String semester, java.sql.Date dateStart, java.sql.Date dateEnd,
+	public LeaveTeach create(Member memberId, String years, String semester, Date dateStart, Date dateEnd,
 			String note) {
 
 		Optional<LeaveTeach> opt = repository.findByMemberIdAndYearsAndSemesterAndDateStartAndDateEnd(memberId, years,
@@ -45,9 +50,11 @@ public class LeaveTeachService {
 			entity.setNote(note);
 		}
 		repository.save(entity);
+
+		return entity;
 	}
 
-	public void update(int leaveTeachId, String years, String semester, java.sql.Date dateStart, java.sql.Date dateEnd,
+	public void update(int leaveTeachId, String years, String semester, Date dateStart, Date dateEnd,
 			String note) {
 
 		Optional<LeaveTeach> opt = repository.findByLeaveTeachId(leaveTeachId);

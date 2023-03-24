@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.logic.ReplaceTeachLogic;
-import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_CreateTeacher_Request;
+import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_UpdateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_ShowAllTeacher_Response;
 
 @RestController
@@ -32,9 +32,9 @@ public class ReplaceTeachAPIController {
 	}
 
 	// SET
-	@PostMapping("/teacher/create")
-	public void createTeacher(@RequestBody M_ReplaceTeach_CreateTeacher_Request request) throws BaseException {
-		replaceTeachLogic.createTeacher(request);
+	@PostMapping("/teacher/update")
+	public void createTeacher(@RequestBody M_ReplaceTeach_UpdateTeacher_Request request) throws BaseException {
+		replaceTeachLogic.updateTeacher(request);
 	}
 
 	// DELETE

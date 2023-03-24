@@ -1,5 +1,6 @@
 package com.thesis.scheduling.modellevel.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -35,10 +36,10 @@ public class LeaveTeach {
 	private String semester;
     
     @Column(name = "DATE_START")
-	private java.sql.Date dateStart;
+	private Date dateStart;
     
 	@Column(name = "DATE_END")
-	private java.sql.Date dateEnd;
+	private Date dateEnd;
 	
     @Column(name = "NOTE")
 	private String note;

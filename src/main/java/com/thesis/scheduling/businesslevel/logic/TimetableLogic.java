@@ -237,8 +237,7 @@ public class TimetableLogic {
 	}
 
 	public M_Timetable_ShowTimeRemain_Response showStartTimeStaff(String yId, String sId, Long cId, Integer cType,
-			Long gId,
-			Integer dayOfWeek, String endTime) {
+			Long gId, Integer dayOfWeek, String endTime) {
 
 		Timetable sourceA = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(yId, sId,
 				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
@@ -248,8 +247,7 @@ public class TimetableLogic {
 	}
 
 	public M_Timetable_ShowTimeRemain_Response showEndTimeStaff(String yId, String sId, Long cId, Integer cType,
-			Long gId,
-			Integer dayOfWeek, String startTime) {
+			Long gId,Integer dayOfWeek, String startTime) {
 
 		Timetable sourceA = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(yId, sId,
 				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());

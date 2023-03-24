@@ -1,5 +1,7 @@
 package com.thesis.scheduling.modellevel.service;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -28,20 +30,29 @@ public class ReplaceTeachService {
 		return repository.findAll();
 	}
 
-	// SET
-	public void create(LeaveTeach leaveTeachId, Timetable essTimetableId, Member memberReplaceId) {
+	public Collection<ReplaceTeach> findAllByLeaveTeachId(LeaveTeach leaveTeachId) {
+		return repository.findAllByLeaveTeachId(leaveTeachId);
+	}
 
-		Optional<ReplaceTeach> opt = repository.findByLeaveTeachIdAndEssTimetableIdAndMemberReplaceId(leaveTeachId,
-				essTimetableId, memberReplaceId);
+	// SET
+	public void create(LeaveTeach leaveTeachId, Timetable essTimetableId , Date date ) {
+
 		ReplaceTeach entity = new ReplaceTeach();
 
-		if (opt.isPresent()) {
-			entity = opt.get();
-		} else {
-			entity.setLeaveTeachId(leaveTeachId);
-			entity.setEssTimetableId(essTimetableId);
-			entity.setMemberReplaceId(memberReplaceId);
-		}
+		entity.setLeaveTeachId(leaveTeachId);
+		entity.setEssTimetableId(essTimetableId);
+		entity.setMemberReplaceId(null);
+		entity.setDate(date);
+
+		repository.save(entity);
+	}
+
+	public void updateTeacher(int replaceTeachId , Member memberId) {
+
+		ReplaceTeach entity = repository.findByReplaceTeachId(replaceTeachId).get();
+
+		entity.setMemberReplaceId(memberId);
+
 		repository.save(entity);
 	}
 
@@ -53,6 +64,17 @@ public class ReplaceTeachService {
 		if (opt.isPresent()) {
 			entity = opt.get();
 			repository.delete(entity);
+		}
+	}
+
+	public void deleteByLeaveTeachId(LeaveTeach leaveTeachId) {
+		Collection<ReplaceTeach> sourceReplaceTeach = findAllByLeaveTeachId(leaveTeachId);
+		if (sourceReplaceTeach != null) {
+			for (ReplaceTeach subReplaceTeach : sourceReplaceTeach) {
+				ReplaceTeach entity = new ReplaceTeach();
+				entity = subReplaceTeach;
+				repository.delete(entity);
+			}
 		}
 	}
 }

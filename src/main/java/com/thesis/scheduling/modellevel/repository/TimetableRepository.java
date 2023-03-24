@@ -22,6 +22,8 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Collection<Timetable> findAllByMemberIdAndDayOfWeek(Member memberId, Integer dayOfWeek);
 
+	Collection<Timetable> findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(Member memberId, String years, String semester, Integer dayOfWeek);
+
 	Collection<Timetable> findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years, String semester,
 			Course courseId, Integer courseType, Group groupId);
 
@@ -54,4 +56,6 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Collection<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years, String semester,
 	Course courseId, Integer courseType, Group groupId , Integer dayOfWeek);
+
+
 }

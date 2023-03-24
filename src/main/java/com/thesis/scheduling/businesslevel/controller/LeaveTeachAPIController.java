@@ -41,7 +41,6 @@ public class LeaveTeachAPIController {
 	@PutMapping("/teacher/update/{leaveTeachId}")
 	public void editLeaveTeaching(@PathVariable("leaveTeachId") int leaveTeachId ,@RequestBody M_LeaveTeach_CreateTeacher_Request request) {
 		leaveTeachLogic.update(leaveTeachId,request);
-		System.out.println("leaveTeachId update");
 	}
 
 

@@ -1,5 +1,7 @@
 package com.thesis.scheduling.modellevel.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,9 +28,12 @@ public class ReplaceTeach {
 	@ManyToOne
     @JoinColumn(name = "ESS_TIMETABLE_ID", nullable = false)
     private Timetable essTimetableId;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "MEMBER_REPLACE_ID" , nullable = false)
+	@JoinColumn(name = "MEMBER_REPLACE_ID" , nullable = true)
     private Member memberReplaceId;
+
+    @Column(name = "DATE", nullable = false)
+	private Date date;
     
 }

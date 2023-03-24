@@ -1,5 +1,6 @@
 package com.thesis.scheduling.modellevel.repository;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
@@ -14,7 +15,7 @@ public interface LeaveTeachRepository extends CrudRepository<LeaveTeach, String>
 	Iterable<LeaveTeach> findAllByMemberId(Member memberId);
 
 	Optional<LeaveTeach> findByMemberIdAndYearsAndSemesterAndDateStartAndDateEnd(Member memberId, String years,
-			String semester, java.sql.Date dateStart, java.sql.Date dateEnd);
+			String semester, Date dateStart, Date dateEnd);
 
 	Optional<LeaveTeach> findByLeaveTeachId(int leaveTeachId);
 }

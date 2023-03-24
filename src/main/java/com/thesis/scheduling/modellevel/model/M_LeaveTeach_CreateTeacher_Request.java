@@ -1,5 +1,7 @@
 package com.thesis.scheduling.modellevel.model;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -9,9 +11,9 @@ public class M_LeaveTeach_CreateTeacher_Request {
 
 	private String semester;
 
-	private java.sql.Date dateStart;
+	private Date  dateStart;
 
-	private java.sql.Date dateEnd;
+	private Date dateEnd;
 
 	private String note;
 	

@@ -50,6 +50,23 @@ public class TimetableService {
 		return repository.findAllByMemberIdAndDayOfWeek(memberId, dayOfWeek);
 	}
 
+	public Collection<Timetable> findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(Member memberId, String years,
+			String semester,Integer dayOfWeek ) {
+
+		if (memberId == null  || years == null || semester == null || dayOfWeek == null ) {
+			throw new IllegalArgumentException("No values can be null");
+		}
+
+		Collection<Timetable> targetA = repository.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(memberId, years,
+				semester, dayOfWeek);
+				
+		if (!targetA.isEmpty()) {
+			return  targetA;
+		} else {
+			return null;
+		}
+	}
+
 	public Iterable<Timetable> findAllByCollectionMemberAndDayOfWeek(Iterable<Member> memberId, Integer dayOfWeek) {
 
 		Collection<Timetable> targetA = new ArrayList<Timetable>();
@@ -140,6 +157,8 @@ public class TimetableService {
 			return null;
 		}
 	}
+
+	
 
 	public Iterable<Timetable> findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(String years,
 			String semester, Course courseId, Integer courseType, Group groupId, Integer dayOfWeek) {
