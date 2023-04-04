@@ -430,7 +430,7 @@ public class TimetableLogic {
 
 	// SET
 	public void createTeacher(M_Timetable_CreateTeacher_Request request) {
-		timetableService.create(request.getYears(), request.getSemester(),
+		timetableService.create((String.valueOf(Integer.parseInt(request.getYears().toString()) - 543)), request.getSemester(),
 				courseService.findByCourseId(request.getCourseId()).get(),
 				request.getCourseType(),
 				groupService.findByGroupId(request.getGroupId()).get(),
@@ -438,7 +438,7 @@ public class TimetableLogic {
 	}
 
 	public void createStaff(M_Timetable_CreateStaff_Request request) {
-		timetableService.create(request.getYears(), request.getSemester(),
+		timetableService.create((String.valueOf(Integer.parseInt(request.getYears().toString()) - 543)), request.getSemester(),
 				courseService.findByCourseId(request.getCourseId()).get(),
 				request.getCourseType(),
 				groupService.findByGroupId(request.getGroupId()).get(),

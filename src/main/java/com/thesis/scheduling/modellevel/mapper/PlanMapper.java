@@ -48,7 +48,14 @@ public class PlanMapper {
 
 		for (Plan sourceTmp : source) {
 			M_Plan_ShowAllStaff_Response targetSub = new M_Plan_ShowAllStaff_Response();
+
+
+			//Y2K in 2600
+			int i =  Integer.parseInt(sourceTmp.getYears().toString()) - 1;
+			int j =  Integer.parseInt(sourceTmp.getGroupId().getGroup_name().substring(sourceTmp.getGroupId().getGroup_name().indexOf('.') + 1 , sourceTmp.getGroupId().getGroup_name().indexOf('.') +3));
+			
 			targetSub.setYears(sourceTmp.getYears().toString());
+			targetSub.setYears_name("25"+(j+i));
 			targetSub.setSemester(sourceTmp.getSemester().toString());
 			targetSub.setCourse_id(sourceTmp.getCourseId().getCourseId().toString());
 			targetSub.setCourse_code(sourceTmp.getCourseId().getCourse_code().toString());

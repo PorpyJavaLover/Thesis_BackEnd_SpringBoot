@@ -54,8 +54,8 @@ public class LeaveTeachLogic {
 
 	// SET
 	public void createTeacher(M_LeaveTeach_CreateTeacher_Request request) {
-
-		LeaveTeach sourceLeaveTeach = leaveTeachService.create(memberService.findByMemberId(getCurrentUserId()).get(), request.getYear(),
+		
+		LeaveTeach sourceLeaveTeach = leaveTeachService.create(memberService.findByMemberId(getCurrentUserId()).get(), (String.valueOf(Integer.parseInt(request.getYear().toString()))),
 				request.getSemester(), request.getDateStart(), request.getDateEnd(), request.getNote());
 
 		Date dateStart = request.getDateStart();
@@ -76,9 +76,9 @@ public class LeaveTeachLogic {
 			dateStart.setDate(dateStart.getDate() + 1);
 			Date dateRun = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
 
-			System.out.println(dayNumber + ":::" + dateStart.getDate() + ":::" + dateRun);
+			System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + ":::" + dateStart.getDate() + ":::" + dateRun);
 			Collection<Timetable> sourceTimetable = timetableService.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
-			memberService.findByMemberId(getCurrentUserId()).get(), "1", request.getSemester(), dayOfWeek);
+			memberService.findByMemberId(getCurrentUserId()).get(), (String.valueOf(Integer.parseInt(request.getYear().toString()))) , request.getSemester(), dayOfWeek);
 
 
 			if(sourceTimetable != null){

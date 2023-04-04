@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.TreeSet;
 
 import org.springframework.stereotype.Component;
@@ -63,7 +62,7 @@ public class TimetableMapper {
 		target.setGroup_id(sourceA.getGroupId().getGroupId().toString());
 		target.setGroup_name(sourceA.getGroupId().getGroup_name().toString());
 		target.setDay_of_week(sourceA.getDayOfWeek() == null ? null : sourceA.getDayOfWeek());
-		target.setDay_of_week_name(convertDayOfWeek(sourceA.getDayOfWeek() == null ? null : sourceA.getDayOfWeek()));
+		target.setDay_of_week_name(sourceA.getDayOfWeek() == null ? null : convertDayOfWeek(sourceA.getDayOfWeek()));
 		target.setStart_time(sourceA.getStartTime() == null ? null : sourceA.getStartTime());
 		target.setEnd_time(sourceA.getEndTime() == null ? null : sourceA.getEndTime());
 		target.setRoom_id(sourceA.getRoomId() == null ? null : sourceA.getRoomId().getRoomId());
