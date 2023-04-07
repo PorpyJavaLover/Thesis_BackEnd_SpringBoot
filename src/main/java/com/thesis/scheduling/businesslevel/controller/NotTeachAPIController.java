@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.logic.NotTeachLogic;
+import com.thesis.scheduling.modellevel.model.M_NotTeach_CreateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_NotTeach_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_NotTeach_ShowAllTeacher_Response;
 
@@ -33,15 +34,34 @@ public class NotTeachAPIController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/staff/show/all/{memberId}")
+	public ResponseEntity<Iterable<M_NotTeach_ShowAllTeacher_Response>> showAllStaff(@PathVariable("memberId") Integer memberId) throws BaseException {
+		Iterable<M_NotTeach_ShowAllTeacher_Response> response = notteachlogic.showAllStaff(memberId);
+		System.out.println("notteach show teacher");
+		return ResponseEntity.ok(response);
+	}
+
 	// SET
 	@PostMapping("/teacher/create")
 	public void createNotTeaching(@RequestBody M_NotTeach_CreateTeacher_Request request) {
-		notteachlogic.create(request);
+		notteachlogic.createTeacher(request);
+		System.out.println("notteach create");
+	}
+
+	@PostMapping("/staff/create")
+	public void createNotTeaching(@RequestBody M_NotTeach_CreateStaff_Request request) {
+		notteachlogic.createStaff(request);
 		System.out.println("notteach create");
 	}
 	
 	@PutMapping("/teacher/update/{notId}")
 	public void editNotTeaching(@PathVariable("notId") int notId ,@RequestBody M_NotTeach_CreateTeacher_Request request) {
+		notteachlogic.update(notId,request);
+		System.out.println("notteach update");
+	}
+
+	@PutMapping("/staff/update/{notId}")
+	public void editNotStaff(@PathVariable("notId") int notId ,@RequestBody M_NotTeach_CreateTeacher_Request request) {
 		notteachlogic.update(notId,request);
 		System.out.println("notteach update");
 	}
@@ -52,4 +72,13 @@ public class NotTeachAPIController {
 		notteachlogic.delete(notId);
 		System.out.println("delete create");
 	}
+
+	@DeleteMapping("/staff/delete/{notId}")
+	public void deleteStaff(@PathVariable("notId") int notId) throws BaseException {
+		notteachlogic.delete(notId);
+		System.out.println("delete create");
+	}
+
+
+
 }

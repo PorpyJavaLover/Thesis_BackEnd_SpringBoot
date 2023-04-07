@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.thesis.scheduling.businesslevel.config.SecurityUtil;
 import com.thesis.scheduling.modellevel.entity.NotTeach;
 import com.thesis.scheduling.modellevel.mapper.NotTeachMapper;
+import com.thesis.scheduling.modellevel.model.M_NotTeach_CreateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_NotTeach_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_NotTeach_ShowAllTeacher_Response;
 import com.thesis.scheduling.modellevel.service.MemberService;
@@ -37,17 +38,24 @@ public class NotTeachLogic {
 				notteachservice.showAllByMemberId(memberservice.findByMemberId(getCurrentUserId()).get()));
 	}
 
-	public Iterable<NotTeach> showAllStaff() {
-		return notteachservice.showAll();
+	public Iterable<M_NotTeach_ShowAllTeacher_Response> showAllStaff(Integer memberId) {
+		return notTeachMapper.toMShowAllTeacher(
+				notteachservice.showAllByMemberId(memberservice.findByMemberId(memberId).get()));
 	}
 
 	// SET
-	public void create(M_NotTeach_CreateTeacher_Request request) {
+	public void createTeacher(M_NotTeach_CreateTeacher_Request request) {
 		notteachservice.create(memberservice.findByMemberId(getCurrentUserId()).get(),
 				request.getDayOfWeek(), request.getTimeStart(), request.getTimeEnd());
 	}
-	
-	public void update(int notId , M_NotTeach_CreateTeacher_Request request) {
+
+	public void createStaff(M_NotTeach_CreateStaff_Request request) {
+		System.out.println("asdasdadadad" + request.getMemberId());
+		notteachservice.create(memberservice.findByMemberId(request.getMemberId()).get(),
+				request.getDayOfWeek(), request.getTimeStart(), request.getTimeEnd());
+	}
+
+	public void update(int notId, M_NotTeach_CreateTeacher_Request request) {
 		notteachservice.update(notId, request.getDayOfWeek(), request.getTimeStart(), request.getTimeEnd());
 	}
 

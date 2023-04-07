@@ -9,7 +9,6 @@ import com.thesis.scheduling.modellevel.entity.Plan;
 import com.thesis.scheduling.modellevel.model.M_Plan_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Plan_ShowAllTeacher_Response;
 
-
 @Component
 public class PlanMapper {
 
@@ -22,7 +21,14 @@ public class PlanMapper {
 
 		for (Plan sourceTmp : source) {
 			M_Plan_ShowAllTeacher_Response targetSub = new M_Plan_ShowAllTeacher_Response();
+			///@note Y2K in year 2600
+			int i = Integer.parseInt(sourceTmp.getYears().toString()) - 1;
+			int j = Integer.parseInt(sourceTmp.getGroupId().getGroup_name().substring(
+					sourceTmp.getGroupId().getGroup_name().indexOf('.') + 1,
+					sourceTmp.getGroupId().getGroup_name().indexOf('.') + 3));
+
 			targetSub.setYears(sourceTmp.getYears().toString());
+			targetSub.setYears_name("25" + (j + i));
 			targetSub.setSemester(sourceTmp.getSemester().toString());
 			targetSub.setCourse_id(sourceTmp.getCourseId().getCourseId().toString());
 			targetSub.setCourse_code(sourceTmp.getCourseId().getCourse_code().toString());
@@ -36,26 +42,26 @@ public class PlanMapper {
 			target.add(targetSub);
 		}
 		return target;
-		
+
 	}
 
 	public Iterable<M_Plan_ShowAllStaff_Response> toMTableResponseStaff(Iterable<Plan> source) {
 		if (source == null) {
 			return null;
 		}
-		
+
 		Collection<M_Plan_ShowAllStaff_Response> target = new ArrayList<M_Plan_ShowAllStaff_Response>();
 
 		for (Plan sourceTmp : source) {
 			M_Plan_ShowAllStaff_Response targetSub = new M_Plan_ShowAllStaff_Response();
+			//@note Y2K in year 2600
+			int i = Integer.parseInt(sourceTmp.getYears().toString()) - 1;
+			int j = Integer.parseInt(sourceTmp.getGroupId().getGroup_name().substring(
+					sourceTmp.getGroupId().getGroup_name().indexOf('.') + 1,
+					sourceTmp.getGroupId().getGroup_name().indexOf('.') + 3));
 
-
-			//Y2K in 2600
-			int i =  Integer.parseInt(sourceTmp.getYears().toString()) - 1;
-			int j =  Integer.parseInt(sourceTmp.getGroupId().getGroup_name().substring(sourceTmp.getGroupId().getGroup_name().indexOf('.') + 1 , sourceTmp.getGroupId().getGroup_name().indexOf('.') +3));
-			
 			targetSub.setYears(sourceTmp.getYears().toString());
-			targetSub.setYears_name("25"+(j+i));
+			targetSub.setYears_name("25" + (j + i));
 			targetSub.setSemester(sourceTmp.getSemester().toString());
 			targetSub.setCourse_id(sourceTmp.getCourseId().getCourseId().toString());
 			targetSub.setCourse_code(sourceTmp.getCourseId().getCourse_code().toString());
@@ -68,7 +74,7 @@ public class PlanMapper {
 			targetSub.setDisable_perf((sourceTmp.getCourseId().getCoursePerf() == 0 ? true : false));
 			target.add(targetSub);
 		}
-		
+
 		return target;
 	}
 

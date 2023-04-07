@@ -54,18 +54,19 @@ public class LeaveTeachLogic {
 
 	// SET
 	public void createTeacher(M_LeaveTeach_CreateTeacher_Request request) {
-		
-		LeaveTeach sourceLeaveTeach = leaveTeachService.create(memberService.findByMemberId(getCurrentUserId()).get(), (String.valueOf(Integer.parseInt(request.getYear().toString()))),
+
+		LeaveTeach sourceLeaveTeach = leaveTeachService.create(memberService.findByMemberId(getCurrentUserId()).get(),
+				(String.valueOf(Integer.parseInt(request.getYear().toString()))),
 				request.getSemester(), request.getDateStart(), request.getDateEnd(), request.getNote());
 
 		Date dateStart = request.getDateStart();
 		Date dateEnd = request.getDateEnd();
-		
 
 		System.out.println(dateStart + ":::" + request.getDateStart());
 
-		//แก้ไขเรื่องวันสิ้นสุดว่าให้สิ้นสุดด้วยเงื่อนไข "ลาถึงวันที่"  หรือ "วันที่กลับมาสอน"
-		while (dateStart.before(dateEnd) || dateStart.equals(dateEnd) ) {
+		// แก้ไขเรื่องวันสิ้นสุดว่าให้สิ้นสุดด้วยเงื่อนไข "ลาถึงวันที่" หรือ
+		// "วันที่กลับมาสอน"
+		while (dateStart.before(dateEnd) || dateStart.equals(dateEnd)) {
 			Calendar sourceA = Calendar.getInstance();
 			sourceA.setTime(request.getDateStart());
 			int dayOfWeek = sourceA.get(Calendar.DAY_OF_WEEK);
@@ -74,16 +75,19 @@ public class LeaveTeachLogic {
 				dayNumber = 7;
 			}
 			dateStart.setDate(dateStart.getDate() + 1);
-			Date dateRun = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
+			Date dateRun = new Date(dateStart.getYear() - 543, dateStart.getMonth(), dateStart.getDate());
 
-			System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + ":::" + dateStart.getDate() + ":::" + dateRun);
-			Collection<Timetable> sourceTimetable = timetableService.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
-			memberService.findByMemberId(getCurrentUserId()).get(), (String.valueOf(Integer.parseInt(request.getYear().toString()))) , request.getSemester(), dayOfWeek);
+			System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + ":::"
+					+ dateStart.getDate() + ":::" + dateRun);
+			Collection<Timetable> sourceTimetable = timetableService
+					.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
+							memberService.findByMemberId(getCurrentUserId()).get(),
+							(String.valueOf(Integer.parseInt(request.getYear().toString()))),
+							request.getSemester(), dayOfWeek);
 
-
-			if(sourceTimetable != null){
-				for(Timetable subTimetable :  sourceTimetable){
-					replaceTeachService.create(sourceLeaveTeach, subTimetable , dateRun);
+			if (sourceTimetable != null) {
+				for (Timetable subTimetable : sourceTimetable) {
+					replaceTeachService.create(sourceLeaveTeach, subTimetable, dateRun);
 				}
 			}
 		}
