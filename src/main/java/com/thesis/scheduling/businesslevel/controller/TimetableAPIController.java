@@ -35,9 +35,15 @@ public class TimetableAPIController {
 	}
 
 	// GET
-	@GetMapping("/teacher/show/all")
+	@GetMapping("/teacher/show/all/ForPlan")
 	public ResponseEntity<Iterable<M_Timetable_ShowAllTeacher_Response>> showAllTeacherForPlan() throws BaseException {
 		Iterable<M_Timetable_ShowAllTeacher_Response> response = timetableLogic.showAllTeacherForPlan();
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/teacher/show/all")
+	public ResponseEntity<Iterable<M_Timetable_ShowAllStaff_Response>> showAllTeacher() throws BaseException {
+		Iterable<M_Timetable_ShowAllStaff_Response> response = timetableLogic.showAllTeacher();
 		return ResponseEntity.ok(response);
 	}
 

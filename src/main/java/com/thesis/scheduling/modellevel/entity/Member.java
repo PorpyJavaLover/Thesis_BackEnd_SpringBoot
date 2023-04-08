@@ -53,7 +53,7 @@ public class Member implements Serializable  {
 	private Organization sOrganizationId;
 	
 	@Column(length = 10)
-	private int role;
+	private Integer role;
 	
 	@Column(length = 10)
 	private Integer rank;

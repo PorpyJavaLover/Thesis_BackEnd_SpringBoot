@@ -73,6 +73,47 @@ public class TimetableLogic {
 				timetableService.findAllByMemberId(memberService.findByMemberId(getCurrentUserId()).get()));
 	}
 
+	public Iterable<M_Timetable_ShowAllStaff_Response> showAllTeacher() {
+		Collection<Timetable> sourceA = new ArrayList<Timetable>(timetableService.findAllByMemberId(memberService.findByMemberId(getCurrentUserId()).get()));
+		Collection<Timetable> sourceForRemove = new ArrayList<Timetable>();
+		Collection<M_Timetable_ShowAllStaff_Response> sourceD = new ArrayList<M_Timetable_ShowAllStaff_Response>();; 
+		for (Timetable sourceATmp : sourceA) {
+			Collection<Timetable> sourceCoopTeacher;
+			String sourceYId = sourceATmp.getYears() ;
+			String sourceSId = sourceATmp.getSemester() ;
+			Course sourceCId = courseService.findByCourseId(sourceATmp.getCourseId().getCourseId()).get();
+			Integer sourceCType = sourceATmp.getCourseType();
+			Group sourceGId =  groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get() ;
+			sourceCoopTeacher =  timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId, sourceCType,sourceGId);
+			for(Timetable sourceCoopTeacherTmp : sourceCoopTeacher){
+				boolean SameTimetable = true;
+				for(Timetable sourceForRemoveTmp : sourceForRemove){
+					if(sourceForRemoveTmp.equals(sourceATmp)){
+						SameTimetable = false;
+						break;
+					}
+				}
+				if(SameTimetable && !sourceCoopTeacherTmp.equals(sourceATmp)){
+					sourceForRemove.add(sourceCoopTeacherTmp);
+				}
+			}
+		}
+
+		sourceA.removeAll(sourceForRemove);
+
+		for (Timetable sourceATmp : sourceA) {
+			String sourceYId = sourceATmp.getYears() ;
+			String sourceSId = sourceATmp.getSemester() ;
+			Course sourceCId = courseService.findByCourseId(sourceATmp.getCourseId().getCourseId()).get();
+			Integer sourceCType = sourceATmp.getCourseType();
+			Group sourceGId =  groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get() ;
+			Collection<Timetable> sourceC =  timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId, sourceCType,sourceGId);
+			M_Timetable_ShowAllStaff_Response sourceDTmp =  mapper.toMTimetableStaff(sourceATmp , sourceC);
+			sourceD.add(sourceDTmp);
+		}
+		return sourceD;
+	}
+
 	public Iterable<M_Timetable_ShowAllStaff_Response> showAllStaff() {
 		Collection<Timetable> sourceA = new ArrayList<Timetable>(timetableService.findAll());
 		Collection<Timetable> sourceForRemove = new ArrayList<Timetable>();

@@ -42,7 +42,7 @@ public class TimetableService {
 		semester, courseId, courseType, groupId);
 	}
 
-	public Iterable<Timetable> findAllByMemberId(Member memberId) {
+	public Collection<Timetable> findAllByMemberId(Member memberId) {
 		return repository.findAllByMemberId(memberId);
 	}
 
