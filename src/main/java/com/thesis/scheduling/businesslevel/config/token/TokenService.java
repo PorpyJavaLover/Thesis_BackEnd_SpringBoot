@@ -27,11 +27,21 @@ public class TokenService {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, 360);
         Date expiresAt = calendar.getTime();
+
+        String role = "Anonymous";
+        if(member.getRole() == 1){
+            role = "Teacher";
+        }else if(member.getRole() == 2){
+            role = "Staff";
+        }else if(member.getRole() == 3){
+            role = "Admin";
+        }
 		
         return JWT.create()
                 .withIssuer(issuer)
                 .withClaim("principal", member.getMemberId())
-                .withClaim("role", member.getRole() + "")
+                .withClaim("role", role)
+                .withClaim("name", member.getThFirstName() + "   "+ member.getThLastName() )
                 .withExpiresAt(expiresAt)
                 .sign(algorithm());
     }
