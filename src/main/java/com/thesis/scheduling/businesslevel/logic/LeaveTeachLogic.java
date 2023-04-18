@@ -75,7 +75,7 @@ public class LeaveTeachLogic {
 				dayNumber = 7;
 			}
 			dateStart.setDate(dateStart.getDate() + 1);
-			Date dateRun = new Date(dateStart.getYear() - 543, dateStart.getMonth(), dateStart.getDate());
+			Date dateRun = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
 
 			System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + ":::"
 					+ dateStart.getDate() + ":::" + dateRun);

@@ -47,6 +47,7 @@ public class LeaveTeachAPIController {
 	// DELETE
 	@DeleteMapping("/teacher/delete/{leaveTeachId}")
 	public void deleteTeacher(@PathVariable("leaveTeachId") int leaveTeachId) throws BaseException {
+		System.out.println(leaveTeachId);
 		leaveTeachLogic.deleteTeacher(leaveTeachId);
 	}
 	
