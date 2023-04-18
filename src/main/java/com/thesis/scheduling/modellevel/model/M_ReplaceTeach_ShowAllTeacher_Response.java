@@ -1,8 +1,7 @@
 package com.thesis.scheduling.modellevel.model;
 
-import com.thesis.scheduling.modellevel.entity.LeaveTeach;
-import com.thesis.scheduling.modellevel.entity.Member;
-import com.thesis.scheduling.modellevel.entity.Timetable;
+import java.sql.Time;
+import java.sql.Date;
 
 import lombok.Data;
 
@@ -19,7 +18,11 @@ public class M_ReplaceTeach_ShowAllTeacher_Response {
 
     private String group_name;
 
-    private java.sql.Date date;
+    private Time start_time;
+
+    private Time end_time;
+
+    private Date date;
 
     private Integer memberTechingId;
 

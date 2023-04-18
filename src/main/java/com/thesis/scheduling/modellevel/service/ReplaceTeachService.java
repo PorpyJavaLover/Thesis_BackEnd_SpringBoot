@@ -38,6 +38,10 @@ public class ReplaceTeachService {
 		return repository.findAllByLeaveTeachId(leaveTeachId);
 	}
 
+	public Optional<ReplaceTeach> findByReplaceTeachId(int replaceTeachId) {
+		return repository.findByReplaceTeachId(replaceTeachId);
+	}
+
 	// SET
 	public void create(LeaveTeach leaveTeachId, Timetable essTimetableId , Date date ) {
 

@@ -1,5 +1,6 @@
 package com.thesis.scheduling.modellevel.service;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,9 +27,10 @@ public class MemberService {
 		return repository.count();
 	}
 
-	public Iterable<Member> findAll() {
+	public Collection<Member> findAll() {
 		return repository.findAll();
 	}
+
 
 	public Optional<Member> findByUsername(String username) {
 		return repository.findByUsername(username);

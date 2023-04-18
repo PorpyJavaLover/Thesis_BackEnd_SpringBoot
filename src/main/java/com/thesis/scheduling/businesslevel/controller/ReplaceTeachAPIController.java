@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.logic.ReplaceTeachLogic;
 import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_UpdateTeacher_Request;
+import com.thesis.scheduling.modellevel.model.M_SelectOption_Response;
 import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_ShowAllTeacher_Response;
 
 @RestController
@@ -31,10 +33,21 @@ public class ReplaceTeachAPIController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/teacher/member/replace/option/{replaceTeachId}")
+	public ResponseEntity<Iterable<M_SelectOption_Response>> showMemberReplaceOption( @PathVariable("replaceTeachId") int replaceTeachId) throws BaseException {
+		Iterable<M_SelectOption_Response> response = replaceTeachLogic.showMemberReplaceOption(replaceTeachId);
+		return ResponseEntity.ok(response);
+	}
+
 	// SET
-	@PostMapping("/teacher/update")
+	@PostMapping("/teacher/create")
 	public void createTeacher(@RequestBody M_ReplaceTeach_UpdateTeacher_Request request) throws BaseException {
-		replaceTeachLogic.updateTeacher(request);
+		
+	}
+
+	@PutMapping("/teacher/update/{replaceTeachId}")
+	public void updateTeacher( @PathVariable("replaceTeachId") int replaceTeachId , @RequestBody M_ReplaceTeach_UpdateTeacher_Request request) throws BaseException {
+		replaceTeachLogic.updateTeacher(replaceTeachId,request);
 	}
 
 	// DELETE
