@@ -8,6 +8,8 @@ public class M_Plan_ShowAllTeacher_Response {
 	private String years;
 
 	private String years_name;
+
+	private String years_value;
 	
 	private String semester;
 	

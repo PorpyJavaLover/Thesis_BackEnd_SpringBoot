@@ -24,8 +24,11 @@ public class LeaveTeachMapper {
 		for (LeaveTeach sourceTmp : source) {
 			M_LeaveTeach_ShowAllTeacher_Response targetSub = new M_LeaveTeach_ShowAllTeacher_Response();
 			targetSub.setLeaveTeachId(sourceTmp.getLeaveTeachId());
-			targetSub.setYears(String.valueOf(Integer.parseInt(sourceTmp.getYears().toString()) + 543));
+			targetSub.setYears_value(String.valueOf(Integer.parseInt(sourceTmp.getYears().toString())));
+			targetSub.setYears_name(String.valueOf(Integer.parseInt(sourceTmp.getYears().toString()) + 543));
 			targetSub.setSemester(sourceTmp.getSemester().toString());
+			targetSub.setDateStart_value(new Date(sourceTmp.getDateStart().getYear(),sourceTmp.getDateStart().getMonth(), sourceTmp.getDateStart().getDate()));
+			targetSub.setDateEnd_value(new Date(sourceTmp.getDateEnd().getYear(),sourceTmp.getDateEnd().getMonth(), sourceTmp.getDateEnd().getDate()));
 			targetSub.setDateStart(new Date(sourceTmp.getDateStart().getYear() + 543,sourceTmp.getDateStart().getMonth(), sourceTmp.getDateStart().getDate()));
 			targetSub.setDateEnd(new Date(sourceTmp.getDateEnd().getYear() + 543,sourceTmp.getDateEnd().getMonth(), sourceTmp.getDateEnd().getDate()));
 			targetSub.setNote(sourceTmp.getNote());

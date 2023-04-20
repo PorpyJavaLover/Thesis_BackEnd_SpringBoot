@@ -129,7 +129,7 @@ public class TimetableMapper {
 		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 		for (Timetable sourceATmp : sourceA) {
 
-			int interim = deconvertStartTime(sourceATmp.getEndTime().toString())
+			int interim = deconvertEndTime(sourceATmp.getEndTime().toString())
 					- deconvertStartTime(sourceATmp.getStartTime().toString());
 
 			for (int i = 0; i < interim; i++) {
@@ -150,7 +150,7 @@ public class TimetableMapper {
 		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 		for (NotTeach sourceATmp : sourceA) {
 
-			int interim = deconvertStartTime(sourceATmp.getTimeEnd().toString())
+			int interim = deconvertEndTime(sourceATmp.getTimeEnd().toString())
 					- deconvertStartTime(sourceATmp.getTimeStart().toString());
 
 			for (int i = 0; i < interim; i++) {
@@ -174,7 +174,7 @@ public class TimetableMapper {
 			if (sourceSubA.getCourseType() == 0) {
 				j = sourceSubA.getCourseId().getCourseLect();
 			} else if (sourceSubA.getCourseType() == 1) {
-				j = sourceSubA.getCourseId().getCoursePerf();
+				j = (sourceSubA.getCourseId().getCoursePerf());
 			}
 			for (int i = 0; i < j; i++) {
 				M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
@@ -256,7 +256,7 @@ public class TimetableMapper {
 			if (sourceATmp.getCourseType() == 0) {
 				j = sourceATmp.getCourseId().getCourseLect();
 			} else if (sourceATmp.getCourseType() == 1) {
-				j = sourceATmp.getCourseId().getCoursePerf();
+				j = (sourceATmp.getCourseId().getCoursePerf());
 			}
 			for (int i = 0; i < j ; i++) {
 				M_Timetable_ShowTimeRemain_Response targetASub = new M_Timetable_ShowTimeRemain_Response();
@@ -283,7 +283,7 @@ public class TimetableMapper {
 		if (sourceA.getCourseType() == 0) {
 			x = sourceA.getCourseId().getCourseLect();
 		} else {
-			x = sourceA.getCourseId().getCoursePerf();
+			x = (sourceA.getCourseId().getCoursePerf());
 		}
 
 		y = deconvertEndTime(Endtime);
@@ -310,7 +310,7 @@ public class TimetableMapper {
 		if (sourceA.getCourseType() == 0) {
 			x = sourceA.getCourseId().getCourseLect();
 		} else {
-			x = sourceA.getCourseId().getCoursePerf();
+			x = (sourceA.getCourseId().getCoursePerf());
 		}
 
 		y = deconvertStartTime(startTime);

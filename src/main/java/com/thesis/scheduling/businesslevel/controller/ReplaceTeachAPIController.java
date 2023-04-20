@@ -14,6 +14,8 @@ import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.logic.ReplaceTeachLogic;
 import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_UpdateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_SelectOption_Response;
+import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_PDFBodyTeacher_Response;
+import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_PDFHeadTeacher_Response;
 import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_ShowAllTeacher_Response;
 
 @RestController
@@ -36,6 +38,18 @@ public class ReplaceTeachAPIController {
 	@GetMapping("/teacher/member/replace/option/{replaceTeachId}")
 	public ResponseEntity<Iterable<M_SelectOption_Response>> showMemberReplaceOption( @PathVariable("replaceTeachId") int replaceTeachId) throws BaseException {
 		Iterable<M_SelectOption_Response> response = replaceTeachLogic.showMemberReplaceOption(replaceTeachId);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/teacher/pdf/head/{replaceTeachId}")
+	public ResponseEntity<M_ReplaceTeach_PDFHeadTeacher_Response> showPDFHeadTeacher( @PathVariable("replaceTeachId") int replaceTeachId) throws BaseException {
+		M_ReplaceTeach_PDFHeadTeacher_Response response = replaceTeachLogic.showPDFHeadTeacher(replaceTeachId);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/teacher/pdf/body/{leaveTeachId}")
+	public ResponseEntity<Iterable<M_ReplaceTeach_PDFBodyTeacher_Response>> showPDFBodyTeacher( @PathVariable("leaveTeachId") int leaveTeachId) throws BaseException {
+		Iterable<M_ReplaceTeach_PDFBodyTeacher_Response> response = replaceTeachLogic.showPDFBodyTeacher(leaveTeachId);
 		return ResponseEntity.ok(response);
 	}
 

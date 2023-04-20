@@ -13,6 +13,8 @@ import com.thesis.scheduling.modellevel.entity.Timetable;
 import com.thesis.scheduling.modellevel.mapper.ReplaceTeachMapper;
 import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_UpdateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_SelectOption_Response;
+import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_PDFBodyTeacher_Response;
+import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_PDFHeadTeacher_Response;
 import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_ShowAllTeacher_Response;
 import com.thesis.scheduling.modellevel.service.LeaveTeachService;
 import com.thesis.scheduling.modellevel.service.MemberService;
@@ -54,34 +56,50 @@ public class ReplaceTeachLogic {
 
 		Collection<Member> sourceA = new ArrayList<Member>(memberService.findAll());
 		sourceA.remove(memberService.findByMemberId(getCurrentUserId()).get());
-		for (Member sourceATmp : sourceA) {
-			Collection<Timetable> sourceB = timetableService.findAllByMemberId(sourceATmp);
+		Collection<Member> sourceD = new ArrayList<Member>(sourceA);
+		for (Member sourceATmp : sourceD) {
 			ReplaceTeach sourceC = replaceTeachService.findByReplaceTeachId(replaceTeachId).get();
+			Collection<Timetable> sourceB = timetableService.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
+					sourceATmp, sourceC.getEssTimetableId().getYears(), sourceC.getEssTimetableId().getSemester(),
+					sourceC.getEssTimetableId().getDayOfWeek());
 			Integer j = 0;
 			if (sourceC.getEssTimetableId().getCourseType() == 0) {
 				j = sourceC.getEssTimetableId().getCourseId().getCourseLect();
 			} else if (sourceC.getEssTimetableId().getCourseType() == 1) {
-				j = sourceC.getEssTimetableId().getCourseId().getCoursePerf();
+				j = (sourceC.getEssTimetableId().getCourseId().getCoursePerf());
 			}
 			sourceC.getEssTimetableId().getStartTime();
-			for (Timetable sourceBTmp : sourceB) {
-				boolean breakChecker = false;
-				for (int i = 0; i < j ; i++) {
-					int A = deconvertEndTime(sourceBTmp.getStartTime().toString()) + i;
-					int B = deconvertEndTime(sourceC.getEssTimetableId().getStartTime().toString());
-					if(A == B){
-						breakChecker = true;
-						sourceA.remove(sourceBTmp.getMemberId());
+			if (sourceB != null) {
+				for (Timetable sourceBTmp : sourceB) {
+					boolean breakChecker = false;
+					for (int i = 0; i < j; i++) {
+						int A = deconvertStartTime(sourceBTmp.getStartTime().toString()) + i;
+						int B = deconvertStartTime(sourceC.getEssTimetableId().getStartTime().toString());
+						if (A == B) {
+							breakChecker = true;
+							sourceA.remove(sourceBTmp.getMemberId());
+							break;
+						}
+					}
+					if (breakChecker == true) {
 						break;
 					}
-				}
-				if(breakChecker == true){
-					break;
-				}
 
+				}
 			}
 		}
+
 		return replaceTeachMapper.toMemberReplaceOptionTeacher(sourceA);
+	}
+
+	public M_ReplaceTeach_PDFHeadTeacher_Response showPDFHeadTeacher(int replaceTeachId) {
+		Optional<ReplaceTeach> sourceC = replaceTeachService.findByReplaceTeachId(replaceTeachId);
+		return replaceTeachMapper.toPDFHeadTeacher(sourceC.get());
+	}
+
+	public Iterable<M_ReplaceTeach_PDFBodyTeacher_Response> showPDFBodyTeacher(int leaveTeachId) {
+		Iterable<ReplaceTeach> sourceC = replaceTeachService.findAllByLeaveTeachId(leaveTeachService.findByLeaveTeachId(leaveTeachId));
+		return replaceTeachMapper.toPDFBodyTeacher(sourceC);
 	}
 
 	public Iterable<ReplaceTeach> showAllStaff() {
@@ -104,101 +122,100 @@ public class ReplaceTeachLogic {
 		return Integer.parseInt(opt.get());
 	}
 
-	//function
-	public int deconvertEndTime(String input) {
+	// function
+	public int deconvertStartTime(String input) {
 		int output = 0;
 		switch (input) {
-
-			case "09:00:00":
+			case "08:00:00":
 				output = 1;
 				break;
-			case "10:00:00":
+			case "09:00:00":
 				output = 2;
 				break;
-			case "11:00:00":
+			case "10:00:00":
 				output = 3;
 				break;
-			case "12:00:00":
+			case "11:00:00":
 				output = 4;
 				break;
-			case "13:00:00":
+			case "12:00:00":
 				output = 5;
 				break;
-			case "14:00:00":
+			case "13:00:00":
 				output = 6;
 				break;
-			case "15:00:00":
+			case "14:00:00":
 				output = 7;
 				break;
-			case "16:00:00":
+			case "15:00:00":
 				output = 8;
 				break;
-			case "17:00:00":
+			case "16:00:00":
 				output = 9;
 				break;
-			case "18:00:00":
+			case "17:00:00":
 				output = 10;
 				break;
-			case "19:00:00":
+			case "18:00:00":
 				output = 11;
 				break;
-			case "20:00:00":
+			case "19:00:00":
 				output = 12;
 				break;
-			case "21:00:00":
+			case "20:00:00":
 				output = 13;
 				break;
-			case "22:00:00":
+			case "21:00:00":
 				output = 14;
 				break;
 		}
 		return output;
 	}
 
-	public String convertEndTime(int input) {
-		String output = "XX:XX:XX";
+	public String convertStartTime(int input) {
+		String output = "08:00:00";
 		switch (input) {
 			case 1:
-				output = "09:00:00";
+				output = "08:00:00";
 				break;
 			case 2:
-				output = "10:00:00";
+				output = "09:00:00";
 				break;
 			case 3:
-				output = "11:00:00";
+				output = "10:00:00";
 				break;
 			case 4:
-				output = "12:00:00";
+				output = "11:00:00";
 				break;
 			case 5:
-				output = "13:00:00";
+				output = "12:00:00";
 				break;
 			case 6:
-				output = "14:00:00";
+				output = "13:00:00";
 				break;
 			case 7:
-				output = "15:00:00";
+				output = "14:00:00";
 				break;
 			case 8:
-				output = "16:00:00";
+				output = "15:00:00";
 				break;
 			case 9:
-				output = "17:00:00";
+				output = "16:00:00";
 				break;
 			case 10:
-				output = "18:00:00";
+				output = "17:00:00";
 				break;
 			case 11:
-				output = "19:00:00";
+				output = "18:00:00";
 				break;
 			case 12:
-				output = "20:00:00";
+				output = "19:00:00";
 				break;
 			case 13:
-				output = "21:00:00";
+				output = "20:00:00";
 				break;
 			case 14:
-				output = "22:00:00";
+				output = "21:00:00";
 				break;
 		}
 		return output;

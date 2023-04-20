@@ -394,7 +394,7 @@ public class TimetableLogic {
 					if (listTmp.getCourseType() == 0) {
 						timeRun = listTmp.getCourseId().getCourseLect();
 					} else {
-						timeRun = listTmp.getCourseId().getCoursePerf();
+						timeRun = (listTmp.getCourseId().getCoursePerf());
 					}
 
 					targetA = new ArrayList<>(showStartTimeOptionStaff(true, listTmp.getYears(),
@@ -470,8 +470,9 @@ public class TimetableLogic {
 	}
 
 	// SET
+	// -543
 	public void createTeacher(M_Timetable_CreateTeacher_Request request) {
-		timetableService.create((String.valueOf(Integer.parseInt(request.getYears().toString()) - 543)), request.getSemester(),
+		timetableService.create(request.getYears().toString(), request.getSemester(),
 				courseService.findByCourseId(request.getCourseId()).get(),
 				request.getCourseType(),
 				groupService.findByGroupId(request.getGroupId()).get(),
@@ -479,7 +480,7 @@ public class TimetableLogic {
 	}
 
 	public void createStaff(M_Timetable_CreateStaff_Request request) {
-		timetableService.create((String.valueOf(Integer.parseInt(request.getYears().toString()) - 543)), request.getSemester(),
+		timetableService.create(request.getYears().toString(), request.getSemester(),
 				courseService.findByCourseId(request.getCourseId()).get(),
 				request.getCourseType(),
 				groupService.findByGroupId(request.getGroupId()).get(),

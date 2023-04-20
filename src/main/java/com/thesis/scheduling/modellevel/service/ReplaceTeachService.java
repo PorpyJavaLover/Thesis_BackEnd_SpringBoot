@@ -34,6 +34,10 @@ public class ReplaceTeachService {
 		return repository.findAll();
 	}
 
+	public Iterable<ReplaceTeach> showPDFBodyTeacher() {
+		return repository.findAll();
+	}
+	
 	public Collection<ReplaceTeach> findAllByLeaveTeachId(LeaveTeach leaveTeachId) {
 		return repository.findAllByLeaveTeachId(leaveTeachId);
 	}

@@ -62,7 +62,7 @@ public class LeaveTeachService {
 
 		if (opt.isPresent()) {
 			entity = opt.get();
-			entity.getYears();
+			entity.setYears(years);
 			entity.setSemester(semester);
 			entity.setDateStart(dateStart);
 			entity.setDateEnd(dateEnd);

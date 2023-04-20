@@ -133,7 +133,7 @@ public class TimetableService {
 			if (subTargetA.getCourseType() == 0) {
 				x = subTargetA.getCourseId().getCourseLect();
 			} else {
-				x = subTargetA.getCourseId().getCoursePerf();
+				x = (subTargetA.getCourseId().getCoursePerf());
 			}
 			return x;
 		} else {

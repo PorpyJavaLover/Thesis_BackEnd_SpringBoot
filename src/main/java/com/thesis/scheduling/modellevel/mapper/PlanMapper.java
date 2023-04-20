@@ -28,6 +28,7 @@ public class PlanMapper {
 					sourceTmp.getGroupId().getGroup_name().indexOf('.') + 3));
 
 			targetSub.setYears(sourceTmp.getYears().toString());
+			targetSub.setYears_value((Integer.parseInt(("25" + (j + i)))-543)+"");
 			targetSub.setYears_name("25" + (j + i));
 			targetSub.setSemester(sourceTmp.getSemester().toString());
 			targetSub.setCourse_id(sourceTmp.getCourseId().getCourseId().toString());
@@ -61,6 +62,7 @@ public class PlanMapper {
 					sourceTmp.getGroupId().getGroup_name().indexOf('.') + 3));
 
 			targetSub.setYears(sourceTmp.getYears().toString());
+			targetSub.setYears_value((Integer.parseInt(("25" + (j + i)))-543)+"");
 			targetSub.setYears_name("25" + (j + i));
 			targetSub.setSemester(sourceTmp.getSemester().toString());
 			targetSub.setCourse_id(sourceTmp.getCourseId().getCourseId().toString());
