@@ -33,15 +33,15 @@ public class M_Timetable_ShowAllStaff_Response {
 	
 	private String member_name;
 	
-	private Integer day_of_week;
+	private String day_of_week;
 
 	private String day_of_week_name;
 	
-	private Time start_time;
+	private String start_time;
 	
-	private Time end_time;
+	private String end_time;
 	
-	private Integer room_id;
+	private String room_id;
 	
 	private String room_name;
 	

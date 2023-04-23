@@ -20,8 +20,15 @@ public class PlanService {
 
 	// GET
 	public Iterable<Plan> findAll() {
-
 		return repository.findAll();
+	}
+
+	public Iterable<Plan> findAllBySemester(int semester) {
+		return repository.findAllBySemester(semester);
+	}
+
+	public Iterable<Plan> findAllByYearsAndSemester(int years , int semester) {
+		return repository.findAllByYearsAndSemester(years , semester);
 	}
 
 	// SET

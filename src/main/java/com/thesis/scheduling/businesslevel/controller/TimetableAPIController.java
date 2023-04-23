@@ -47,9 +47,9 @@ public class TimetableAPIController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/staff/show/all")
-	public ResponseEntity<Iterable<M_Timetable_ShowAllStaff_Response>> showAllStaff() throws BaseException {
-		Iterable<M_Timetable_ShowAllStaff_Response> response = timetableLogic.showAllStaff();
+	@GetMapping("/staff/show/all/{yId}/{sId}")
+	public ResponseEntity<Iterable<M_Timetable_ShowAllStaff_Response>> showAllStaff(@PathVariable("yId") String yId , @PathVariable("sId") String sId) throws BaseException {
+		Iterable<M_Timetable_ShowAllStaff_Response> response = timetableLogic.showAllStaff(yId , sId);
 		return ResponseEntity.ok(response);
 	}
 
@@ -119,9 +119,9 @@ public class TimetableAPIController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/staff/auto_pilot")
-	public void autoPilot() throws BaseException, ParseException {
-		timetableLogic.autoPilot();
+	@GetMapping("/staff/auto_pilot/{yId}/{sId}")
+	public void autoPilot(@PathVariable("yId") String yId , @PathVariable("sId") String sId) throws BaseException, ParseException {
+		timetableLogic.autoPilot( yId , sId );
 	}
 
 	// SET
@@ -182,9 +182,9 @@ public class TimetableAPIController {
 		timetableLogic.clean(yId, sId, cId, cType, gId, dayOfWeek, startTime, endTime, roomId, timeLocker, roomLocker);
 	}
 
-	@DeleteMapping("/staff/clean/all")
-	public void cleanAll() throws BaseException {
-		timetableLogic.cleanAll();
+	@DeleteMapping("/staff/clean/all/{yId}/{sId}")
+	public void cleanAll(@PathVariable("yId") String yId , @PathVariable("sId") String sId) throws BaseException {
+		timetableLogic.cleanAll(yId , sId);
 	}
 
 }

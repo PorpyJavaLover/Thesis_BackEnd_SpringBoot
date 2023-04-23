@@ -18,9 +18,13 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Collection<Timetable> findAll();
 
+	Collection<Timetable> findAllByYearsAndSemester(String years , String semester);
+
 	Collection<Timetable> findAllByMemberId(Member memberId);
 
 	Collection<Timetable> findAllByMemberIdAndDayOfWeek(Member memberId, Integer dayOfWeek);
+
+	Collection<Timetable> findAllByMemberIdAndYearsAndDayOfWeek(Member memberId, String years , Integer dayOfWeek);
 
 	Collection<Timetable> findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(Member memberId, String years, String semester, Integer dayOfWeek);
 

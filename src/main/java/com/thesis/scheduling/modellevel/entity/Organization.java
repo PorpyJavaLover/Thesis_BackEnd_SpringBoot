@@ -44,4 +44,9 @@ public class Organization {
     @JsonIgnore
     private List<Member> member;
 
+	@OneToMany(mappedBy = "sOrganizationId")
+    @Column(nullable = true)
+    @JsonIgnore
+    private List<Person> person;
+
 }

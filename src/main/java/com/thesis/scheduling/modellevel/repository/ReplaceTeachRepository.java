@@ -22,6 +22,8 @@ public interface ReplaceTeachRepository extends CrudRepository<ReplaceTeach, Str
 
 	Collection<ReplaceTeach> findAllByLeaveTeachId(LeaveTeach leaveTeachId);
 
+	Collection<ReplaceTeach> findAllByLeaveTeachIdAndMemberReplaceId(LeaveTeach leaveTeachId,Member memberReplaceId);
+
 	Optional<ReplaceTeach> findByLeaveTeachIdAndEssTimetableIdAndMemberReplaceId(LeaveTeach leaveTeachId,
 			Timetable essTimetableId, Member memberReplaceId);
 	

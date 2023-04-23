@@ -42,6 +42,10 @@ public class ReplaceTeachService {
 		return repository.findAllByLeaveTeachId(leaveTeachId);
 	}
 
+	public Collection<ReplaceTeach> findAllByLeaveTeachIdAndMemberReplaceId(LeaveTeach leaveTeachId,Member memberReplaceId) {
+		return repository.findAllByLeaveTeachIdAndMemberReplaceId(leaveTeachId,memberReplaceId);
+	}
+
 	public Optional<ReplaceTeach> findByReplaceTeachId(int replaceTeachId) {
 		return repository.findByReplaceTeachId(replaceTeachId);
 	}

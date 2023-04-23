@@ -47,9 +47,9 @@ public class ReplaceTeachAPIController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/teacher/pdf/body/{leaveTeachId}")
-	public ResponseEntity<Iterable<M_ReplaceTeach_PDFBodyTeacher_Response>> showPDFBodyTeacher( @PathVariable("leaveTeachId") int leaveTeachId) throws BaseException {
-		Iterable<M_ReplaceTeach_PDFBodyTeacher_Response> response = replaceTeachLogic.showPDFBodyTeacher(leaveTeachId);
+	@GetMapping("/teacher/pdf/body/{leaveTeachId}/{replaceTeachId}")
+	public ResponseEntity<Iterable<M_ReplaceTeach_PDFBodyTeacher_Response>> showPDFBodyTeacher( @PathVariable("leaveTeachId") int leaveTeachId , @PathVariable("replaceTeachId") int replaceTeachId) throws BaseException {
+		Iterable<M_ReplaceTeach_PDFBodyTeacher_Response> response = replaceTeachLogic.showPDFBodyTeacher(leaveTeachId,replaceTeachId);
 		return ResponseEntity.ok(response);
 	}
 

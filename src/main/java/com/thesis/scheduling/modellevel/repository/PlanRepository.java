@@ -14,6 +14,10 @@ public interface PlanRepository extends CrudRepository<Plan,String>{
 	
 	Iterable<Plan> findByGroupId(Group groupId);
 
+	Iterable<Plan> findAllBySemester(int semester);
+
+	Iterable<Plan> findAllByYearsAndSemester(int years , int semester);
+
 	Optional<Plan> findByYearsAndSemesterAndCourseIdAndGroupId(int years , int semester , Course courseId , Group groupId );
 	
 }

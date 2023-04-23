@@ -26,6 +26,10 @@ public class TimetableService {
 		return repository.findAll();
 	}
 
+	public Collection<Timetable> findAllByYearsAndSemester(String years , String semester) {
+		return repository.findAllByYearsAndSemester(years , semester);
+	}
+
 	public Iterable<Timetable> findAllByRoomId(Room roomId) {
 		return repository.findAllByRoomId(roomId);
 	}
@@ -175,8 +179,8 @@ public class TimetableService {
 		Collection<Timetable> targetB = new ArrayList<Timetable>();
 
 		for (Timetable targetASub : targetA) {
-			Collection<Timetable> targetC = repository.findAllByMemberIdAndDayOfWeek(targetASub.getMemberId(),
-					dayOfWeek);
+			Collection<Timetable> targetC = repository.findAllByMemberIdAndYearsAndDayOfWeek(targetASub.getMemberId(),
+			 years , dayOfWeek);
 			targetB.addAll(targetC);
 		}
 
@@ -205,7 +209,10 @@ public class TimetableService {
 			Group groupId, Integer dayOfWeek, Time startTime, Time endTime) {
 
 		if (endTime == null || startTime == null || dayOfWeek == null) {
-			throw new IllegalArgumentException("No values can be null");
+
+			//@todo บัค เลือกห้อง
+			return null;
+
 		}
 
 		Collection<Timetable> targetA = repository.findAllByDayOfWeek(dayOfWeek);

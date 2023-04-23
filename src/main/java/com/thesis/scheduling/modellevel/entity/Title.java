@@ -31,5 +31,10 @@ public class Title implements Serializable  {
     @Column(nullable = true)
     @JsonIgnore
     private List<Member> member;
+
+    @OneToMany(mappedBy = "titleId")
+    @Column(nullable = true)
+    @JsonIgnore
+    private List<Person> person;
 	
 }

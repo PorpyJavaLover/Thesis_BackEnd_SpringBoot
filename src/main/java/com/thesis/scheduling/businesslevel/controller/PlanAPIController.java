@@ -35,9 +35,9 @@ public class PlanAPIController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/staff/show/all")
-	public ResponseEntity<Iterable<M_Plan_ShowAllStaff_Response>> showAllStaff() throws BaseException {
-		Iterable<M_Plan_ShowAllStaff_Response> response = planLogic.showAllStaff();
+	@GetMapping("/staff/show/all/{years}/{semester}")
+	public ResponseEntity<Iterable<M_Plan_ShowAllStaff_Response>> showAllStaff(@PathVariable("years") int years, @PathVariable("semester") int semester) throws BaseException {
+		Iterable<M_Plan_ShowAllStaff_Response> response = planLogic.showAllStaff(years, semester);
 		return ResponseEntity.ok(response);
 	}
 
@@ -49,8 +49,8 @@ public class PlanAPIController {
 
 	// DELETE
 	@DeleteMapping("/teacher/delete/{years}/{semester}/{courseId}/{groupId}")
-	public void delete(@PathVariable("timetableId") int years, @PathVariable("timetableId") int semester,
-			@PathVariable("timetableId") Course courseId, @PathVariable("timetableId") Group groupId)
+	public void delete(@PathVariable("years") int years, @PathVariable("semester") int semester,
+			@PathVariable("courseId") Course courseId, @PathVariable("groupId") Group groupId)
 			throws BaseException {
 		planLogic.delete(years, semester, courseId, groupId);
 	}

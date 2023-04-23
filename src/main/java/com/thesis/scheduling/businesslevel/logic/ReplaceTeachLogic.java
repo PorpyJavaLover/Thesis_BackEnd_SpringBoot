@@ -97,8 +97,8 @@ public class ReplaceTeachLogic {
 		return replaceTeachMapper.toPDFHeadTeacher(sourceC.get());
 	}
 
-	public Iterable<M_ReplaceTeach_PDFBodyTeacher_Response> showPDFBodyTeacher(int leaveTeachId) {
-		Iterable<ReplaceTeach> sourceC = replaceTeachService.findAllByLeaveTeachId(leaveTeachService.findByLeaveTeachId(leaveTeachId));
+	public Iterable<M_ReplaceTeach_PDFBodyTeacher_Response> showPDFBodyTeacher(int leaveTeachId , int replaceTeachId) {
+		Iterable<ReplaceTeach> sourceC = replaceTeachService.findAllByLeaveTeachIdAndMemberReplaceId(leaveTeachService.findByLeaveTeachId(leaveTeachId),replaceTeachService.findByReplaceTeachId(replaceTeachId).get().getMemberReplaceId());
 		return replaceTeachMapper.toPDFBodyTeacher(sourceC);
 	}
 

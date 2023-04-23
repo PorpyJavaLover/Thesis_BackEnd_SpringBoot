@@ -74,26 +74,29 @@ public class TimetableLogic {
 	}
 
 	public Iterable<M_Timetable_ShowAllStaff_Response> showAllTeacher() {
-		Collection<Timetable> sourceA = new ArrayList<Timetable>(timetableService.findAllByMemberId(memberService.findByMemberId(getCurrentUserId()).get()));
+		Collection<Timetable> sourceA = new ArrayList<Timetable>(
+				timetableService.findAllByMemberId(memberService.findByMemberId(getCurrentUserId()).get()));
 		Collection<Timetable> sourceForRemove = new ArrayList<Timetable>();
-		Collection<M_Timetable_ShowAllStaff_Response> sourceD = new ArrayList<M_Timetable_ShowAllStaff_Response>();; 
+		Collection<M_Timetable_ShowAllStaff_Response> sourceD = new ArrayList<M_Timetable_ShowAllStaff_Response>();
+		;
 		for (Timetable sourceATmp : sourceA) {
 			Collection<Timetable> sourceCoopTeacher;
-			String sourceYId = sourceATmp.getYears() ;
-			String sourceSId = sourceATmp.getSemester() ;
+			String sourceYId = sourceATmp.getYears();
+			String sourceSId = sourceATmp.getSemester();
 			Course sourceCId = courseService.findByCourseId(sourceATmp.getCourseId().getCourseId()).get();
 			Integer sourceCType = sourceATmp.getCourseType();
-			Group sourceGId =  groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get() ;
-			sourceCoopTeacher =  timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId, sourceCType,sourceGId);
-			for(Timetable sourceCoopTeacherTmp : sourceCoopTeacher){
+			Group sourceGId = groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get();
+			sourceCoopTeacher = timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId,
+					sourceSId, sourceCId, sourceCType, sourceGId);
+			for (Timetable sourceCoopTeacherTmp : sourceCoopTeacher) {
 				boolean SameTimetable = true;
-				for(Timetable sourceForRemoveTmp : sourceForRemove){
-					if(sourceForRemoveTmp.equals(sourceATmp)){
+				for (Timetable sourceForRemoveTmp : sourceForRemove) {
+					if (sourceForRemoveTmp.equals(sourceATmp)) {
 						SameTimetable = false;
 						break;
 					}
 				}
-				if(SameTimetable && !sourceCoopTeacherTmp.equals(sourceATmp)){
+				if (SameTimetable && !sourceCoopTeacherTmp.equals(sourceATmp)) {
 					sourceForRemove.add(sourceCoopTeacherTmp);
 				}
 			}
@@ -102,39 +105,43 @@ public class TimetableLogic {
 		sourceA.removeAll(sourceForRemove);
 
 		for (Timetable sourceATmp : sourceA) {
-			String sourceYId = sourceATmp.getYears() ;
-			String sourceSId = sourceATmp.getSemester() ;
+			String sourceYId = sourceATmp.getYears();
+			String sourceSId = sourceATmp.getSemester();
 			Course sourceCId = courseService.findByCourseId(sourceATmp.getCourseId().getCourseId()).get();
 			Integer sourceCType = sourceATmp.getCourseType();
-			Group sourceGId =  groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get() ;
-			Collection<Timetable> sourceC =  timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId, sourceCType,sourceGId);
-			M_Timetable_ShowAllStaff_Response sourceDTmp =  mapper.toMTimetableStaff(sourceATmp , sourceC);
+			Group sourceGId = groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get();
+			Collection<Timetable> sourceC = timetableService
+					.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId,
+							sourceCType, sourceGId);
+			M_Timetable_ShowAllStaff_Response sourceDTmp = mapper.toMTimetableStaff(sourceATmp, sourceC);
 			sourceD.add(sourceDTmp);
 		}
 		return sourceD;
 	}
 
-	public Iterable<M_Timetable_ShowAllStaff_Response> showAllStaff() {
-		Collection<Timetable> sourceA = new ArrayList<Timetable>(timetableService.findAll());
+	public Iterable<M_Timetable_ShowAllStaff_Response> showAllStaff( String yId , String sId) {
+		Collection<Timetable> sourceA = new ArrayList<Timetable>(timetableService.findAllByYearsAndSemester(yId,sId));
 		Collection<Timetable> sourceForRemove = new ArrayList<Timetable>();
-		Collection<M_Timetable_ShowAllStaff_Response> sourceD = new ArrayList<M_Timetable_ShowAllStaff_Response>();; 
+		Collection<M_Timetable_ShowAllStaff_Response> sourceD = new ArrayList<M_Timetable_ShowAllStaff_Response>();
+		;
 		for (Timetable sourceATmp : sourceA) {
 			Collection<Timetable> sourceCoopTeacher;
-			String sourceYId = sourceATmp.getYears() ;
-			String sourceSId = sourceATmp.getSemester() ;
+			String sourceYId = sourceATmp.getYears();
+			String sourceSId = sourceATmp.getSemester();
 			Course sourceCId = courseService.findByCourseId(sourceATmp.getCourseId().getCourseId()).get();
 			Integer sourceCType = sourceATmp.getCourseType();
-			Group sourceGId =  groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get() ;
-			sourceCoopTeacher =  timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId, sourceCType,sourceGId);
-			for(Timetable sourceCoopTeacherTmp : sourceCoopTeacher){
+			Group sourceGId = groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get();
+			sourceCoopTeacher = timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId,
+					sourceSId, sourceCId, sourceCType, sourceGId);
+			for (Timetable sourceCoopTeacherTmp : sourceCoopTeacher) {
 				boolean SameTimetable = true;
-				for(Timetable sourceForRemoveTmp : sourceForRemove){
-					if(sourceForRemoveTmp.equals(sourceATmp)){
+				for (Timetable sourceForRemoveTmp : sourceForRemove) {
+					if (sourceForRemoveTmp.equals(sourceATmp)) {
 						SameTimetable = false;
 						break;
 					}
 				}
-				if(SameTimetable && !sourceCoopTeacherTmp.equals(sourceATmp)){
+				if (SameTimetable && !sourceCoopTeacherTmp.equals(sourceATmp)) {
 					sourceForRemove.add(sourceCoopTeacherTmp);
 				}
 			}
@@ -143,13 +150,15 @@ public class TimetableLogic {
 		sourceA.removeAll(sourceForRemove);
 
 		for (Timetable sourceATmp : sourceA) {
-			String sourceYId = sourceATmp.getYears() ;
-			String sourceSId = sourceATmp.getSemester() ;
+			String sourceYId = sourceATmp.getYears();
+			String sourceSId = sourceATmp.getSemester();
 			Course sourceCId = courseService.findByCourseId(sourceATmp.getCourseId().getCourseId()).get();
 			Integer sourceCType = sourceATmp.getCourseType();
-			Group sourceGId =  groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get() ;
-			Collection<Timetable> sourceC =  timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId, sourceCType,sourceGId);
-			M_Timetable_ShowAllStaff_Response sourceDTmp =  mapper.toMTimetableStaff(sourceATmp , sourceC);
+			Group sourceGId = groupService.findByGroupId(sourceATmp.getGroupId().getGroupId()).get();
+			Collection<Timetable> sourceC = timetableService
+					.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceYId, sourceSId, sourceCId,
+							sourceCType, sourceGId);
+			M_Timetable_ShowAllStaff_Response sourceDTmp = mapper.toMTimetableStaff(sourceATmp, sourceC);
 			sourceD.add(sourceDTmp);
 		}
 		return sourceD;
@@ -181,8 +190,7 @@ public class TimetableLogic {
 		Collection<M_Timetable_ShowTimeRemain_Response> MUnionSorted;
 
 		sourceCoTeach = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(yId,
-				sId,
-				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
+				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get(), dayOfWeek);
 		sourceEachTeacher = timetableService.findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupId(yId,
 				sId, courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
 		sourceInconvenientTeach = new ArrayList<NotTeach>();
@@ -267,7 +275,8 @@ public class TimetableLogic {
 
 		MUnion = mapper.UnionDayAndTime(MBase, MCoTeach, MInconvenientTeach, MEachClassToDay);
 
-		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType - 1, MUnion.size());
+		MUnionSort = ((ArrayList<M_Timetable_ShowTimeRemain_Response>) MUnion).subList(sourceCourseType - 1,
+				MUnion.size());
 		MUnionSorted = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 
 		MUnionSorted.addAll(MUnion);
@@ -288,7 +297,7 @@ public class TimetableLogic {
 	}
 
 	public M_Timetable_ShowTimeRemain_Response showEndTimeStaff(String yId, String sId, Long cId, Integer cType,
-			Long gId,Integer dayOfWeek, String startTime) {
+			Long gId, Integer dayOfWeek, String startTime) {
 
 		Timetable sourceA = timetableService.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(yId, sId,
 				courseService.findByCourseId(cId).get(), cType, groupService.findByGroupId(gId).get());
@@ -330,9 +339,9 @@ public class TimetableLogic {
 		updateAutoPilotStaff(yId, sId, cId, cType, gId, sourceDay, sourceStartTime, sourceEndTime, sourceRoom);
 	}
 
-	public void cleanAll() {
+	public void cleanAll(String yId , String sId) {
 
-		Collection<Timetable> sourceA = timetableService.findAll();
+		Collection<Timetable> sourceA = timetableService.findAllByYearsAndSemester(yId , sId);
 
 		for (Timetable sourceATmp : sourceA) {
 
@@ -358,9 +367,9 @@ public class TimetableLogic {
 
 	}
 
-	public void autoPilot() throws ParseException {
+	public void autoPilot(String yId , String sId) throws ParseException {
 
-		Collection<Timetable> sourceA = timetableService.findAll();
+		Collection<Timetable> sourceA = timetableService.findAllByYearsAndSemester(yId , sId);
 		ArrayList<Timetable> list = new ArrayList<>(sourceA);
 		Integer dayA = 1;
 		Long listTmpTmp = null;
@@ -368,7 +377,7 @@ public class TimetableLogic {
 		Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId()));
 		Collections.reverse(list);
 
-		cleanAll();
+		cleanAll(yId , sId);
 
 		for (Timetable listTmp : list) {
 
@@ -406,7 +415,8 @@ public class TimetableLogic {
 						if (!targetATmp.getText().substring(0, 1).equals("!")) {
 							boolean notBussy = true;
 							for (int i = 1; i < timeRun; i++) {
-								if((j + i) > (targetA.size() - timeRun) || (j + i) > 10 || targetA.get(j + i).getText().substring(0, 1).equals("!") ){
+								if ((j + i) > (targetA.size() - timeRun) || (j + i) > 10
+										|| targetA.get(j + i).getText().substring(0, 1).equals("!")) {
 									notBussy = false;
 									break;
 								}
@@ -419,7 +429,7 @@ public class TimetableLogic {
 						j++;
 					}
 
-					if(timeValueStart != null){
+					if (timeValueStart != null) {
 						timeValueEnd.setHours(timeValueStart.getHours() + timeRun);
 						if (timeValueStart != null && timeValueEnd.getHours() <= 18) {
 							updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
@@ -427,9 +437,10 @@ public class TimetableLogic {
 									listTmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd,
 									listTmp.getRoomId() == null ? null : listTmp.getRoomId().getRoomId());
 							break;
+						}else{
+							dayA++;
 						}
-					}
-					else {
+					} else {
 						dayA++;
 					}
 				} else {
@@ -452,18 +463,20 @@ public class TimetableLogic {
 						listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(),
 						listTmp.getEndTime());
 
-				for (M_For_Selection_Response targetATmp : targetA) {
-					System.out.println(targetATmp.getText());
-					if (!targetATmp.getText().substring(0, 1).equals("!")) {
-						timevalueStart = Integer.parseInt(targetATmp.getValue());
-						break;
+				if (targetA != null) {
+					for (M_For_Selection_Response targetATmp : targetA) {
+						System.out.println(targetATmp.getText());
+						if (!targetATmp.getText().substring(0, 1).equals("!")) {
+							timevalueStart = Integer.parseInt(targetATmp.getValue());
+							break;
+						}
 					}
-				}
 
-				updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
-						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-						listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(),
-						listTmp.getEndTime(), timevalueStart);
+					updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
+							listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+							listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(),
+							listTmp.getEndTime(), timevalueStart);
+				}
 			}
 		}
 

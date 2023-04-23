@@ -61,12 +61,12 @@ public class TimetableMapper {
 		target.setCourse_type_name(sourceA.getCourseType() == 0 ? "ทฤษฎี" : "ปฏิบัติ");
 		target.setGroup_id(sourceA.getGroupId().getGroupId().toString());
 		target.setGroup_name(sourceA.getGroupId().getGroup_name().toString());
-		target.setDay_of_week(sourceA.getDayOfWeek() == null ? null : sourceA.getDayOfWeek());
-		target.setDay_of_week_name(sourceA.getDayOfWeek() == null ? null : convertDayOfWeek(sourceA.getDayOfWeek()));
-		target.setStart_time(sourceA.getStartTime() == null ? null : sourceA.getStartTime());
-		target.setEnd_time(sourceA.getEndTime() == null ? null : sourceA.getEndTime());
-		target.setRoom_id(sourceA.getRoomId() == null ? null : sourceA.getRoomId().getRoomId());
-		target.setRoom_name(sourceA.getRoomId() == null ? null : sourceA.getRoomId().getName().replace("  ", " "));
+		target.setDay_of_week(sourceA.getDayOfWeek() == null ? "null" : sourceA.getDayOfWeek().toString());
+		target.setDay_of_week_name(sourceA.getDayOfWeek() == null ? "null" : convertDayOfWeek(sourceA.getDayOfWeek()));
+		target.setStart_time(sourceA.getStartTime() == null ? "null" : sourceA.getStartTime().toString());
+		target.setEnd_time(sourceA.getEndTime() == null ? "null" : sourceA.getEndTime().toString());
+		target.setRoom_id(sourceA.getRoomId() == null ? "null" : sourceA.getRoomId().getRoomId().toString());
+		target.setRoom_name(sourceA.getRoomId() == null ? "null" : sourceA.getRoomId().getName().replace("  ", " "));
 		target.setTime_locker(sourceA.isTimeLocker());
 		target.setRoom_locker(sourceA.isRoomLocker());
 		Collection<HashMap<String, String>> cMember = new ArrayList<>();
@@ -129,7 +129,7 @@ public class TimetableMapper {
 		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 		for (Timetable sourceATmp : sourceA) {
 
-			int interim = deconvertEndTime(sourceATmp.getEndTime().toString())
+			int interim = deconvertStartTime(sourceATmp.getEndTime().toString())
 					- deconvertStartTime(sourceATmp.getStartTime().toString());
 
 			for (int i = 0; i < interim; i++) {
@@ -150,7 +150,7 @@ public class TimetableMapper {
 		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 		for (NotTeach sourceATmp : sourceA) {
 
-			int interim = deconvertEndTime(sourceATmp.getTimeEnd().toString())
+			int interim = deconvertStartTime(sourceATmp.getTimeEnd().toString())
 					- deconvertStartTime(sourceATmp.getTimeStart().toString());
 
 			for (int i = 0; i < interim; i++) {
