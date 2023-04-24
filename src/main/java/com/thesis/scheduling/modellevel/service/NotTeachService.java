@@ -23,6 +23,10 @@ public class NotTeachService {
 	public Collection<NotTeach> showAllByMemberId(Member memberId) {
 		return repository.findAllByMemberId(memberId);
 	}
+
+	public Collection<NotTeach> findAllByYearsAndSemesterAndMemberId(String years , String semester ,Member memberId) {
+		return repository.findAllByYearsAndSemesterAndMemberId(years , semester , memberId);
+	}
 	
 	public Collection<NotTeach> findAllByMemberIdAndDayOfWeek(Member memberId , Integer dayOfWeek) {
 		return repository.findAllByMemberIdAndDayOfWeek(memberId , dayOfWeek);
@@ -33,7 +37,7 @@ public class NotTeachService {
 	}
 
 	// SET
-	public void create(Member memberId, int dayOfWeek, Time timeStart, Time timeEnd) {
+	public void create(String years , String semester ,Member memberId, int dayOfWeek, Time timeStart, Time timeEnd) {
 
 		NotTeach entity = new NotTeach();
 
@@ -42,12 +46,13 @@ public class NotTeachService {
 
 		if (opt.isPresent()) {
 			entity = opt.get();
-
 		} else {
 			entity.setMemberId(memberId);
 			entity.setDayOfWeek(dayOfWeek);
 			entity.setTimeEnd(timeEnd);
 			entity.setTimeStart(timeStart);
+			entity.setYears(years);
+			entity.setSemester(semester);
 			repository.save(entity);
 		}
 

@@ -50,7 +50,7 @@ public class Member implements Serializable  {
 
 	@ManyToOne
 	@JoinColumn(name = "s_organization_id", nullable = true)
-	private Organization sOrganizationId;
+	private Organization organizationId;
 	
 	@Column(length = 10)
 	private Integer role;

@@ -7,6 +7,10 @@ import lombok.Data;
 @Data
 public class M_NotTeach_CreateTeacher_Request {
 
+	private String years;
+
+	private String semester;
+
 	private int dayOfWeek;
 
 	private Time timeStart;

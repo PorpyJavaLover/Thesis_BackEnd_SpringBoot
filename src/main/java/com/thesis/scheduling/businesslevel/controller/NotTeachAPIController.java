@@ -27,16 +27,16 @@ public class NotTeachAPIController {
 	}
 
 	// GET
-	@GetMapping("/teacher/show/all")
-	public ResponseEntity<Iterable<M_NotTeach_ShowAllTeacher_Response>> showAllTeacher() throws BaseException {
-		Iterable<M_NotTeach_ShowAllTeacher_Response> response = notteachlogic.showAllTeacher();
+	@GetMapping("/teacher/show/all/{years}/{semester}")
+	public ResponseEntity<Iterable<M_NotTeach_ShowAllTeacher_Response>> showAllTeacher(@PathVariable("years") String years, @PathVariable("semester") String semester ) throws BaseException {
+		Iterable<M_NotTeach_ShowAllTeacher_Response> response = notteachlogic.showAllTeacher(years , semester);
 		System.out.println("notteach show teacher");
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/staff/show/all/{memberId}")
-	public ResponseEntity<Iterable<M_NotTeach_ShowAllTeacher_Response>> showAllStaff(@PathVariable("memberId") Integer memberId) throws BaseException {
-		Iterable<M_NotTeach_ShowAllTeacher_Response> response = notteachlogic.showAllStaff(memberId);
+	@GetMapping("/staff/show/all/{years}/{semester}/{memberId}")
+	public ResponseEntity<Iterable<M_NotTeach_ShowAllTeacher_Response>> showAllStaff(@PathVariable("years") String years, @PathVariable("semester") String semester ,@PathVariable("memberId") Integer memberId) throws BaseException {
+		Iterable<M_NotTeach_ShowAllTeacher_Response> response = notteachlogic.showAllStaff(years , semester , memberId);
 		System.out.println("notteach show teacher");
 		return ResponseEntity.ok(response);
 	}

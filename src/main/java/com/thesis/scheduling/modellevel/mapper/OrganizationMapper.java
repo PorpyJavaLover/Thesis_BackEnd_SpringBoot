@@ -1,13 +1,36 @@
 package com.thesis.scheduling.modellevel.mapper;
 
-import org.mapstruct.Mapper;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.springframework.stereotype.Component;
 
 import com.thesis.scheduling.modellevel.entity.Organization;
-import com.thesis.scheduling.modellevel.model.M_Organization_ShowAllTeacher_Response;
+import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 
-@Mapper(componentModel = "spring")
-public interface OrganizationMapper {
+@Component
+public class OrganizationMapper {
 
-	Iterable<M_Organization_ShowAllTeacher_Response> toMShowAllTeacher(Iterable<Organization> organization);
+	public Iterable<M_For_Selection_Response> toMShowTeacherForSelection(Iterable<Organization> source){
+
+		if (source == null) {
+			return null;
+		}
+
+		Collection<M_For_Selection_Response> target = new ArrayList<M_For_Selection_Response>();
+		
+		for (Organization sourceTmp : source) {
+
+			M_For_Selection_Response targetSub = new M_For_Selection_Response();
+
+			targetSub.setId(Integer.parseInt(sourceTmp.getCode()));
+			targetSub.setValue(sourceTmp.getCode());
+			targetSub.setText(sourceTmp.getName());
+			target.add(targetSub);
+		}
+		
+		return target;
+
+	}
 	
 }

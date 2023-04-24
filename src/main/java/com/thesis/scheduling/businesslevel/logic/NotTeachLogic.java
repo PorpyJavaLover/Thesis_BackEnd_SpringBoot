@@ -33,25 +33,28 @@ public class NotTeachLogic {
 	}
 
 	// GET
-	public Iterable<M_NotTeach_ShowAllTeacher_Response> showAllTeacher() {
+	public Iterable<M_NotTeach_ShowAllTeacher_Response> showAllTeacher(String years, String semester) {
 		return notTeachMapper.toMShowAllTeacher(
-				notteachservice.showAllByMemberId(memberservice.findByMemberId(getCurrentUserId()).get()));
+				notteachservice.findAllByYearsAndSemesterAndMemberId(years, semester,
+						memberservice.findByMemberId(getCurrentUserId()).get()));
 	}
 
-	public Iterable<M_NotTeach_ShowAllTeacher_Response> showAllStaff(Integer memberId) {
+	public Iterable<M_NotTeach_ShowAllTeacher_Response> showAllStaff(String years, String semester, Integer memberId) {
 		return notTeachMapper.toMShowAllTeacher(
-				notteachservice.showAllByMemberId(memberservice.findByMemberId(memberId).get()));
+				notteachservice.findAllByYearsAndSemesterAndMemberId(years, semester,
+						memberservice.findByMemberId(memberId).get()));
 	}
 
 	// SET
 	public void createTeacher(M_NotTeach_CreateTeacher_Request request) {
-		notteachservice.create(memberservice.findByMemberId(getCurrentUserId()).get(),
+		notteachservice.create(request.getYears(), request.getSemester(),
+				memberservice.findByMemberId(getCurrentUserId()).get(),
 				request.getDayOfWeek(), request.getTimeStart(), request.getTimeEnd());
 	}
 
 	public void createStaff(M_NotTeach_CreateStaff_Request request) {
-		System.out.println("asdasdadadad" + request.getMemberId());
-		notteachservice.create(memberservice.findByMemberId(request.getMemberId()).get(),
+		notteachservice.create(request.getYears(), request.getSemester(),
+				memberservice.findByMemberId(request.getMemberId()).get(),
 				request.getDayOfWeek(), request.getTimeStart(), request.getTimeEnd());
 	}
 

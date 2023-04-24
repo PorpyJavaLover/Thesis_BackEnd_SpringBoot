@@ -93,7 +93,7 @@ public class ReplaceTeachMapper {
 		target.setNameTeachingLast(source.getEssTimetableId().getMemberId().getThLastName());
 		target.setNameTeachingShort(source.getEssTimetableId().getMemberId().getTitleId().getTitleShort());
 		target.setNote(source.getLeaveTeachId().getNote());
-		target.setOganize(source.getEssTimetableId().getMemberId().getSOrganizationId().getName());
+		target.setOganize(source.getEssTimetableId().getMemberId().getOrganizationId().getName());
 
 		return target;
 	}

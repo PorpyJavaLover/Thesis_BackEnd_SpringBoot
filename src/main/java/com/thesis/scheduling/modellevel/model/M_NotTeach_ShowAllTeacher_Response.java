@@ -9,6 +9,10 @@ import lombok.Data;
 @Data
 public class M_NotTeach_ShowAllTeacher_Response {
 
+	private String years;
+
+	private String semester;
+
 	private int notId;
 	
     private Member memberId;

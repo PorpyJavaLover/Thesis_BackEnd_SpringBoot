@@ -24,7 +24,6 @@ public class Timetable {
 	
     @Column(name = "YEARNO")
 	private String years;
-	
 
     @Column(name = "SEMESTER_ID")
 	private String semester;

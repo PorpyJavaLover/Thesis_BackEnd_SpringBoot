@@ -39,12 +39,12 @@ public class Organization {
 	
 	//JOIN ZONE 
 	
-    @OneToMany(mappedBy = "sOrganizationId")
+    @OneToMany(mappedBy = "organizationId")
     @Column(nullable = true)
     @JsonIgnore
     private List<Member> member;
 
-	@OneToMany(mappedBy = "sOrganizationId")
+	@OneToMany(mappedBy = "organizationId")
     @Column(nullable = true)
     @JsonIgnore
     private List<Person> person;

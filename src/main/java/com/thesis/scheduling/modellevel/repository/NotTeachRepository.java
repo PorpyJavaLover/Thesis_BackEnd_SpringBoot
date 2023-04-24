@@ -15,6 +15,8 @@ import com.thesis.scheduling.modellevel.entity.NotTeach;
 public interface NotTeachRepository extends CrudRepository<NotTeach,String> {
 	
 	Collection<NotTeach> findAllByMemberId(Member memberId);
+
+	Collection<NotTeach> findAllByYearsAndSemesterAndMemberId(String years , String semester , Member memberId);
 	
 	Collection<NotTeach> findAllByMemberIdAndDayOfWeek(Member memberId , Integer dayOfWeek);
 

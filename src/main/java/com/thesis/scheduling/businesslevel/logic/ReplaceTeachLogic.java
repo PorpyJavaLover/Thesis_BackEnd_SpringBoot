@@ -18,6 +18,7 @@ import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_PDFHeadTeacher_Resp
 import com.thesis.scheduling.modellevel.model.M_ReplaceTeach_ShowAllTeacher_Response;
 import com.thesis.scheduling.modellevel.service.LeaveTeachService;
 import com.thesis.scheduling.modellevel.service.MemberService;
+import com.thesis.scheduling.modellevel.service.OrganizationService;
 import com.thesis.scheduling.modellevel.service.ReplaceTeachService;
 import com.thesis.scheduling.modellevel.service.TimetableService;
 
@@ -29,15 +30,17 @@ public class ReplaceTeachLogic {
 	private final ReplaceTeachMapper replaceTeachMapper;
 	private final LeaveTeachService leaveTeachService;
 	private final TimetableService timetableService;
+	private final OrganizationService organizationService;
 
 	public ReplaceTeachLogic(MemberService memberService, ReplaceTeachService replaceTeachService,
 			ReplaceTeachMapper replaceTeachMapper, LeaveTeachService leaveTeachService,
-			TimetableService timetableService) {
+			TimetableService timetableService, OrganizationService organizationService) {
 		this.memberService = memberService;
 		this.replaceTeachService = replaceTeachService;
 		this.replaceTeachMapper = replaceTeachMapper;
 		this.leaveTeachService = leaveTeachService;
 		this.timetableService = timetableService;
+		this.organizationService = organizationService;
 	}
 
 	// GET
@@ -52,9 +55,9 @@ public class ReplaceTeachLogic {
 		return replaceTeachMapper.toMShowAllTeacher(sourceB);
 	}
 
-	public Iterable<M_SelectOption_Response> showMemberReplaceOption(int replaceTeachId) {
+	public Iterable<M_SelectOption_Response> showMemberReplaceOption(int replaceTeachId , String sOrganize) {
 
-		Collection<Member> sourceA = new ArrayList<Member>(memberService.findAll());
+		Collection<Member> sourceA = new ArrayList<Member>(memberService.findAllBySOrganizationId(organizationService.findByCode(sOrganize).get())); 	//@todo <---check point
 		sourceA.remove(memberService.findByMemberId(getCurrentUserId()).get());
 		Collection<Member> sourceD = new ArrayList<Member>(sourceA);
 		for (Member sourceATmp : sourceD) {

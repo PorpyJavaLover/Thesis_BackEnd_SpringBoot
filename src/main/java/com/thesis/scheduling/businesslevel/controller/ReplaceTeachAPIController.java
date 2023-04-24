@@ -35,9 +35,9 @@ public class ReplaceTeachAPIController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/teacher/member/replace/option/{replaceTeachId}")
-	public ResponseEntity<Iterable<M_SelectOption_Response>> showMemberReplaceOption( @PathVariable("replaceTeachId") int replaceTeachId) throws BaseException {
-		Iterable<M_SelectOption_Response> response = replaceTeachLogic.showMemberReplaceOption(replaceTeachId);
+	@GetMapping("/teacher/member/replace/option/{replaceTeachId}/{organize}")
+	public ResponseEntity<Iterable<M_SelectOption_Response>> showMemberReplaceOption( @PathVariable("replaceTeachId") int replaceTeachId ,@PathVariable("organize") String organize) throws BaseException {
+		Iterable<M_SelectOption_Response> response = replaceTeachLogic.showMemberReplaceOption(replaceTeachId , organize);
 		return ResponseEntity.ok(response);
 	}
 

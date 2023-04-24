@@ -33,6 +33,12 @@ public class NotTeach {
 	
 	@Column(length = 10)
 	private Time timeEnd;
+
+	@Column(length = 10)
+	private String years;
+
+    @Column(length = 10)
+	private String semester;
     
     
     

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.exception.MemberException;
 import com.thesis.scheduling.modellevel.entity.Member;
+import com.thesis.scheduling.modellevel.entity.Organization;
 import com.thesis.scheduling.modellevel.entity.Title;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Response;
 import com.thesis.scheduling.modellevel.repository.MemberRepository;
@@ -29,6 +30,10 @@ public class MemberService {
 
 	public Collection<Member> findAll() {
 		return repository.findAll();
+	}
+
+	public Collection<Member> findAllBySOrganizationId(Organization organizationId) {
+		return repository.findAllByOrganizationId(organizationId);
 	}
 
 

@@ -39,6 +39,6 @@ public class Person {
 
 	@ManyToOne
 	@JoinColumn(name = "s_organization_id", nullable = true)
-	private Organization sOrganizationId;
+	private Organization organizationId;
     
 }
