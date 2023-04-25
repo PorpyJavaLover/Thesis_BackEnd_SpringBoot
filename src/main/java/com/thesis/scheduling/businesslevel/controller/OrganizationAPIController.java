@@ -26,7 +26,7 @@ public class OrganizationAPIController {
 		return  ResponseEntity.ok(response);
 	}
 	
-	@GetMapping("/public/show/select")
+	@GetMapping("/public/show/option")
 	public  ResponseEntity<Iterable<M_For_Selection_Response>> showOrganizOption() throws BaseException  {
 		Iterable<M_For_Selection_Response> response = organizationLogic.showOrganizOption();
 		return  ResponseEntity.ok(response);

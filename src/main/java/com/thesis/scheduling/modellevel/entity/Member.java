@@ -1,6 +1,5 @@
 package com.thesis.scheduling.modellevel.entity;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -19,11 +18,11 @@ import lombok.Data;
 
 @Data
 @Entity(name = "member")
-public class Member implements Serializable  {
+public class Member{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false , length = 10)
+    @Column(name = "member_id", nullable = false, updatable = true , length = 10)
     private Integer memberId;
 
     @ManyToOne

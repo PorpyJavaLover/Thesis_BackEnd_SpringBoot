@@ -6,6 +6,7 @@ import com.thesis.scheduling.businesslevel.config.token.TokenService;
 import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.exception.MemberException;
 import com.thesis.scheduling.modellevel.entity.Member;
+import com.thesis.scheduling.modellevel.entity.Organization;
 import com.thesis.scheduling.modellevel.entity.Title;
 import com.thesis.scheduling.modellevel.mapper.MemberMapper;
 import com.thesis.scheduling.modellevel.model.M_Member_Login_Request;
@@ -14,6 +15,7 @@ import com.thesis.scheduling.modellevel.model.M_Member_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Response;
 import com.thesis.scheduling.modellevel.service.MemberService;
+import com.thesis.scheduling.modellevel.service.OrganizationService;
 import com.thesis.scheduling.modellevel.service.TitleService;
 
 @Service
@@ -27,20 +29,22 @@ public class MemberLogic {
 
 	private final MemberMapper memberMapper;
 
-	public MemberLogic(TitleService titleservice, MemberService memberService, TokenService tokenService,
-			MemberMapper memberMapper) {
-		this.titleService = titleservice;
+	private final OrganizationService organizationService;
+
+	public MemberLogic(TitleService titleService, MemberService memberService, TokenService tokenService,
+			MemberMapper memberMapper, OrganizationService organizationService) {
+		this.titleService = titleService;
 		this.memberService = memberService;
 		this.tokenService = tokenService;
 		this.memberMapper = memberMapper;
+		this.organizationService = organizationService;
 	}
 
 	// GET
 	public Iterable<M_Member_ShowAllStaff_Response> showAllStaff() {
 		return memberMapper.toMShowAll(memberService.findAll());
 	}
-	
-	
+
 	public M_Member_Login_Response login(M_Member_Login_Request request) throws BaseException {
 
 		// find user name
@@ -62,16 +66,17 @@ public class MemberLogic {
 		return response;
 	}
 
-	
 	// SET
 	public M_Member_Register_Response register(M_Member_Register_Request request) throws BaseException {
 
-		Optional<Title> title = titleService.findByTitleId(request.getTitle_id());
-		Member member = memberService.create(title.get(), request.getTh_first_name(), request.getTh_last_name(),
-				request.getUsername(), request.getPassword());
+
+		Optional<Title> title = titleService.findByTitleId(request.getTitleNameSelected());
+		Optional<Organization> organiz = organizationService.findByCode(request.getOrganizSelected());
+		Member member = memberService.create(title.get(), organiz.get(), request.getFirstNameTH(),
+				request.getLastNameTH(), request.getFirstNameEN(), request.getLastNameEN()
+				, request.getUsernameRe(), request.getPasswordRe());
 		return memberMapper.toMRegisterResponse(member);
 	}
-	
 
 	// DELETE
 

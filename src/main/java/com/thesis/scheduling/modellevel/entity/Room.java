@@ -18,30 +18,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
-@Entity(name = "ess_room")
+@Entity(name = "room")
 public class Room {
 
 	@Id
 	@Column(name = "ROOM_ID", length = 6)
 	private Integer roomId;
 
-	@Column(name = "BUILDING_ID", length = 6)
-	private Integer buildId;
-
-	@Column(name = "TYPE_ID", length = 3)
-	private Integer typeId;
-
-	@Column(name = "ROOM_NO", length = 20)
-	private String roomNo;
-
 	@Column(name = "NAME", length = 50)
 	private String name;
 
 	@Column(name = "NSEAT", length = 3)
-	private Integer nseat;
-
-	@Column(name = "STATUS", length = 1)
-	private Integer status;
+	private Integer seat;
 
 	@OneToMany(mappedBy = "roomId")
 	@Column(nullable = true)

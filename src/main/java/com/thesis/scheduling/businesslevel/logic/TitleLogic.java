@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.thesis.scheduling.businesslevel.config.SecurityUtil;
 import com.thesis.scheduling.modellevel.mapper.TitleMapper;
+import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 import com.thesis.scheduling.modellevel.model.M_Title_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_Tittle_ShowAllPublic_Response;
 import com.thesis.scheduling.modellevel.service.TitleService;
@@ -28,8 +29,8 @@ public class TitleLogic {
 	}
 
 	// GET
-	public Iterable<M_Tittle_ShowAllPublic_Response> showAllPublic() {
-		return titleMapper.toMShowAll(titleService.showAll());
+	public Iterable<M_For_Selection_Response> showTitleOption() {
+		return titleMapper.toMShowTitleOption(titleService.showAll());
 	}
 
 	// SET

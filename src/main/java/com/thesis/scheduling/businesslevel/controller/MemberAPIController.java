@@ -35,7 +35,6 @@ public class MemberAPIController {
     @PostMapping("/anonymous/login")
     public ResponseEntity<M_Member_Login_Response> login(@RequestBody M_Member_Login_Request request)
             throws BaseException {
-        System.out.println("login");
         M_Member_Login_Response response = memberLogic.login(request);
         return ResponseEntity.ok(response);
     }
@@ -44,6 +43,7 @@ public class MemberAPIController {
     @PostMapping("/anonymous/register")
     public ResponseEntity<M_Member_Register_Response> register(@RequestBody M_Member_Register_Request request)
             throws BaseException {
+        System.out.println("register");
         M_Member_Register_Response response = memberLogic.register(request);
         return ResponseEntity.ok(response);
     }

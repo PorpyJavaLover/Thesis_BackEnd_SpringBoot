@@ -5,14 +5,21 @@ import lombok.Data;
 @Data
 public class M_Member_Register_Request {
 	
-	private Long title_id;
-    
-	private String th_first_name;
+	private Long titleNameSelected;
 
-	private String th_last_name;
+	private String organizSelected;
 
-	private String username;
+	private String firstNameTH;
 
-	private String password;
+	private String lastNameTH;
 
+	private String firstNameEN;
+
+	private String lastNameEN;
+
+	private String usernameRe;
+
+	private String passwordRe;
+	
+	private String confirmPasswordRe;
 }

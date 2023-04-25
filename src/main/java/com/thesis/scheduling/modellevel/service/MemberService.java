@@ -51,44 +51,50 @@ public class MemberService {
 
 	
 	// SET
-	public Member create(Title title, String th_first_name, String th_last_name, String username, String password)
+	public Member create(Title titleNameSelected , Organization organizSelected, String firstNameTH, String lastNameTH, 
+	 String firstNameEN, String lastNameEN, String usernameRe, String passwordRe)
 			throws BaseException {
 
 		// validate
-		if (Objects.isNull(title)) {
+		if (Objects.isNull(titleNameSelected)) {
 			throw MemberException.createTitleNull();
 		}
 
-		if (Objects.isNull(th_first_name)) {
+		if (Objects.isNull(firstNameTH)) {
 			throw MemberException.createTHFirstNameNull();
 		}
 
-		if (Objects.isNull(th_last_name)) {
+		if (Objects.isNull(lastNameTH)) {
 			throw MemberException.createTHLastNameNull();
 		}
 
-		if (Objects.isNull(username)) {
+		if (Objects.isNull(usernameRe)) {
 			throw MemberException.createUsernameNull();
 		}
 
-		if (Objects.isNull(password)) {
+		if (Objects.isNull(passwordRe)) {
 			throw MemberException.createPasswordNull();
 		}
 
 		// verify
-		if (repository.existsByUsername(username)) {
+		if (repository.existsByUsername(usernameRe)) {
 			throw MemberException.createUsernameDuplicated();
 		}
 
 		// save
 		Member entity = new Member();
-		entity.setTitleId(title);
-		entity.setThFirstName(th_first_name);
-		entity.setThLastName(th_last_name);
-		entity.setUsername(username);
-		entity.setPassword(password);
-
-		return repository.save(entity);
+		repository.save(entity);
+		entity.setTitleId(titleNameSelected);
+		entity.setOrganizationId(organizSelected);
+		entity.setThFirstName(firstNameTH);
+		entity.setThLastName(lastNameTH);
+		entity.setEnFirstName(firstNameEN);
+		entity.setEnLastName(lastNameEN);
+		entity.setUsername(usernameRe);
+		entity.setPassword(passwordRe);
+		entity.setRole(0);
+		repository.save(entity);
+		return null;
 	}
 	
 

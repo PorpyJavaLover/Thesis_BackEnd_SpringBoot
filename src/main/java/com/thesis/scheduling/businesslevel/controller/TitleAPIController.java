@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thesis.scheduling.businesslevel.exception.BaseException;
 import com.thesis.scheduling.businesslevel.logic.TitleLogic;
+import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 import com.thesis.scheduling.modellevel.model.M_Title_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_Tittle_ShowAllPublic_Response;
 
@@ -25,12 +26,13 @@ public class TitleAPIController {
 	}
 	
 	//GET
-	@GetMapping("/public/show/all")
-    public ResponseEntity<Iterable<M_Tittle_ShowAllPublic_Response> > showAllBublic() throws BaseException {
-    	Iterable<M_Tittle_ShowAllPublic_Response>  response = titleLogic.showAllPublic();
+	@GetMapping("/public/show/option")
+    public ResponseEntity<Iterable<M_For_Selection_Response> > showTitleOption() throws BaseException {
+    	Iterable<M_For_Selection_Response>  response = titleLogic.showTitleOption();
         return ResponseEntity.ok(response);
     }
-	
+
+
 	//SET
 	@PostMapping("/staff/create")
 	public void createStaff(@RequestBody M_Title_CreateTeacher_Request request) {
