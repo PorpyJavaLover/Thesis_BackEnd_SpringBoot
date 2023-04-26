@@ -13,7 +13,11 @@ public interface OrganizationRepository extends CrudRepository<Organization, Str
 
 	Iterable<Organization> findByTypeAndParentIn(int type , Collection<String> text);
 
-	Collection<Organization> findByCodeStartingWithAndNameStartingWithAndType( String code , String name , int type);
+	Collection<Organization> findAllByCodeStartingWithAndNameStartingWithAndType( String code , String name , int type);
+
+	Collection<Organization> findAllByParent(String parent);
+
+	Collection<Organization> findAllByParentAndType(String parent , int type);
 
 	Optional<Organization> findByCode(String code);
 	

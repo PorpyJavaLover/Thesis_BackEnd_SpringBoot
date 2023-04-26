@@ -66,7 +66,7 @@ public class TimetableMapper {
 		target.setStart_time(sourceA.getStartTime() == null ? "null" : sourceA.getStartTime().toString());
 		target.setEnd_time(sourceA.getEndTime() == null ? "null" : sourceA.getEndTime().toString());
 		target.setRoom_id(sourceA.getRoomId() == null ? "null" : sourceA.getRoomId().getRoomId().toString());
-		target.setRoom_name(sourceA.getRoomId() == null ? "null" : sourceA.getRoomId().getName().replace("  ", " "));
+		target.setRoom_name(sourceA.getRoomId() == null ? "null" : sourceA.getRoomId().getRoomName().replace("  ", " "));
 		target.setTime_locker(sourceA.isTimeLocker());
 		target.setRoom_locker(sourceA.isRoomLocker());
 		Collection<HashMap<String, String>> cMember = new ArrayList<>();
@@ -336,7 +336,7 @@ public class TimetableMapper {
 			M_For_Selection_Response targetSub = new M_For_Selection_Response();
 			targetSub.setId(sourceDTmp.getRoomId().getRoomId());
 			targetSub.setValue(sourceDTmp.getRoomId().getRoomId().toString());
-			targetSub.setText(sourceDTmp.getRoomId().getName());
+			targetSub.setText(sourceDTmp.getRoomId().getRoomName());
 			targetD.add(targetSub);
 		}
 
@@ -346,7 +346,7 @@ public class TimetableMapper {
 			M_For_Selection_Response targetSub = new M_For_Selection_Response();
 			targetSub.setId(sourceATmp.getRoomId());
 			targetSub.setValue(sourceATmp.getRoomId().toString());
-			targetSub.setText(sourceATmp.getName());
+			targetSub.setText(sourceATmp.getRoomName());
 			targetA.add(targetSub);
 		}
 

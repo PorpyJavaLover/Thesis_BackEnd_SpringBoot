@@ -11,7 +11,8 @@ import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 @Component
 public class OrganizationMapper {
 
-	public Iterable<M_For_Selection_Response> toMShowTeacherForSelection(Iterable<Organization> source){
+
+	public Iterable<M_For_Selection_Response> toMShowForSelection(Iterable<Organization> source){
 
 		if (source == null) {
 			return null;

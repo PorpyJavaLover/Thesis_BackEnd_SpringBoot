@@ -11,7 +11,7 @@ import com.thesis.scheduling.modellevel.entity.Room;
 @Repository
 public interface RoomRepository extends CrudRepository<Room, String> {
 	
-	Collection<Room> findAllByRoomNoStartingWith(String name);
+	Collection<Room> findAllByRoomNameStartingWith(String name);
 	
 	Optional<Room> findAllByRoomId(Integer roomId);
 

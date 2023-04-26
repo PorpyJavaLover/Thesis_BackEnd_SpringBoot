@@ -15,12 +15,12 @@ import lombok.Data;
 @Entity(name = "s_organization")
 public class Organization {
 
-	@Column(name = "parent", nullable = false, length = 8)
-	private String parent;
-
 	@Id
 	@Column(name = "code", nullable = false, length = 8)
 	private String code;
+
+	@Column(name = "parent", nullable = false, length = 8)
+	private String parent;
 
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -48,5 +48,10 @@ public class Organization {
     @Column(nullable = true)
     @JsonIgnore
     private List<Person> person;
+
+	@OneToMany(mappedBy = "organizationId")
+    @Column(nullable = true)
+    @JsonIgnore
+    private List<Room> room;
 
 }

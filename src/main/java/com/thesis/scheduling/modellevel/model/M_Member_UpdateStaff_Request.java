@@ -3,11 +3,9 @@ package com.thesis.scheduling.modellevel.model;
 import lombok.Data;
 
 @Data
-public class M_Member_Register_Request {
-	
-	private Long titleNameSelected;
+public class M_Member_UpdateStaff_Request {
 
-	private String organizSelected;
+    private Long titleNameSelected;
 
 	private String firstNameTH;
 
@@ -20,7 +18,9 @@ public class M_Member_Register_Request {
 	private String usernameRe;
 
 	private String passwordRe;
+
+    private Integer roleSelected;
 	
-	private Integer roleSelected;
+    private boolean activeStatusSelected;
 
 }

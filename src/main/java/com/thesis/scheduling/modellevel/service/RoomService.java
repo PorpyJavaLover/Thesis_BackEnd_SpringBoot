@@ -21,8 +21,8 @@ public class RoomService {
 	
 	public Iterable<Room> findAll() {
 
-		Collection<Room> resultA =  repository.findAllByRoomNoStartingWith("18");
-		Collection<Room> resultB =  repository.findAllByRoomNoStartingWith("36");
+		Collection<Room> resultA =  repository.findAllByRoomNameStartingWith("18");
+		Collection<Room> resultB =  repository.findAllByRoomNameStartingWith("36");
 		resultA.addAll(resultB);
 		return resultA;
 	}

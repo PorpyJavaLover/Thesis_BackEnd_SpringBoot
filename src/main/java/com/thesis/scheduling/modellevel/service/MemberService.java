@@ -52,7 +52,7 @@ public class MemberService {
 	
 	// SET
 	public Member create(Title titleNameSelected , Organization organizSelected, String firstNameTH, String lastNameTH, 
-	 String firstNameEN, String lastNameEN, String usernameRe, String passwordRe)
+	 String firstNameEN, String lastNameEN, String usernameRe, String passwordRe, Integer roleSelected)
 			throws BaseException {
 
 		// validate
@@ -83,7 +83,6 @@ public class MemberService {
 
 		// save
 		Member entity = new Member();
-		repository.save(entity);
 		entity.setTitleId(titleNameSelected);
 		entity.setOrganizationId(organizSelected);
 		entity.setThFirstName(firstNameTH);
@@ -92,12 +91,32 @@ public class MemberService {
 		entity.setEnLastName(lastNameEN);
 		entity.setUsername(usernameRe);
 		entity.setPassword(passwordRe);
-		entity.setRole(0);
-		repository.save(entity);
-		return null;
+		entity.setRole(roleSelected);
+		entity.setActiveStatus(false);
+		return 	repository.save(entity);
+	}
+
+	public void update(Member member, Title titleNameSelected , String firstNameTH, String lastNameTH, 
+	 String firstNameEN, String lastNameEN, String usernameRe, String passwordRe , Integer roleSelected , boolean activeStatusSelected)
+			throws BaseException {
+
+		member.setTitleId(titleNameSelected);
+		member.setThFirstName(firstNameTH);
+		member.setThLastName(lastNameTH);
+		member.setEnFirstName(firstNameEN);
+		member.setEnLastName(lastNameEN);
+		member.setUsername(usernameRe);
+		member.setPassword(passwordRe);
+		member.setRole(roleSelected);
+		member.setActiveStatus(activeStatusSelected);
+		repository.save(member);
 	}
 	
 
 	// DELETE
+
+	public void delete(Member member){
+		repository.delete(member);
+	}
 
 }

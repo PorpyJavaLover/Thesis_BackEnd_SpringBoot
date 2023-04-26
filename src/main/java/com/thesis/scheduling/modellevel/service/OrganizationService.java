@@ -41,8 +41,16 @@ public class OrganizationService {
 		return repository.findByTypeAndParentIn(52, text);
 	}
 
-	public Collection<Organization> showOrganizationForSelection() {
-		return repository.findByCodeStartingWithAndNameStartingWithAndType("1", "สาขา", 52);
+	public Collection<Organization> findByCodeStartingWithAndNameStartingWithAndType() {
+		return repository.findAllByCodeStartingWithAndNameStartingWithAndType("1", "สาขา", 52);
+	}
+
+	public Collection<Organization> findAllByParent( String parent) {
+		return repository.findAllByParent( parent );
+	}
+
+	public Collection<Organization> findAllByParentAndType( String parent , int type ) {
+		return repository.findAllByParentAndType( parent, type );
 	}
 
 }

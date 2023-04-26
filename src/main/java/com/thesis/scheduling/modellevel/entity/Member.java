@@ -53,9 +53,9 @@ public class Member{
 	
 	@Column(length = 10)
 	private Integer role;
-	
-	@Column(length = 10)
-	private Integer rank;
+
+    @Column
+	private boolean activeStatus;
 	
     //<<JOIN ZONE>>
 	
