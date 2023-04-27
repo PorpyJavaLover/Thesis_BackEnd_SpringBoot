@@ -1,9 +1,5 @@
 package com.thesis.scheduling.modellevel.model;
 
-import com.thesis.scheduling.modellevel.entity.Course;
-import com.thesis.scheduling.modellevel.entity.Group;
-import com.thesis.scheduling.modellevel.entity.Member;
-
 import lombok.Data;
 
 @Data

@@ -44,10 +44,11 @@ public class ReplaceTeachLogic {
 	}
 
 	// GET
-	public Iterable<M_ReplaceTeach_ShowAllTeacher_Response> showAllTeacher() {
+	public Iterable<M_ReplaceTeach_ShowAllTeacher_Response> showAllTeacher(String year, String semester) {
 
 		Collection<Timetable> sourceA = new ArrayList<Timetable>(
-				timetableService.findAllByMemberId(memberService.findByMemberId(getCurrentUserId()).get()));
+				timetableService.findAllByYearsAndSemesterAndMemberId(year, semester,
+						memberService.findByMemberId(getCurrentUserId()).get()));
 		Collection<ReplaceTeach> sourceB = new ArrayList<ReplaceTeach>();
 		for (Timetable sourceATmp : sourceA) {
 			sourceB.addAll(replaceTeachService.showAllByEssTimetableId(sourceATmp));
@@ -55,9 +56,24 @@ public class ReplaceTeachLogic {
 		return replaceTeachMapper.toMShowAllTeacher(sourceB);
 	}
 
-	public Iterable<M_SelectOption_Response> showMemberReplaceOption(int replaceTeachId , String sOrganize) {
+	public Iterable<M_ReplaceTeach_ShowAllTeacher_Response> showAllStaff(String year, String semester, int memberId) {
 
-		Collection<Member> sourceA = new ArrayList<Member>(memberService.findAllBySOrganizationId(organizationService.findByCode(sOrganize).get())); 	//@todo <---check point
+		Collection<Timetable> sourceA = new ArrayList<Timetable>(
+				timetableService.findAllByYearsAndSemesterAndMemberId(year, semester,
+						memberService.findByMemberId(memberId).get()));
+		Collection<ReplaceTeach> sourceB = new ArrayList<ReplaceTeach>();
+		for (Timetable sourceATmp : sourceA) {
+			sourceB.addAll(replaceTeachService.showAllByEssTimetableId(sourceATmp));
+		}
+		return replaceTeachMapper.toMShowAllTeacher(sourceB);
+	}
+
+	public Iterable<M_SelectOption_Response> showMemberReplaceOption(int replaceTeachId, String sOrganize) {
+
+		Collection<Member> sourceA = new ArrayList<Member>(
+				memberService.findAllBySOrganizationId(organizationService.findByCode(sOrganize).get())); // @todo
+																											// <---check
+																											// point
 		sourceA.remove(memberService.findByMemberId(getCurrentUserId()).get());
 		Collection<Member> sourceD = new ArrayList<Member>(sourceA);
 		for (Member sourceATmp : sourceD) {
@@ -100,8 +116,10 @@ public class ReplaceTeachLogic {
 		return replaceTeachMapper.toPDFHeadTeacher(sourceC.get());
 	}
 
-	public Iterable<M_ReplaceTeach_PDFBodyTeacher_Response> showPDFBodyTeacher(int leaveTeachId , int replaceTeachId) {
-		Iterable<ReplaceTeach> sourceC = replaceTeachService.findAllByLeaveTeachIdAndMemberReplaceId(leaveTeachService.findByLeaveTeachId(leaveTeachId),replaceTeachService.findByReplaceTeachId(replaceTeachId).get().getMemberReplaceId());
+	public Iterable<M_ReplaceTeach_PDFBodyTeacher_Response> showPDFBodyTeacher(int leaveTeachId, int replaceTeachId) {
+		Iterable<ReplaceTeach> sourceC = replaceTeachService.findAllByLeaveTeachIdAndMemberReplaceId(
+				leaveTeachService.findByLeaveTeachId(leaveTeachId),
+				replaceTeachService.findByReplaceTeachId(replaceTeachId).get().getMemberReplaceId());
 		return replaceTeachMapper.toPDFBodyTeacher(sourceC);
 	}
 

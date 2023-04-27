@@ -79,6 +79,10 @@ public class MemberLogic {
 			throw MemberException.loginFailPasswordIncorrect();
 		}
 
+		if (member.isActiveStatus() == false) {
+			throw MemberException.loginMemberNotActive();
+		}
+
 		// create token
 		M_Member_Login_Response response = new M_Member_Login_Response();
 		response.setToken(tokenService.tokenize(member));

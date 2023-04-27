@@ -23,6 +23,10 @@ public class LeaveTeachService {
 		return repository.findAllByMemberId(memberId);
 	}
 
+	public Iterable<LeaveTeach> findAllByYearsAndSemesterAndMemberId(String year, String semester, Member memberId) {
+		return repository.findAllByYearsAndSemesterAndMemberId(year, semester, memberId);
+	}
+
 	public Iterable<LeaveTeach> showAll() {
 		return repository.findAll();
 	}

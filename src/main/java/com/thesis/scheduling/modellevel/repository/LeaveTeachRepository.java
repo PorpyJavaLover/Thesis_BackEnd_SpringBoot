@@ -14,6 +14,8 @@ public interface LeaveTeachRepository extends CrudRepository<LeaveTeach, String>
 	
 	Iterable<LeaveTeach> findAllByMemberId(Member memberId);
 
+	Iterable<LeaveTeach> findAllByYearsAndSemesterAndMemberId(String years, String semester , Member memberId);
+
 	Optional<LeaveTeach> findByMemberIdAndYearsAndSemesterAndDateStartAndDateEnd(Member memberId, String years,
 			String semester, Date dateStart, Date dateEnd);
 

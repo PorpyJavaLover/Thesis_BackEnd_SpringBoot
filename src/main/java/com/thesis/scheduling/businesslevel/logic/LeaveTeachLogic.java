@@ -11,6 +11,7 @@ import com.thesis.scheduling.businesslevel.config.SecurityUtil;
 import com.thesis.scheduling.modellevel.entity.LeaveTeach;
 import com.thesis.scheduling.modellevel.entity.Timetable;
 import com.thesis.scheduling.modellevel.mapper.LeaveTeachMapper;
+import com.thesis.scheduling.modellevel.model.M_LeaveTeach_CreateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_LeaveTeach_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_LeaveTeach_ShowAllTeacher_Response;
 import com.thesis.scheduling.modellevel.service.LeaveTeachService;
@@ -43,13 +44,14 @@ public class LeaveTeachLogic {
 	}
 
 	// GET
-	public Iterable<M_LeaveTeach_ShowAllTeacher_Response> showAllTeacher() {
+	public Iterable<M_LeaveTeach_ShowAllTeacher_Response> showAllTeacher(String year, String semester) {
 		return leaveTeachMapper.toMShowAllTeacher(
-				leaveTeachService.showAllByMemberId(memberService.findByMemberId(getCurrentUserId()).get()));
+			leaveTeachService.findAllByYearsAndSemesterAndMemberId(year, semester, memberService.findByMemberId(getCurrentUserId()).get()));
 	}
 
-	public Iterable<LeaveTeach> showAllStaff() {
-		return leaveTeachService.showAll();
+	public Iterable<M_LeaveTeach_ShowAllTeacher_Response> showAllStaff(String year, String semester, int memberId) {
+				return leaveTeachMapper.toMShowAllTeacher(
+				leaveTeachService.findAllByYearsAndSemesterAndMemberId(year, semester, memberService.findByMemberId(memberId).get()));
 	}
 
 	// SET
@@ -91,7 +93,46 @@ public class LeaveTeachLogic {
 				}
 			}
 		}
+	}
 
+	public void createStaff(M_LeaveTeach_CreateStaff_Request request) {
+
+		LeaveTeach sourceLeaveTeach = leaveTeachService.create(memberService.findByMemberId(request.getMemberId()).get(),
+				(String.valueOf(Integer.parseInt(request.getYear().toString()))),
+				request.getSemester(), request.getDateStart(), request.getDateEnd(), request.getNote());
+
+		Date dateStart = request.getDateStart();
+		Date dateEnd = request.getDateEnd();
+
+		System.out.println(dateStart + ":::" + request.getDateStart());
+
+		// แก้ไขเรื่องวันสิ้นสุดว่าให้สิ้นสุดด้วยเงื่อนไข "ลาถึงวันที่" หรือ
+		// "วันที่กลับมาสอน"
+		while (dateStart.before(dateEnd) || dateStart.equals(dateEnd)) {
+			Calendar sourceA = Calendar.getInstance();
+			sourceA.setTime(request.getDateStart());
+			int dayOfWeek = sourceA.get(Calendar.DAY_OF_WEEK);
+			int dayNumber = dayOfWeek - 1;
+			if (dayNumber == 0) {
+				dayNumber = 7;
+			}
+			dateStart.setDate(dateStart.getDate() + 1);
+			Date dateRun = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
+
+			System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + ":::"
+					+ dateStart.getDate() + ":::" + dateRun);
+			Collection<Timetable> sourceTimetable = timetableService
+					.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
+							memberService.findByMemberId(request.getMemberId()).get(),
+							(String.valueOf(Integer.parseInt(request.getYear().toString()))),
+							request.getSemester(), dayOfWeek);
+
+			if (sourceTimetable != null) {
+				for (Timetable subTimetable : sourceTimetable) {
+					replaceTeachService.create(sourceLeaveTeach, subTimetable, dateRun);
+				}
+			}
+		}
 	}
 
 	public void update(int leaveTeachId, M_LeaveTeach_CreateTeacher_Request request) {
@@ -100,7 +141,7 @@ public class LeaveTeachLogic {
 	}
 
 	// DELETE
-	public void deleteTeacher(int leaveTeachId) {
+	public void delete(int leaveTeachId) {
 		replaceTeachService.deleteByLeaveTeachId(leaveTeachService.findByLeaveTeachId(leaveTeachId));
 		leaveTeachService.delete(leaveTeachId);
 	}

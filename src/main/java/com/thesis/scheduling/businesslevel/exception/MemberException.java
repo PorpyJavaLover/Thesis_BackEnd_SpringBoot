@@ -20,6 +20,10 @@ public class MemberException extends BaseException {
     public static MemberException loginFailPasswordIncorrect() {
         return new MemberException("login.password.incorrect");
     }
+
+    public static MemberException loginMemberNotActive() {
+        return new MemberException("login.member.NotActive");
+    }
 	
 	//Create Exception
     public static MemberException createTitleNull() {

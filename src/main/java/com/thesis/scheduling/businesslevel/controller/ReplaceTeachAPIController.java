@@ -29,9 +29,15 @@ public class ReplaceTeachAPIController {
 	}
 
 	// GET
-	@GetMapping("/teacher/show/all")
-	public ResponseEntity<Iterable<M_ReplaceTeach_ShowAllTeacher_Response>> showAllTeacher() throws BaseException {
-		Iterable<M_ReplaceTeach_ShowAllTeacher_Response> response = replaceTeachLogic.showAllTeacher();
+	@GetMapping("/teacher/show/all/{year}/{semester}")
+	public ResponseEntity<Iterable<M_ReplaceTeach_ShowAllTeacher_Response>> showAllTeacher(@PathVariable("year") String year, @PathVariable("semester") String semester) throws BaseException {
+		Iterable<M_ReplaceTeach_ShowAllTeacher_Response> response = replaceTeachLogic.showAllTeacher(year, semester);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/staff/show/all/{year}/{semester}/{memberId}")
+	public ResponseEntity<Iterable<M_ReplaceTeach_ShowAllTeacher_Response>> showAllStaff(@PathVariable("year") String year, @PathVariable("semester") String semester, @PathVariable("memberId") int memberId ) throws BaseException {
+		Iterable<M_ReplaceTeach_ShowAllTeacher_Response> response = replaceTeachLogic.showAllStaff(year, semester, memberId);
 		return ResponseEntity.ok(response);
 	}
 

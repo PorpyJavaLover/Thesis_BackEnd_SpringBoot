@@ -18,20 +18,24 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Collection<Timetable> findAll();
 
-	Collection<Timetable> findAllByYearsAndSemester(String years , String semester);
+	Collection<Timetable> findAllByYearsAndSemester(String years, String semester);
+
+	Collection<Timetable> findAllByYearsAndSemesterAndMemberId(String years, String semester, Member memberId);
 
 	Collection<Timetable> findAllByMemberId(Member memberId);
 
 	Collection<Timetable> findAllByMemberIdAndDayOfWeek(Member memberId, Integer dayOfWeek);
 
-	Collection<Timetable> findAllByMemberIdAndYearsAndDayOfWeek(Member memberId, String years , Integer dayOfWeek);
+	Collection<Timetable> findAllByMemberIdAndYearsAndDayOfWeek(Member memberId, String years, Integer dayOfWeek);
 
-	Collection<Timetable> findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(Member memberId, String years, String semester, Integer dayOfWeek);
+	Collection<Timetable> findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(Member memberId, String years,
+			String semester, Integer dayOfWeek);
 
 	Collection<Timetable> findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years, String semester,
 			Course courseId, Integer courseType, Group groupId);
 
-	Collection<Timetable> findAllByYearsAndSemesterAndGroupIdAndDayOfWeek( String years, String semester, Group groupId , Integer dayOfWeek);
+	Collection<Timetable> findAllByYearsAndSemesterAndGroupIdAndDayOfWeek(String years, String semester, Group groupId,
+			Integer dayOfWeek);
 
 	Collection<Timetable> findAllByYearsAndSemesterAndCourseIdAndGroupIdAndMemberId(String years, String semester,
 			Course courseId, Group groupId, Member memberId);
@@ -58,8 +62,8 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Optional<Timetable> findByTimetableId(int timetableId);
 
-	Collection<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years, String semester,
-	Course courseId, Integer courseType, Group groupId , Integer dayOfWeek);
-
+	Collection<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years,
+			String semester,
+			Course courseId, Integer courseType, Group groupId, Integer dayOfWeek);
 
 }

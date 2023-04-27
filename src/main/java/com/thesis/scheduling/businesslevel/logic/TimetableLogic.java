@@ -73,12 +73,12 @@ public class TimetableLogic {
 				timetableService.findAllByMemberId(memberService.findByMemberId(getCurrentUserId()).get()));
 	}
 
-	public Iterable<M_Timetable_ShowAllStaff_Response> showAllTeacher() {
+	public Iterable<M_Timetable_ShowAllStaff_Response> showAllTeacher(String yId , String sId) {
 		Collection<Timetable> sourceA = new ArrayList<Timetable>(
-				timetableService.findAllByMemberId(memberService.findByMemberId(getCurrentUserId()).get()));
+				timetableService.findAllByYearsAndSemesterAndMemberId(yId, sId, memberService.findByMemberId(getCurrentUserId()).get()));
 		Collection<Timetable> sourceForRemove = new ArrayList<Timetable>();
 		Collection<M_Timetable_ShowAllStaff_Response> sourceD = new ArrayList<M_Timetable_ShowAllStaff_Response>();
-		;
+
 		for (Timetable sourceATmp : sourceA) {
 			Collection<Timetable> sourceCoopTeacher;
 			String sourceYId = sourceATmp.getYears();

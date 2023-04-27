@@ -29,9 +29,9 @@ public class PlanAPIController {
 	}
 
 	// GET
-	@GetMapping("/teacher/show/all")
-	public ResponseEntity<Iterable<M_Plan_ShowAllTeacher_Response>> showAllTeacher() throws BaseException {
-		Iterable<M_Plan_ShowAllTeacher_Response> response = planLogic.showAllTeacher();
+	@GetMapping("/teacher/show/all/{years}/{semester}")
+	public ResponseEntity<Iterable<M_Plan_ShowAllStaff_Response>> showAllTeacher(@PathVariable("years") int years, @PathVariable("semester") int semester) throws BaseException {
+		Iterable<M_Plan_ShowAllStaff_Response> response = planLogic.showAllStaff(years, semester);
 		return ResponseEntity.ok(response);
 	}
 
