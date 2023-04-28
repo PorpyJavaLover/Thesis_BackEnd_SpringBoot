@@ -17,6 +17,7 @@ import com.thesis.scheduling.modellevel.model.M_Member_Login_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Login_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Response;
+import com.thesis.scheduling.modellevel.model.M_Member_RolePlay_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_UpdateStaff_Request;
 import com.thesis.scheduling.modellevel.service.MemberService;
@@ -64,6 +65,11 @@ public class MemberLogic {
 		return memberMapper.toMShowMemberForOption(sourceB);
 	}
 
+	public Iterable<M_For_Selection_Response> showMemberAdminForOption(String organiz ) {
+		Collection<Member> sourceB = memberService.findAllBySOrganizationId(organizationService.findByCode(organiz).get());
+		return memberMapper.toMShowMemberForOption(sourceB);
+	}
+
 	public M_Member_Login_Response login(M_Member_Login_Request request) throws BaseException {
 
 		// find user name
@@ -78,6 +84,26 @@ public class MemberLogic {
 		if (!memberService.matchPassword(request.getPassword(), member.getPassword())) {
 			throw MemberException.loginFailPasswordIncorrect();
 		}
+
+		if (member.isActiveStatus() == false) {
+			throw MemberException.loginMemberNotActive();
+		}
+
+		// create token
+		M_Member_Login_Response response = new M_Member_Login_Response();
+		response.setToken(tokenService.tokenize(member));
+		return response;
+	}
+
+	public M_Member_Login_Response rolePlay(M_Member_RolePlay_Request request) throws BaseException {
+
+		// find user name
+		Optional<Member> opt = memberService.findByMemberId(request.getMemberId());
+		if (!opt.isPresent()) {
+			throw MemberException.loginFailUsernameNotFound();
+		}
+
+		Member member = opt.get();
 
 		if (member.isActiveStatus() == false) {
 			throw MemberException.loginMemberNotActive();

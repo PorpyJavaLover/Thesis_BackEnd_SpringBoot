@@ -19,6 +19,7 @@ import com.thesis.scheduling.modellevel.model.M_Member_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_UpdateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Response;
+import com.thesis.scheduling.modellevel.model.M_Member_RolePlay_Request;
 
 @RestController
 @RequestMapping("/member")
@@ -43,10 +44,23 @@ public class MemberAPIController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/admin/show/option/{organiz}")
+    public ResponseEntity<Iterable<M_For_Selection_Response>> showMemberStaffForOption( @PathVariable("organiz") String organiz) throws BaseException {
+        Iterable<M_For_Selection_Response> response = memberLogic.showMemberAdminForOption(organiz);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/anonymous/login")
     public ResponseEntity<M_Member_Login_Response> login(@RequestBody M_Member_Login_Request request)
             throws BaseException {
         M_Member_Login_Response response = memberLogic.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/role/play")
+    public ResponseEntity<M_Member_Login_Response> rolePlay(@RequestBody M_Member_RolePlay_Request request)
+            throws BaseException {
+        M_Member_Login_Response response = memberLogic.rolePlay(request);
         return ResponseEntity.ok(response);
     }
 

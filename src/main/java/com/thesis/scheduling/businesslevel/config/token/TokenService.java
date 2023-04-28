@@ -29,9 +29,7 @@ public class TokenService {
         Date expiresAt = calendar.getTime();
 
         String role = "Anonymous";
-        if(member.getRole() == 0){
-            role = "Newbie";
-        }else if(member.getRole() == 1){
+        if(member.getRole() == 1){
             role = "Teacher";
         }else if(member.getRole() == 2){
             role = "Staff";
