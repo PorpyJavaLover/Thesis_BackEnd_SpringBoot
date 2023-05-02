@@ -63,24 +63,27 @@ public class LeaveTeachLogic {
 
 		Date dateStart = request.getDateStart();
 		Date dateEnd = request.getDateEnd();
+		Date dateStartTmp = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
+		Date dateEndTmp = new Date(dateEnd.getYear(), dateEnd.getMonth(), dateEnd.getDate());
 
 		System.out.println(dateStart + ":::" + request.getDateStart());
 
 		// แก้ไขเรื่องวันสิ้นสุดว่าให้สิ้นสุดด้วยเงื่อนไข "ลาถึงวันที่" หรือ
 		// "วันที่กลับมาสอน"
-		while (dateStart.before(dateEnd) || dateStart.equals(dateEnd)) {
+		while (dateStartTmp.before(dateEndTmp) || dateStartTmp.equals(dateEndTmp)) {
 			Calendar sourceA = Calendar.getInstance();
-			sourceA.setTime(request.getDateStart());
+			sourceA.setTime(dateStartTmp);
 			int dayOfWeek = sourceA.get(Calendar.DAY_OF_WEEK);
 			int dayNumber = dayOfWeek - 1;
 			if (dayNumber == 0) {
 				dayNumber = 7;
 			}
-			dateStart.setDate(dateStart.getDate() + 1);
-			Date dateRun = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
+
+			dateStartTmp.setDate(dateStartTmp.getDate() + 1);
+			Date dateRun = new Date(dateStartTmp.getYear(), dateStartTmp.getMonth(), dateStartTmp.getDate());
 
 			System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + ":::"
-					+ dateStart.getDate() + ":::" + dateRun);
+					+ dateStartTmp.getDate() + ":::" + dateRun);
 			Collection<Timetable> sourceTimetable = timetableService
 					.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
 							memberService.findByMemberId(getCurrentUserId()).get(),
@@ -97,31 +100,38 @@ public class LeaveTeachLogic {
 
 	public void createStaff(M_LeaveTeach_CreateStaff_Request request) {
 
+		System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + "XXX"
+		+ request.getDateStart() + "XXX" + request.getDateEnd());
+
 		LeaveTeach sourceLeaveTeach = leaveTeachService.create(memberService.findByMemberId(request.getMemberId()).get(),
 				(String.valueOf(Integer.parseInt(request.getYear().toString()))),
 				request.getSemester(), request.getDateStart(), request.getDateEnd(), request.getNote());
 
 		Date dateStart = request.getDateStart();
 		Date dateEnd = request.getDateEnd();
+		Date dateStartTmp = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
+		Date dateEndTmp = new Date(dateEnd.getYear(), dateEnd.getMonth(), dateEnd.getDate());
 
-		System.out.println(dateStart + ":::" + request.getDateStart());
+		System.out.println(dateStartTmp + ":::" + request.getDateStart());
 
 		// แก้ไขเรื่องวันสิ้นสุดว่าให้สิ้นสุดด้วยเงื่อนไข "ลาถึงวันที่" หรือ
 		// "วันที่กลับมาสอน"
-		while (dateStart.before(dateEnd) || dateStart.equals(dateEnd)) {
+		while (dateStartTmp.before(dateEndTmp) || dateStartTmp.equals(dateEndTmp)) {
 			Calendar sourceA = Calendar.getInstance();
-			sourceA.setTime(request.getDateStart());
+			sourceA.setTime(dateStartTmp);
 			int dayOfWeek = sourceA.get(Calendar.DAY_OF_WEEK);
 			int dayNumber = dayOfWeek - 1;
 			if (dayNumber == 0) {
 				dayNumber = 7;
 			}
-			dateStart.setDate(dateStart.getDate() + 1);
-			Date dateRun = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
+
+			dateStartTmp.setDate(dateStartTmp.getDate() + 1);
+			Date dateRun = new Date(dateStartTmp.getYear(), dateStartTmp.getMonth(), dateStartTmp.getDate());
 
 			System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + ":::"
-					+ dateStart.getDate() + ":::" + dateRun);
-			Collection<Timetable> sourceTimetable = timetableService
+					+ dateStartTmp.getDate() + ":::" + dateRun);
+					
+			Collection<Timetable> sourceTimetable =  timetableService
 					.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
 							memberService.findByMemberId(request.getMemberId()).get(),
 							(String.valueOf(Integer.parseInt(request.getYear().toString()))),

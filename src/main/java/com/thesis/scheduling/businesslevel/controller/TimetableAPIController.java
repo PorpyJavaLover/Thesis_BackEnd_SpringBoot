@@ -172,14 +172,11 @@ public class TimetableAPIController {
 		timetableLogic.deleteForPlanStaff(yId, sId, cId, cType, gId, memberId);
 	}
 
-	@DeleteMapping("/staff/clean/{yId}/{sId}/{cId}/{cType}/{gId}/{dayOfWeek}/{startTime}/{endTime}/{room}/{timeLocker}/{roomLocker}")
+	@DeleteMapping("/staff/clean/{yId}/{sId}/{cId}/{cType}/{gId}")
 	public void clean(@PathVariable("yId") String yId, @PathVariable("sId") String sId,
-			@PathVariable("cId") Long cId, @PathVariable("cType") Integer cType, @PathVariable("gId") Long gId,
-			@PathVariable("dayOfWeek") Integer dayOfWeek, @PathVariable("startTime") Time startTime,
-			@PathVariable("endTime") Time endTime, @PathVariable("room") Integer roomId,
-			@PathVariable("timeLocker") boolean timeLocker, @PathVariable("roomLocker") boolean roomLocker)
+			@PathVariable("cId") Long cId, @PathVariable("cType") Integer cType, @PathVariable("gId") Long gId)
 			throws BaseException {
-		timetableLogic.clean(yId, sId, cId, cType, gId, dayOfWeek, startTime, endTime, roomId, timeLocker, roomLocker);
+		timetableLogic.clean(yId, sId, cId, cType, gId);
 	}
 
 	@DeleteMapping("/staff/clean/all/{yId}/{sId}")

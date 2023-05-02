@@ -59,6 +59,11 @@ public class MemberLogic {
 		return memberMapper.toMShowMember(sourceB);
 	}
 
+	public Iterable<M_Member_ShowAllStaff_Response> showMemberAdmin(String organiz) {
+		Collection<Member> sourceB = memberService.findAllBySOrganizationId(organizationService.findByCode(organiz).get());
+		return memberMapper.toMShowMember(sourceB);
+	}
+
 	public Iterable<M_For_Selection_Response> showMemberStaffForOption() {
 		Organization sourceA = memberService.findByMemberId(getCurrentUserId()).get().getOrganizationId();
 		Collection<Member> sourceB = memberService.findAllBySOrganizationId(sourceA);
@@ -75,14 +80,14 @@ public class MemberLogic {
 		// find user name
 		Optional<Member> opt = memberService.findByUsername(request.getUsername());
 		if (!opt.isPresent()) {
-			throw MemberException.loginFailUsernameNotFound();
+			throw MemberException.loginFailUsernameAndPasswordWrong();
 		}
 
 		Member member = opt.get();
 
 		// verify password
 		if (!memberService.matchPassword(request.getPassword(), member.getPassword())) {
-			throw MemberException.loginFailPasswordIncorrect();
+			throw MemberException.loginFailUsernameAndPasswordWrong();
 		}
 
 		if (member.isActiveStatus() == false) {

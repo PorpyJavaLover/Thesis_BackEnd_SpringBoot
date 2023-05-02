@@ -50,6 +50,12 @@ public class MemberAPIController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/admin/show/all/{organiz}")
+    public ResponseEntity<Iterable<M_Member_ShowAllStaff_Response>> showMemberAdmin(@PathVariable("organiz") String organiz) throws BaseException {
+        Iterable<M_Member_ShowAllStaff_Response> response = memberLogic.showMemberAdmin(organiz);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/anonymous/login")
     public ResponseEntity<M_Member_Login_Response> login(@RequestBody M_Member_Login_Request request)
             throws BaseException {

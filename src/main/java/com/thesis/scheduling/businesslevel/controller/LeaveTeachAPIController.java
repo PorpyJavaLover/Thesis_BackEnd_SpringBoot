@@ -52,9 +52,9 @@ public class LeaveTeachAPIController {
 	
 	@PutMapping("/teacher/update/{leaveTeachId}")
 	public void editLeaveTeaching(@PathVariable("leaveTeachId") int leaveTeachId ,@RequestBody M_LeaveTeach_CreateTeacher_Request request) {
+		System.out.println(request);
 		leaveTeachLogic.update(leaveTeachId,request);
 	}
-
 
 	// DELETE
 	@DeleteMapping("/teacher/delete/{leaveTeachId}")

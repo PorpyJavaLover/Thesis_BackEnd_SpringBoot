@@ -26,12 +26,16 @@ public class TimetableService {
 		return repository.findAll();
 	}
 
-	public Collection<Timetable> findAllByYearsAndSemester(String years , String semester) {
-		return repository.findAllByYearsAndSemester(years , semester);
+	public Optional<Timetable> findByTimetableId(int timetableId) {
+		return repository.findByTimetableId(timetableId);
 	}
 
-	public Collection<Timetable> findAllByYearsAndSemesterAndMemberId(String years , String semester, Member memberId) {
-		return repository.findAllByYearsAndSemesterAndMemberId(years , semester , memberId);
+	public Collection<Timetable> findAllByYearsAndSemester(String years, String semester) {
+		return repository.findAllByYearsAndSemester(years, semester);
+	}
+
+	public Collection<Timetable> findAllByYearsAndSemesterAndMemberId(String years, String semester, Member memberId) {
+		return repository.findAllByYearsAndSemesterAndMemberId(years, semester, memberId);
 	}
 
 	public Iterable<Timetable> findAllByRoomId(Room roomId) {
@@ -45,9 +49,15 @@ public class TimetableService {
 	}
 
 	public Collection<Timetable> findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(String years,
-	String semester, Course courseId, Integer courseType, Group groupId) {
+			String semester, Course courseId, Integer courseType, Group groupId) {
 		return repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
-		semester, courseId, courseType, groupId);
+				semester, courseId, courseType, groupId);
+	}
+
+	public Collection<Timetable> findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndMemberId(String years,
+			String semester, Course courseId, Integer courseType, Group groupId, Member memberId) {
+		return repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndMemberId(years,
+				semester, courseId, courseType, groupId, memberId);
 	}
 
 	public Collection<Timetable> findAllByMemberId(Member memberId) {
@@ -59,17 +69,17 @@ public class TimetableService {
 	}
 
 	public Collection<Timetable> findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(Member memberId, String years,
-			String semester,Integer dayOfWeek ) {
+			String semester, Integer dayOfWeek) {
 
-		if (memberId == null  || years == null || semester == null || dayOfWeek == null ) {
+		if (memberId == null || years == null || semester == null || dayOfWeek == null) {
 			throw new IllegalArgumentException("No values can be null");
 		}
 
 		Collection<Timetable> targetA = repository.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(memberId, years,
 				semester, dayOfWeek);
-				
+
 		if (!targetA.isEmpty()) {
-			return  targetA;
+			return targetA;
 		} else {
 			return null;
 		}
@@ -150,23 +160,22 @@ public class TimetableService {
 	}
 
 	public Collection<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years,
-			String semester, Course courseId, Integer courseType, Group groupId ,Integer dayOfWeek ) {
+			String semester, Course courseId, Integer courseType, Group groupId, Integer dayOfWeek) {
 
 		if (years == null || semester == null || courseId == null || courseType == null || groupId == null) {
 			throw new IllegalArgumentException("No values can be null");
 		}
 
-		Collection<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(years,
-				semester, courseId, courseType, groupId , dayOfWeek);
-				
+		Collection<Timetable> targetA = repository.findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(
+				years,
+				semester, courseId, courseType, groupId, dayOfWeek);
+
 		if (!targetA.isEmpty()) {
-			return  targetA;
+			return targetA;
 		} else {
 			return null;
 		}
 	}
-
-	
 
 	public Iterable<Timetable> findAllCollectionMemberByYearsAndSemesterAndCourseIdAndGroupIdAndDayOfWeek(String years,
 			String semester, Course courseId, Integer courseType, Group groupId, Integer dayOfWeek) {
@@ -184,7 +193,7 @@ public class TimetableService {
 
 		for (Timetable targetASub : targetA) {
 			Collection<Timetable> targetC = repository.findAllByMemberIdAndYearsAndDayOfWeek(targetASub.getMemberId(),
-			 years , dayOfWeek);
+					years, dayOfWeek);
 			targetB.addAll(targetC);
 		}
 
@@ -213,10 +222,7 @@ public class TimetableService {
 			Group groupId, Integer dayOfWeek, Time startTime, Time endTime) {
 
 		if (endTime == null || startTime == null || dayOfWeek == null) {
-
-			//@todo บัค เลือกห้อง
 			return null;
-
 		}
 
 		Collection<Timetable> targetA = repository.findAllByDayOfWeek(dayOfWeek);

@@ -13,6 +13,10 @@ public class MemberException extends BaseException {
     }
 	
 	//Login Exception
+    public static MemberException loginFailUsernameAndPasswordWrong() {
+        return new MemberException("login.usernameAndPassword.Wrong");
+    }
+
     public static MemberException loginFailUsernameNotFound() {
         return new MemberException("login.username.NotFound");
     }

@@ -51,7 +51,7 @@ public class ReplaceTeachLogic {
 						memberService.findByMemberId(getCurrentUserId()).get()));
 		Collection<ReplaceTeach> sourceB = new ArrayList<ReplaceTeach>();
 		for (Timetable sourceATmp : sourceA) {
-			sourceB.addAll(replaceTeachService.showAllByEssTimetableId(sourceATmp));
+			sourceB.addAll(replaceTeachService.findAllByEssTimetableId(sourceATmp));
 		}
 		return replaceTeachMapper.toMShowAllTeacher(sourceB);
 	}
@@ -63,7 +63,7 @@ public class ReplaceTeachLogic {
 						memberService.findByMemberId(memberId).get()));
 		Collection<ReplaceTeach> sourceB = new ArrayList<ReplaceTeach>();
 		for (Timetable sourceATmp : sourceA) {
-			sourceB.addAll(replaceTeachService.showAllByEssTimetableId(sourceATmp));
+			sourceB.addAll(replaceTeachService.findAllByEssTimetableId(sourceATmp));
 		}
 		return replaceTeachMapper.toMShowAllTeacher(sourceB);
 	}

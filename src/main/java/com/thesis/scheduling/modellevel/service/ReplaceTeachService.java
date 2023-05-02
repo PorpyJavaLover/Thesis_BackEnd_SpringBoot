@@ -26,7 +26,7 @@ public class ReplaceTeachService {
 		return repository.findAllByMemberReplaceId(memberId);
 	}
 
-	public Collection<ReplaceTeach> showAllByEssTimetableId(Timetable essTimetableId) {
+	public Collection<ReplaceTeach> findAllByEssTimetableId(Timetable essTimetableId) {
 		return repository.findAllByEssTimetableId(essTimetableId);
 	}
 
