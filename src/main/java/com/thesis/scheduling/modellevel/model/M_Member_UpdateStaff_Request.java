@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class M_Member_UpdateStaff_Request {
 
+	private int memberIdNeo;
+
     private Long titleNameSelected;
 
 	private String firstNameTH;

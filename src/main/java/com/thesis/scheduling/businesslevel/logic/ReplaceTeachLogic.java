@@ -71,9 +71,7 @@ public class ReplaceTeachLogic {
 	public Iterable<M_SelectOption_Response> showMemberReplaceOption(int replaceTeachId, String sOrganize) {
 
 		Collection<Member> sourceA = new ArrayList<Member>(
-				memberService.findAllBySOrganizationId(organizationService.findByCode(sOrganize).get())); // @todo
-																											// <---check
-																											// point
+				memberService.findAllBySOrganizationId(organizationService.findByCode(sOrganize).get()));
 		sourceA.remove(memberService.findByMemberId(getCurrentUserId()).get());
 		Collection<Member> sourceD = new ArrayList<Member>(sourceA);
 		for (Member sourceATmp : sourceD) {

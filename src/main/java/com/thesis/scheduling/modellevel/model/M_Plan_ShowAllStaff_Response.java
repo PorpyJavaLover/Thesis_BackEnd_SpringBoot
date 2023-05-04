@@ -18,6 +18,8 @@ public class M_Plan_ShowAllStaff_Response {
 	private String course_code;
 	
 	private String course_title;
+
+	private String course_title_en;
 	
 	private String group_id;
 	

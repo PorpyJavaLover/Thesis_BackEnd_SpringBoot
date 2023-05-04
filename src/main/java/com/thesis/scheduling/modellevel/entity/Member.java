@@ -79,6 +79,4 @@ public class Member{
     @JsonIgnore
     private List<LeaveTeach> leaveTeach;
 
-
-
 }

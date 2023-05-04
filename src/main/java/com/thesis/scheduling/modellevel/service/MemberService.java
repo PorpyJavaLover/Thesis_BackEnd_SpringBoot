@@ -36,7 +36,6 @@ public class MemberService {
 		return repository.findAllByOrganizationId(organizationId);
 	}
 
-
 	public Optional<Member> findByUsername(String username) {
 		return repository.findByUsername(username);
 	}
@@ -44,15 +43,14 @@ public class MemberService {
 	public Optional<Member> findByMemberId(int mId) {
 		return repository.findByMemberId(mId);
 	}
-	
+
 	public boolean matchPassword(String requestPassword, String realPassword) {
 		return realPassword.equals(requestPassword);
 	}
 
-	
 	// SET
-	public Member create(Title titleNameSelected , Organization organizSelected, String firstNameTH, String lastNameTH, 
-	 String firstNameEN, String lastNameEN, String usernameRe, String passwordRe, Integer roleSelected)
+	public Member create(Title titleNameSelected, Organization organizSelected, String firstNameTH, String lastNameTH,
+			String firstNameEN, String lastNameEN, String usernameRe, String passwordRe, Integer roleSelected)
 			throws BaseException {
 
 		// validate
@@ -93,13 +91,17 @@ public class MemberService {
 		entity.setPassword(passwordRe);
 		entity.setRole(roleSelected);
 		entity.setActiveStatus(false);
-		return 	repository.save(entity);
+		return repository.save(entity);
 	}
 
-	public void update(Member member, Title titleNameSelected , String firstNameTH, String lastNameTH, 
-	 String firstNameEN, String lastNameEN, String usernameRe, String passwordRe , Integer roleSelected , boolean activeStatusSelected)
+	// @todo เปลี่ยน memberId ไม่ได้เเพราะเป็น primary key
+	public void update(Member member, int memberIdNeo, Title titleNameSelected, String firstNameTH, String lastNameTH,
+			String firstNameEN, String lastNameEN, String usernameRe, String passwordRe, Integer roleSelected,
+			boolean activeStatusSelected)
 			throws BaseException {
 
+		//Member entity = new Member();
+		//member.setMemberId(memberIdNeo);
 		member.setTitleId(titleNameSelected);
 		member.setThFirstName(firstNameTH);
 		member.setThLastName(lastNameTH);
@@ -108,14 +110,15 @@ public class MemberService {
 		member.setUsername(usernameRe);
 		member.setPassword(passwordRe);
 		member.setRole(roleSelected);
+		member.setOrganizationId(member.getOrganizationId());
 		member.setActiveStatus(activeStatusSelected);
 		repository.save(member);
+		//repository.delete(member);
 	}
-	
 
 	// DELETE
 
-	public void delete(Member member){
+	public void delete(Member member) {
 		repository.delete(member);
 	}
 

@@ -44,13 +44,11 @@ public class PlanLogic {
 			int j = Integer.parseInt(sourceATmp.getGroupId().getGroup_name().substring(
 				sourceATmp.getGroupId().getGroup_name().indexOf('.') + 1,
 				sourceATmp.getGroupId().getGroup_name().indexOf('.') + 3));
-				if( Integer.parseInt("25" + (j + i)) == years){
+				if( Integer.parseInt("25" + (j + i)) == (years + 543)){
 					sourceB.add(sourceATmp);
 				}
 		}
-
-
-
+		
 		return mapper.toMTableResponseStaff(sourceB);
 	}
 

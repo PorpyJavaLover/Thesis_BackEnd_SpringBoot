@@ -135,7 +135,7 @@ public class MemberLogic {
 	public void update( int memberId , M_Member_UpdateStaff_Request request) throws BaseException {
 
 		Optional<Title> title = titleService.findByTitleId(request.getTitleNameSelected());
-		 memberService.update(memberService.findByMemberId(memberId).get() , title.get(), request.getFirstNameTH(),
+		 memberService.update(memberService.findByMemberId(memberId).get() , request.getMemberIdNeo() , title.get(), request.getFirstNameTH(),
 				request.getLastNameTH(), request.getFirstNameEN(), request.getLastNameEN()
 				, request.getUsernameRe(), request.getPasswordRe(), request.getRoleSelected() , request.isActiveStatusSelected());
 

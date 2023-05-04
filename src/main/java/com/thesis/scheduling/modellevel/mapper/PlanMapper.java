@@ -34,6 +34,7 @@ public class PlanMapper {
 			targetSub.setCourse_id(sourceTmp.getCourseId().getCourseId().toString());
 			targetSub.setCourse_code(sourceTmp.getCourseId().getCourse_code().toString());
 			targetSub.setCourse_title(sourceTmp.getCourseId().getCourse_title().toString());
+			targetSub.setCourse_title_en(sourceTmp.getCourseId().getCourse_title_en().toString());
 			targetSub.setGroup_id(sourceTmp.getGroupId().getGroupId().toString());
 			targetSub.setGroup_name(sourceTmp.getGroupId().getGroup_name().toString());
 			targetSub.setSelected_lect(false);
@@ -68,6 +69,7 @@ public class PlanMapper {
 			targetSub.setCourse_id(sourceTmp.getCourseId().getCourseId().toString());
 			targetSub.setCourse_code(sourceTmp.getCourseId().getCourse_code().toString());
 			targetSub.setCourse_title(sourceTmp.getCourseId().getCourse_title().toString());
+			targetSub.setCourse_title_en(sourceTmp.getCourseId().getCourse_title_en().toString());
 			targetSub.setGroup_id(sourceTmp.getGroupId().getGroupId().toString());
 			targetSub.setGroup_name(sourceTmp.getGroupId().getGroup_name().toString());
 			targetSub.setSelected_lect(false);
