@@ -15,6 +15,7 @@ import com.thesis.scheduling.modellevel.mapper.MemberMapper;
 import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_Login_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Login_Response;
+import com.thesis.scheduling.modellevel.model.M_Member_Organiz_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_RolePlay_Request;

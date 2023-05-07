@@ -249,6 +249,11 @@ public class TimetableService {
 
 	}
 
+	public Collection<Timetable> findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime( String years, String semester, Member memberId,
+			Integer dayOfWeek, Time startTime) {
+		return repository.findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(years, semester, memberId, dayOfWeek,  startTime);
+	}
+
 	// SET
 	public void create(String years, String semester, Course courseId, Integer courseType, Group groupId,
 			Member memberId) {
@@ -371,5 +376,7 @@ public class TimetableService {
 
 		return result;
 	}
+
+	
 
 }

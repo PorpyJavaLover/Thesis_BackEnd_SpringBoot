@@ -15,6 +15,7 @@ import com.thesis.scheduling.businesslevel.logic.MemberLogic;
 import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_Login_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Login_Response;
+import com.thesis.scheduling.modellevel.model.M_Member_Organiz_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Member_UpdateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_Member_Register_Request;

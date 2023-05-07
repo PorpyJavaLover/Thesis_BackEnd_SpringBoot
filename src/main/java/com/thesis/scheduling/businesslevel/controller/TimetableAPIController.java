@@ -20,6 +20,7 @@ import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_CreateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllTeacher_Response;
+import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTable_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTimeRemain_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_UpdateLockerStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_Timetable_UpdateStaff_Request;
@@ -42,14 +43,16 @@ public class TimetableAPIController {
 	}
 
 	@GetMapping("/teacher/show/all/{yId}/{sId}")
-	public ResponseEntity<Iterable<M_Timetable_ShowAllStaff_Response>> showAllTeacher(@PathVariable("yId") String yId , @PathVariable("sId") String sId) throws BaseException {
-		Iterable<M_Timetable_ShowAllStaff_Response> response = timetableLogic.showAllTeacher(yId , sId);
+	public ResponseEntity<Iterable<M_Timetable_ShowAllStaff_Response>> showAllTeacher(@PathVariable("yId") String yId,
+			@PathVariable("sId") String sId) throws BaseException {
+		Iterable<M_Timetable_ShowAllStaff_Response> response = timetableLogic.showAllTeacher(yId, sId);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/staff/show/all/{yId}/{sId}")
-	public ResponseEntity<Iterable<M_Timetable_ShowAllStaff_Response>> showAllStaff(@PathVariable("yId") String yId , @PathVariable("sId") String sId) throws BaseException {
-		Iterable<M_Timetable_ShowAllStaff_Response> response = timetableLogic.showAllStaff(yId , sId);
+	public ResponseEntity<Iterable<M_Timetable_ShowAllStaff_Response>> showAllStaff(@PathVariable("yId") String yId,
+			@PathVariable("sId") String sId) throws BaseException {
+		Iterable<M_Timetable_ShowAllStaff_Response> response = timetableLogic.showAllStaff(yId, sId);
 		return ResponseEntity.ok(response);
 	}
 
@@ -63,8 +66,8 @@ public class TimetableAPIController {
 	@GetMapping("/staff/show/start/time/option/{yId}/{sId}/{cId}/{cType}/{gId}/{dayOfWeek}/{endTime}")
 	public ResponseEntity<Iterable<M_Timetable_ShowTimeRemain_Response>> showStartTimeForOption(
 			@PathVariable("yId") String yId,
-			@PathVariable("sId") String sId, @PathVariable("cId") Long cId, @PathVariable("cType") Integer cType,
-			@PathVariable("gId") Long gId,
+			@PathVariable("sId") String sId, @PathVariable("cId") Long cId,
+			@PathVariable("cType") Integer cType, @PathVariable("gId") Long gId,
 			@PathVariable("dayOfWeek") Integer dayOfWeek, @PathVariable("endTime") String endTime)
 			throws BaseException {
 		Iterable<M_Timetable_ShowTimeRemain_Response> response = timetableLogic.showStartTimeOptionStaff(false, yId,
@@ -120,8 +123,27 @@ public class TimetableAPIController {
 	}
 
 	@GetMapping("/staff/auto_pilot/{yId}/{sId}")
-	public void autoPilot(@PathVariable("yId") String yId , @PathVariable("sId") String sId) throws BaseException, ParseException {
-		timetableLogic.autoPilot( yId , sId );
+	public void autoPilot(@PathVariable("yId") String yId, @PathVariable("sId") String sId)
+			throws BaseException, ParseException {
+		timetableLogic.autoPilot(yId, sId);
+	}
+
+	@GetMapping("/teacher/show/table/{yId}/{sId}/{dayOfWeek}")
+	public ResponseEntity<Iterable<M_Timetable_ShowTable_Response>> showTableTeacher(@PathVariable("yId") String yId,
+			@PathVariable("sId") String sId, @PathVariable("dayOfWeek") Integer dayOfWeek)
+			throws BaseException, ParseException {
+		Iterable<M_Timetable_ShowTable_Response> response = timetableLogic.showTableTeacher(yId, sId, dayOfWeek);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/staff/show/table/{yId}/{sId}/{memberId}/{dayOfWeek}")
+	public ResponseEntity<Iterable<M_Timetable_ShowTable_Response>> showTableStaff(@PathVariable("yId") String yId,
+			@PathVariable("sId") String sId,
+			@PathVariable("memberId") Integer memberId, @PathVariable("dayOfWeek") Integer dayOfWeek)
+			throws BaseException, ParseException {
+		Iterable<M_Timetable_ShowTable_Response> response = timetableLogic.showTableStaff(yId, sId, memberId,
+				dayOfWeek);
+		return ResponseEntity.ok(response);
 	}
 
 	// SET
@@ -180,8 +202,8 @@ public class TimetableAPIController {
 	}
 
 	@DeleteMapping("/staff/clean/all/{yId}/{sId}")
-	public void cleanAll(@PathVariable("yId") String yId , @PathVariable("sId") String sId) throws BaseException {
-		timetableLogic.cleanAll(yId , sId);
+	public void cleanAll(@PathVariable("yId") String yId, @PathVariable("sId") String sId) throws BaseException {
+		timetableLogic.cleanAll(yId, sId);
 	}
 
 }

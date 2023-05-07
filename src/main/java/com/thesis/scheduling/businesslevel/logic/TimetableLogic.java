@@ -29,6 +29,7 @@ import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_CreateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllTeacher_Response;
+import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTable_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTimeRemain_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_UpdateLockerStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_Timetable_UpdateStaff_Request;
@@ -131,7 +132,7 @@ public class TimetableLogic {
 		Collection<Timetable> sourceA = new ArrayList<Timetable>(timetableService.findAllByYearsAndSemester(yId, sId));
 		Collection<Timetable> sourceForRemove = new ArrayList<Timetable>();
 		Collection<M_Timetable_ShowAllStaff_Response> sourceD = new ArrayList<M_Timetable_ShowAllStaff_Response>();
-		;
+
 		for (Timetable sourceATmp : sourceA) {
 			Collection<Timetable> sourceCoopTeacher;
 			String sourceYId = sourceATmp.getYears();
@@ -519,10 +520,175 @@ public class TimetableLogic {
 				}
 			}
 		}
-
 	}
 
-	// SET
+	public Iterable<M_Timetable_ShowTable_Response> showTableTeacher(String yId, String sId, Integer dayOfWeek) {
+
+		Collection<M_Timetable_ShowTable_Response> target = new ArrayList<M_Timetable_ShowTable_Response>();
+
+		for (Integer index = 1, indexB = 0; index <= 14; index++) {
+
+			Collection<Timetable> sourceA = timetableService
+					.findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(yId,
+							sId, memberService.findByMemberId(getCurrentUserId()).get(), dayOfWeek, convertStartTime(index));
+
+							
+
+			M_Timetable_ShowTable_Response targetSub = new M_Timetable_ShowTable_Response();
+
+			Collection<String> sourceB = new ArrayList<String>();
+			Collection<String> sourceC = new ArrayList<String>();
+
+			if (sourceA.isEmpty() == false) {
+
+				for (Timetable sourceATmp : sourceA) {
+					targetSub.setIndex(index);
+					targetSub.setActiveStatus(1);
+					targetSub.setCourseLect(
+							sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() : 0);
+					targetSub.setCoursePerf(
+							sourceATmp.getCourseType() == 0 ? 0 : sourceATmp.getCourseId().getCoursePerf() / 3);
+					targetSub.setTimeLect(
+							sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() : 0);
+					targetSub.setTimePerf(
+							sourceATmp.getCourseType() == 0 ? 0 : sourceATmp.getCourseId().getCoursePerf());
+					targetSub.setCourse_code(sourceATmp.getCourseId().getCourse_code());
+					targetSub.setCourse_title(sourceATmp.getCourseId().getCourse_title());
+					targetSub.setDay_of_week(sourceATmp.getDayOfWeek());
+
+					if (sourceB.isEmpty()) {
+						targetSub.setGroup_name(sourceATmp.getGroupId().getGroup_name());
+						sourceB.add(sourceATmp.getGroupId().getGroup_name());
+					} else if (!sourceB.contains(sourceATmp.getGroupId().getGroup_name())) {
+						targetSub.setGroup_name(targetSub.getGroup_name() + ", " +sourceATmp.getGroupId().getGroup_name());
+						sourceB.add(sourceATmp.getGroupId().getGroup_name());
+					}
+
+					Collection<Timetable> sourceD = timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceATmp.getYears(),
+					sourceATmp.getSemester(), sourceATmp.getCourseId(), sourceATmp.getCourseType(), sourceATmp.getGroupId());
+					
+					if(sourceC.isEmpty()){
+						targetSub.setMember_name(
+								sourceATmp.getMemberId().getTitleId().getTitleShort().toString() + " "
+								+ sourceATmp.getMemberId().getThFirstName().toString() + " "
+								+ sourceATmp.getMemberId().getThLastName().toString() );
+						sourceC.add(sourceATmp.getMemberId().getThFirstName().toString() + sourceATmp.getMemberId().getThLastName().toString());
+					} 
+					
+					for(Timetable sourceDTmp : sourceD){
+						if (!sourceC.contains(sourceDTmp.getMemberId().getThFirstName().toString() + sourceATmp.getMemberId().getThLastName().toString())) {
+							targetSub.setMember_name(
+									targetSub.getMember_name() + ", " 
+									+ sourceDTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
+									+ sourceDTmp.getMemberId().getThFirstName().toString() + " "
+									+ sourceDTmp.getMemberId().getThLastName().toString());
+							sourceC.add(sourceDTmp.getMemberId().getThFirstName().toString() + sourceDTmp.getMemberId().getThLastName().toString());
+						}
+					}
+
+					targetSub.setRoom_name(sourceATmp.getRoomId().getRoomName());
+					indexB = sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() - 1 : sourceATmp.getCourseId().getCoursePerf() - 1;
+				}
+
+			} else if (indexB != 0) {
+				targetSub.setIndex(index);
+				targetSub.setActiveStatus(2);
+				indexB--;
+			} else {
+				targetSub.setIndex(index);
+				targetSub.setActiveStatus(3);
+
+			}
+			target.add(targetSub);
+		}
+
+		return target;
+	}
+
+	public Iterable<M_Timetable_ShowTable_Response> showTableStaff(String yId, String sId,
+			Integer memberId, Integer dayOfWeek) {
+
+		Collection<M_Timetable_ShowTable_Response> target = new ArrayList<M_Timetable_ShowTable_Response>();
+
+		for (Integer index = 1, indexB = 0; index <= 14; index++) {
+
+			Collection<Timetable> sourceA = timetableService
+					.findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(yId,
+							sId, memberService.findByMemberId(memberId).get(), dayOfWeek, convertStartTime(index));
+
+							
+
+			M_Timetable_ShowTable_Response targetSub = new M_Timetable_ShowTable_Response();
+
+			Collection<String> sourceB = new ArrayList<String>();
+			Collection<String> sourceC = new ArrayList<String>();
+
+			if (sourceA.isEmpty() == false) {
+
+				for (Timetable sourceATmp : sourceA) {
+					targetSub.setIndex(index);
+					targetSub.setActiveStatus(1);
+					targetSub.setCourseLect(
+							sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() : 0);
+					targetSub.setCoursePerf(
+							sourceATmp.getCourseType() == 0 ? 0 : sourceATmp.getCourseId().getCoursePerf() / 3);
+					targetSub.setTimeLect(
+							sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() : 0);
+					targetSub.setTimePerf(
+							sourceATmp.getCourseType() == 0 ? 0 : sourceATmp.getCourseId().getCoursePerf());
+					targetSub.setCourse_code(sourceATmp.getCourseId().getCourse_code());
+					targetSub.setCourse_title(sourceATmp.getCourseId().getCourse_title());
+					targetSub.setDay_of_week(sourceATmp.getDayOfWeek());
+
+					if (sourceB.isEmpty()) {
+						targetSub.setGroup_name(sourceATmp.getGroupId().getGroup_name());
+						sourceB.add(sourceATmp.getGroupId().getGroup_name());
+					} else if (!sourceB.contains(sourceATmp.getGroupId().getGroup_name())) {
+						targetSub.setGroup_name(targetSub.getGroup_name() + ", " +sourceATmp.getGroupId().getGroup_name());
+						sourceB.add(sourceATmp.getGroupId().getGroup_name());
+					}
+
+					Collection<Timetable> sourceD = timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceATmp.getYears(),
+					sourceATmp.getSemester(), sourceATmp.getCourseId(), sourceATmp.getCourseType(), sourceATmp.getGroupId());
+					
+					if(sourceC.isEmpty()){
+						targetSub.setMember_name(
+								sourceATmp.getMemberId().getTitleId().getTitleShort().toString() + " "
+								+ sourceATmp.getMemberId().getThFirstName().toString() + " "
+								+ sourceATmp.getMemberId().getThLastName().toString() );
+						sourceC.add(sourceATmp.getMemberId().getThFirstName().toString() + sourceATmp.getMemberId().getThLastName().toString());
+					} 
+					
+					for(Timetable sourceDTmp : sourceD){
+						if (!sourceC.contains(sourceDTmp.getMemberId().getThFirstName().toString() + sourceATmp.getMemberId().getThLastName().toString())) {
+							targetSub.setMember_name(
+									targetSub.getMember_name() + ", " 
+									+ sourceDTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
+									+ sourceDTmp.getMemberId().getThFirstName().toString() + " "
+									+ sourceDTmp.getMemberId().getThLastName().toString());
+							sourceC.add(sourceDTmp.getMemberId().getThFirstName().toString() + sourceDTmp.getMemberId().getThLastName().toString());
+						}
+					}
+
+					targetSub.setRoom_name(sourceATmp.getRoomId().getRoomName());
+					indexB = sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() - 1 : sourceATmp.getCourseId().getCoursePerf() - 1;
+				}
+
+			} else if (indexB != 0) {
+				targetSub.setIndex(index);
+				targetSub.setActiveStatus(2);
+				indexB--;
+			} else {
+				targetSub.setIndex(index);
+				targetSub.setActiveStatus(3);
+
+			}
+			target.add(targetSub);
+		}
+
+		return target;
+	}
+
 	// -543
 	public void createTeacher(M_Timetable_CreateTeacher_Request request) {
 		timetableService.create(request.getYears().toString(), request.getSemester(),
@@ -647,5 +813,54 @@ public class TimetableLogic {
 	}
 
 	// Utill
+
+	public Time convertStartTime(Integer input) {
+		Time output = java.sql.Time.valueOf("08:00:00");
+		switch (input) {
+			case 1:
+				output = java.sql.Time.valueOf("08:00:00");
+				break;
+			case 2:
+				output = java.sql.Time.valueOf("09:00:00");
+				break;
+			case 3:
+				output = java.sql.Time.valueOf("10:00:00");
+				break;
+			case 4:
+				output = java.sql.Time.valueOf("11:00:00");
+				break;
+			case 5:
+				output = java.sql.Time.valueOf("12:00:00");
+				break;
+			case 6:
+				output = java.sql.Time.valueOf("13:00:00");
+				break;
+			case 7:
+				output = java.sql.Time.valueOf("14:00:00");
+				break;
+			case 8:
+				output = java.sql.Time.valueOf("15:00:00");
+				break;
+			case 9:
+				output = java.sql.Time.valueOf("16:00:00");
+				break;
+			case 10:
+				output = java.sql.Time.valueOf("17:00:00");
+				break;
+			case 11:
+				output = java.sql.Time.valueOf("18:00:00");
+				break;
+			case 12:
+				output = java.sql.Time.valueOf("19:00:00");
+				break;
+			case 13:
+				output = java.sql.Time.valueOf("20:00:00");
+				break;
+			case 14:
+				output = java.sql.Time.valueOf("21:00:00");
+				break;
+		}
+		return output;
+	}
 
 }

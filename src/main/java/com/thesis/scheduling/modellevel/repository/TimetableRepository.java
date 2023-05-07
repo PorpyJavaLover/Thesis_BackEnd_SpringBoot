@@ -50,6 +50,9 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Collection<Timetable> findAllByRoomId(Room roomId);
 
+	Collection<Timetable> findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(String years, String semester,
+			Member memberId, Integer dayOfWeek, Time startTime);
+
 	Optional<Timetable> findByYearsAndSemesterAndCourseIdAndGroupId(String years, String semester,
 			Course courseId, Group groupId);
 

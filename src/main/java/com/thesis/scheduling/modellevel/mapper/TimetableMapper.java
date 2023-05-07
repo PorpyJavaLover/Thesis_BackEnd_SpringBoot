@@ -16,6 +16,7 @@ import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllStaff_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllTeacher_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowMemberTimeTeacher_Response;
+import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTable_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTimeRemain_Response;
 
 @Component
@@ -44,7 +45,7 @@ public class TimetableMapper {
 
 	}
 
-	public M_Timetable_ShowAllStaff_Response toMTimetableStaff(Timetable sourceA , Collection<Timetable> sourceB) {
+	public M_Timetable_ShowAllStaff_Response toMTimetableStaff(Timetable sourceA, Collection<Timetable> sourceB) {
 
 		if (sourceA == null) {
 			return null;
@@ -66,23 +67,24 @@ public class TimetableMapper {
 		target.setStart_time(sourceA.getStartTime() == null ? "null" : sourceA.getStartTime().toString());
 		target.setEnd_time(sourceA.getEndTime() == null ? "null" : sourceA.getEndTime().toString());
 		target.setRoom_id(sourceA.getRoomId() == null ? "null" : sourceA.getRoomId().getRoomId().toString());
-		target.setRoom_name(sourceA.getRoomId() == null ? "null" : sourceA.getRoomId().getRoomName().replace("  ", " "));
+		target.setRoom_name(
+				sourceA.getRoomId() == null ? "null" : sourceA.getRoomId().getRoomName().replace("  ", " "));
 		target.setTime_locker(sourceA.isTimeLocker());
 		target.setRoom_locker(sourceA.isRoomLocker());
 		Collection<HashMap<String, String>> cMember = new ArrayList<>();
 		String member_name = "";
-		for(Timetable sourceBTmp :sourceB){
+		for (Timetable sourceBTmp : sourceB) {
 
 			HashMap<String, String> cSubMember = new HashMap<String, String>();
-			cSubMember.put("member_id" , sourceBTmp.getMemberId().getMemberId().toString());
-			cSubMember.put("member_name" , sourceBTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
-			+ sourceBTmp.getMemberId().getThFirstName().toString() + " "
-			+ sourceBTmp.getMemberId().getThLastName().toString());
+			cSubMember.put("member_id", sourceBTmp.getMemberId().getMemberId().toString());
+			cSubMember.put("member_name", sourceBTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
+					+ sourceBTmp.getMemberId().getThFirstName().toString() + " "
+					+ sourceBTmp.getMemberId().getThLastName().toString());
 			cMember.add(cSubMember);
 
 			member_name = member_name + " " + sourceBTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
-			+ sourceBTmp.getMemberId().getThFirstName().toString() + " "
-			+ sourceBTmp.getMemberId().getThLastName().toString();
+					+ sourceBTmp.getMemberId().getThFirstName().toString() + " "
+					+ sourceBTmp.getMemberId().getThLastName().toString();
 
 		}
 		target.setMember(cMember);
@@ -258,7 +260,7 @@ public class TimetableMapper {
 			} else if (sourceATmp.getCourseType() == 1) {
 				j = (sourceATmp.getCourseId().getCoursePerf());
 			}
-			for (int i = 0; i < j ; i++) {
+			for (int i = 0; i < j; i++) {
 				M_Timetable_ShowTimeRemain_Response targetASub = new M_Timetable_ShowTimeRemain_Response();
 				targetASub.setId(deconvertEndTime(sourceATmp.getEndTime().toString()) - i);
 				targetASub.setValue(convertEndTime(deconvertEndTime(sourceATmp.getEndTime().toString()) - i));
@@ -321,6 +323,50 @@ public class TimetableMapper {
 		targetA.setText(convertEndTime(z));
 
 		return targetA;
+	}
+
+	public Collection<M_Timetable_ShowTable_Response> toMShowTableStaff(Collection<Timetable> sourceA) {
+
+		if (sourceA == null) {
+			return null;
+		}
+
+		Collection<M_Timetable_ShowTable_Response> target = new ArrayList<M_Timetable_ShowTable_Response>();
+
+		Integer index = 0;
+		Integer indexB = 0;
+
+		for (Timetable sourceATmp : sourceA) {
+			M_Timetable_ShowTable_Response targetSub = new M_Timetable_ShowTable_Response();
+			if (sourceATmp != null) {
+				targetSub.setIndex(index);
+				targetSub.setActiveStatus(1);
+				targetSub.setCourseLect(sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() : 0);
+				targetSub.setCoursePerf(sourceATmp.getCourseType() == 0 ? 0 : sourceATmp.getCourseId().getCoursePerf()/3);
+				targetSub.setTimeLect(sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() : 0);
+				targetSub.setTimePerf(sourceATmp.getCourseType() == 0 ? 0 : sourceATmp.getCourseId().getCoursePerf());
+				targetSub.setCourse_code(sourceATmp.getCourseId().getCourse_code());
+				targetSub.setCourse_title(sourceATmp.getCourseId().getCourse_title());
+				targetSub.setDay_of_week(sourceATmp.getDayOfWeek());
+				targetSub.setGroup_name(sourceATmp.getGroupId().getGroup_name());
+				targetSub.setMember_name(sourceATmp.getMemberId().getTitleId().getTitleShort().toString() + " "
+						+ sourceATmp.getMemberId().getThFirstName().toString() + " "
+						+ sourceATmp.getMemberId().getThLastName().toString());
+				targetSub.setRoom_name(sourceATmp.getRoomId().getRoomName());
+				indexB = sourceATmp.getCourseId().getCourseLect() + sourceATmp.getCourseId().getCoursePerf() - 1  ;
+			} else if (sourceATmp == null && indexB != 0) {
+				targetSub.setIndex(index);
+				targetSub.setActiveStatus(2);
+				indexB--;
+			} else {
+				targetSub.setIndex(index);
+				targetSub.setActiveStatus(3);
+			}
+			target.add(targetSub);
+			index++;
+		}
+
+		return target;
 	}
 
 	public Collection<M_For_Selection_Response> toMRoomStaff(boolean modeForAutoPilot, Iterable<Timetable> sourceD,
