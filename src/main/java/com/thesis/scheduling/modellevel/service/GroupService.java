@@ -15,6 +15,10 @@ public class GroupService {
     public GroupService(GroupRepository repository) {
         this.repository = repository;
     }
+
+    public Iterable<Group> findAll(){
+    	return repository.findAll();
+    }
     
     public Optional<Group> findByGroupId(Long gId){
     	return repository.findByGroupId(gId);

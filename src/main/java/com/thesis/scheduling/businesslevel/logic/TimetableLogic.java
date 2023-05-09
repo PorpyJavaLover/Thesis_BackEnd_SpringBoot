@@ -10,8 +10,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeSet;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.stereotype.Service;
 
@@ -410,113 +408,118 @@ public class TimetableLogic {
 
 	public void autoPilot(String yId, String sId) throws ParseException {
 
-		Collection<Timetable> sourceA = timetableService.findAllByYearsAndSemester(yId, sId);
-		ArrayList<Timetable> list = new ArrayList<>(sourceA);
-		Integer dayA = 1;
-		Long listTmpTmp = null;
+		cleanAll(yId, sId); // <-- ล้างทั้งหมด
 
-		Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId()));
-		Collections.reverse(list);
+		Collection<Member> sourceB = memberService
+				.findAllBySOrganizationId(memberService.findByMemberId(getCurrentUserId()).get().getOrganizationId());	
+	
+		for (Member sourceBTmp : sourceB) {
 
-		cleanAll(yId, sId);
+			Collection<Timetable> sourceA = timetableService.findAllByYearsAndSemesterAndMemberId(yId, sId, sourceBTmp);
+			if(sourceA == null ){
+				continue;
+			}
 
-		for (Timetable listTmp : list) {
+			ArrayList<Timetable> list = new ArrayList<>(sourceA);
+			Integer dayA = 1;
+			Integer preTimeEnd = 0;
+			Integer timeLong = null;
+			Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId())); // <-- ตัวกำหนดการเรียง
+			Collections.reverse(list);
 
-			while (dayA <= 7) {
+			for (Timetable listTmp : list) {
 
-				if (listTmpTmp != null) {
-					if (listTmpTmp != listTmp.getGroupId().getGroupId()) {
-						dayA = 1;
-					}
-				}
+				while (dayA <= 7) {
 
-				listTmpTmp = listTmp.getGroupId().getGroupId();
+					if (listTmp.getDayOfWeek() == null && !listTmp.isTimeLocker()) { // <--เลือกตัวที่ไม่ได้ล็อก
 
-				if (listTmp.getDayOfWeek() == null && !listTmp.isTimeLocker()) {
+						ArrayList<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+						Integer runTimeStart = 0;
+						DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+						Time timeValueStart = null;
+						Time timeValueEnd = new Time(0, 0, 0);
 
-					ArrayList<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-					Integer timeRun;
-					Integer j = 0;
-					DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-					Time timeValueStart = null;
-					Time timeValueEnd = new Time(0, 0, 0);
+						if (listTmp.getCourseType() == 0) { // <-- แยกประเภท ท. ป. เพื่อหน่วยชั่วโมงเรียน
+							timeLong = listTmp.getCourseId().getCourseLect();
+						} else {
+							timeLong = (listTmp.getCourseId().getCoursePerf());
+						}
 
-					if (listTmp.getCourseType() == 0) {
-						timeRun = listTmp.getCourseId().getCourseLect();
-					} else {
-						timeRun = (listTmp.getCourseId().getCoursePerf());
-					}
+						targetA = new ArrayList<>(showStartTimeOptionStaff(true, listTmp.getYears(),
+								listTmp.getSemester(), listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+								listTmp.getGroupId().getGroupId(), dayA));
 
-					targetA = new ArrayList<>(showStartTimeOptionStaff(true, listTmp.getYears(),
-							listTmp.getSemester(), listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-							listTmp.getGroupId().getGroupId(), dayA));
+						 for (M_Timetable_ShowTimeRemain_Response targetATmp : targetA) {
 
-					for (M_Timetable_ShowTimeRemain_Response targetATmp : targetA) {
+							timeValueStart = new Time(formatter.parse(targetATmp.getValue()).getTime());
+							timeValueEnd.setHours(timeValueStart.getHours() + timeLong);
 
-						if (!targetATmp.getText().substring(0, 1).equals("!")) {
-							boolean notBussy = true;
-							for (int i = 1; i < timeRun; i++) {
-								if ((j + i) > (targetA.size() - timeRun) || (j + i) > 10
-										|| targetA.get(j + i).getText().substring(0, 1).equals("!")) {
-									notBussy = false;
+							if (!targetATmp.getText().substring(0, 1).equals("!")
+									&& (preTimeEnd) < timeValueStart.getHours()
+									&& timeValueEnd.getHours() <= 18) {
+								boolean notBussy = true;
+								for (int nextTimes = 1; nextTimes < timeLong; nextTimes++) { // <--
+																								// เช็คว่าว่างจริงถึงจบคาบเรียน
+									if (targetA.get(runTimeStart + nextTimes).getText().substring(0, 1).equals("!")
+											|| (runTimeStart + nextTimes) > (targetA.size() - timeLong)) {
+										notBussy = false;
+										break ;
+									}
+								}
+								if (notBussy) {
 									break;
 								}
 							}
-							if (notBussy) {
-								timeValueStart = new Time(formatter.parse(targetATmp.getValue()).getTime());
-								break;
-							}
+							timeValueStart = null;
+							runTimeStart++;
 						}
-						j++;
-					}
 
-					if (timeValueStart != null) {
-						timeValueEnd.setHours(timeValueStart.getHours() + timeRun);
-						if (timeValueStart != null && timeValueEnd.getHours() <= 18) {
+						if (timeValueStart != null) {
+
 							updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
 									listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
 									listTmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd,
 									listTmp.getRoomId() == null ? null : listTmp.getRoomId().getRoomId());
-							break;
+							preTimeEnd = timeValueEnd.getHours();
+							break; // <-- ไปรายการถัดไป
+
 						} else {
+							preTimeEnd = 0;
 							dayA++;
 						}
 					} else {
-						dayA++;
+						preTimeEnd = 0;
+						break; // <-- ถ้าล็อก ไปรายการถัดไป
 					}
-				} else {
-					dayA = 1;
-					break;
 				}
 
-			}
+				if (!listTmp.isRoomLocker()) { // <-- เช็คล็อกห้อง
 
-		}
+					Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
+					Integer timevalueStart = null;
 
-		for (Timetable listTmp : list) {
-			if (!listTmp.isRoomLocker()) {
-
-				Iterable<M_For_Selection_Response> targetA = new ArrayList<M_For_Selection_Response>();
-				Integer timevalueStart = null;
-
-				targetA = showRoomStaff(true, listTmp.getYears(), listTmp.getSemester(),
-						listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
-						listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(),
-						listTmp.getEndTime());
-
-				if (targetA != null) {
-					for (M_For_Selection_Response targetATmp : targetA) {
-						System.out.println(targetATmp.getText());
-						if (!targetATmp.getText().substring(0, 1).equals("!")) {
-							timevalueStart = Integer.parseInt(targetATmp.getValue());
-							break;
-						}
-					}
-
-					updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
+					targetA = showRoomStaff(true, listTmp.getYears(), listTmp.getSemester(),
 							listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
 							listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(),
-							listTmp.getEndTime(), timevalueStart);
+							listTmp.getEndTime());
+
+					if (targetA != null) {
+
+						for (M_For_Selection_Response targetATmp : targetA) {
+							System.out.println(targetATmp.getText());
+							// <-- หาห้องว่าง
+							if (!targetATmp.getText().substring(0, 1).equals("!")) {
+								timevalueStart = Integer.parseInt(targetATmp.getValue());
+								break;
+							}
+						}
+
+						// <---บันทึก
+						updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
+								listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
+								listTmp.getGroupId().getGroupId(), listTmp.getDayOfWeek(), listTmp.getStartTime(),
+								listTmp.getEndTime(), timevalueStart);
+					}
 				}
 			}
 		}
@@ -530,9 +533,8 @@ public class TimetableLogic {
 
 			Collection<Timetable> sourceA = timetableService
 					.findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(yId,
-							sId, memberService.findByMemberId(getCurrentUserId()).get(), dayOfWeek, convertStartTime(index));
-
-							
+							sId, memberService.findByMemberId(getCurrentUserId()).get(), dayOfWeek,
+							convertStartTime(index));
 
 			M_Timetable_ShowTable_Response targetSub = new M_Timetable_ShowTable_Response();
 
@@ -560,34 +562,41 @@ public class TimetableLogic {
 						targetSub.setGroup_name(sourceATmp.getGroupId().getGroup_name());
 						sourceB.add(sourceATmp.getGroupId().getGroup_name());
 					} else if (!sourceB.contains(sourceATmp.getGroupId().getGroup_name())) {
-						targetSub.setGroup_name(targetSub.getGroup_name() + ", " +sourceATmp.getGroupId().getGroup_name());
+						targetSub.setGroup_name(
+								targetSub.getGroup_name() + ", " + sourceATmp.getGroupId().getGroup_name());
 						sourceB.add(sourceATmp.getGroupId().getGroup_name());
 					}
 
-					Collection<Timetable> sourceD = timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceATmp.getYears(),
-					sourceATmp.getSemester(), sourceATmp.getCourseId(), sourceATmp.getCourseType(), sourceATmp.getGroupId());
-					
-					if(sourceC.isEmpty()){
+					Collection<Timetable> sourceD = timetableService
+							.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceATmp.getYears(),
+									sourceATmp.getSemester(), sourceATmp.getCourseId(), sourceATmp.getCourseType(),
+									sourceATmp.getGroupId());
+
+					if (sourceC.isEmpty()) {
 						targetSub.setMember_name(
 								sourceATmp.getMemberId().getTitleId().getTitleShort().toString() + " "
-								+ sourceATmp.getMemberId().getThFirstName().toString() + " "
-								+ sourceATmp.getMemberId().getThLastName().toString() );
-						sourceC.add(sourceATmp.getMemberId().getThFirstName().toString() + sourceATmp.getMemberId().getThLastName().toString());
-					} 
-					
-					for(Timetable sourceDTmp : sourceD){
-						if (!sourceC.contains(sourceDTmp.getMemberId().getThFirstName().toString() + sourceATmp.getMemberId().getThLastName().toString())) {
+										+ sourceATmp.getMemberId().getThFirstName().toString() + " "
+										+ sourceATmp.getMemberId().getThLastName().toString());
+						sourceC.add(sourceATmp.getMemberId().getThFirstName().toString()
+								+ sourceATmp.getMemberId().getThLastName().toString());
+					}
+
+					for (Timetable sourceDTmp : sourceD) {
+						if (!sourceC.contains(sourceDTmp.getMemberId().getThFirstName().toString()
+								+ sourceATmp.getMemberId().getThLastName().toString())) {
 							targetSub.setMember_name(
-									targetSub.getMember_name() + ", " 
-									+ sourceDTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
-									+ sourceDTmp.getMemberId().getThFirstName().toString() + " "
+									targetSub.getMember_name() + ", "
+											+ sourceDTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
+											+ sourceDTmp.getMemberId().getThFirstName().toString() + " "
+											+ sourceDTmp.getMemberId().getThLastName().toString());
+							sourceC.add(sourceDTmp.getMemberId().getThFirstName().toString()
 									+ sourceDTmp.getMemberId().getThLastName().toString());
-							sourceC.add(sourceDTmp.getMemberId().getThFirstName().toString() + sourceDTmp.getMemberId().getThLastName().toString());
 						}
 					}
 
 					targetSub.setRoom_name(sourceATmp.getRoomId().getRoomName());
-					indexB = sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() - 1 : sourceATmp.getCourseId().getCoursePerf() - 1;
+					indexB = sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() - 1
+							: sourceATmp.getCourseId().getCoursePerf() - 1;
 				}
 
 			} else if (indexB != 0) {
@@ -616,8 +625,6 @@ public class TimetableLogic {
 					.findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(yId,
 							sId, memberService.findByMemberId(memberId).get(), dayOfWeek, convertStartTime(index));
 
-							
-
 			M_Timetable_ShowTable_Response targetSub = new M_Timetable_ShowTable_Response();
 
 			Collection<String> sourceB = new ArrayList<String>();
@@ -644,34 +651,41 @@ public class TimetableLogic {
 						targetSub.setGroup_name(sourceATmp.getGroupId().getGroup_name());
 						sourceB.add(sourceATmp.getGroupId().getGroup_name());
 					} else if (!sourceB.contains(sourceATmp.getGroupId().getGroup_name())) {
-						targetSub.setGroup_name(targetSub.getGroup_name() + ", " +sourceATmp.getGroupId().getGroup_name());
+						targetSub.setGroup_name(
+								targetSub.getGroup_name() + ", " + sourceATmp.getGroupId().getGroup_name());
 						sourceB.add(sourceATmp.getGroupId().getGroup_name());
 					}
 
-					Collection<Timetable> sourceD = timetableService.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceATmp.getYears(),
-					sourceATmp.getSemester(), sourceATmp.getCourseId(), sourceATmp.getCourseType(), sourceATmp.getGroupId());
-					
-					if(sourceC.isEmpty()){
+					Collection<Timetable> sourceD = timetableService
+							.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(sourceATmp.getYears(),
+									sourceATmp.getSemester(), sourceATmp.getCourseId(), sourceATmp.getCourseType(),
+									sourceATmp.getGroupId());
+
+					if (sourceC.isEmpty()) {
 						targetSub.setMember_name(
 								sourceATmp.getMemberId().getTitleId().getTitleShort().toString() + " "
-								+ sourceATmp.getMemberId().getThFirstName().toString() + " "
-								+ sourceATmp.getMemberId().getThLastName().toString() );
-						sourceC.add(sourceATmp.getMemberId().getThFirstName().toString() + sourceATmp.getMemberId().getThLastName().toString());
-					} 
-					
-					for(Timetable sourceDTmp : sourceD){
-						if (!sourceC.contains(sourceDTmp.getMemberId().getThFirstName().toString() + sourceATmp.getMemberId().getThLastName().toString())) {
+										+ sourceATmp.getMemberId().getThFirstName().toString() + " "
+										+ sourceATmp.getMemberId().getThLastName().toString());
+						sourceC.add(sourceATmp.getMemberId().getThFirstName().toString()
+								+ sourceATmp.getMemberId().getThLastName().toString());
+					}
+
+					for (Timetable sourceDTmp : sourceD) {
+						if (!sourceC.contains(sourceDTmp.getMemberId().getThFirstName().toString()
+								+ sourceATmp.getMemberId().getThLastName().toString())) {
 							targetSub.setMember_name(
-									targetSub.getMember_name() + ", " 
-									+ sourceDTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
-									+ sourceDTmp.getMemberId().getThFirstName().toString() + " "
+									targetSub.getMember_name() + ", "
+											+ sourceDTmp.getMemberId().getTitleId().getTitleShort().toString() + " "
+											+ sourceDTmp.getMemberId().getThFirstName().toString() + " "
+											+ sourceDTmp.getMemberId().getThLastName().toString());
+							sourceC.add(sourceDTmp.getMemberId().getThFirstName().toString()
 									+ sourceDTmp.getMemberId().getThLastName().toString());
-							sourceC.add(sourceDTmp.getMemberId().getThFirstName().toString() + sourceDTmp.getMemberId().getThLastName().toString());
 						}
 					}
 
 					targetSub.setRoom_name(sourceATmp.getRoomId().getRoomName());
-					indexB = sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() - 1 : sourceATmp.getCourseId().getCoursePerf() - 1;
+					indexB = sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() - 1
+							: sourceATmp.getCourseId().getCoursePerf() - 1;
 				}
 
 			} else if (indexB != 0) {
@@ -689,7 +703,6 @@ public class TimetableLogic {
 		return target;
 	}
 
-	// -543
 	public void createTeacher(M_Timetable_CreateTeacher_Request request) {
 		timetableService.create(request.getYears().toString(), request.getSemester(),
 				courseService.findByCourseId(request.getCourseId()).get(),
@@ -733,7 +746,7 @@ public class TimetableLogic {
 		Integer dayOfWeek = day;
 		Time startTime = start;
 		Time endTime = end;
-		Room roomId = roomService.findAllByRoomId(room).isPresent() == false ? null // @todo check point
+		Room roomId = roomService.findAllByRoomId(room).isPresent() == false ? null
 				: roomService.findAllByRoomId(room).get();
 
 		timetableService.updateStaff(year, semeter, courseId, cType, groupId, dayOfWeek, startTime, endTime, roomId);

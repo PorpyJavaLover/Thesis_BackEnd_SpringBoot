@@ -74,10 +74,10 @@ public class ReplaceTeachLogic {
 				memberService.findAllBySOrganizationId(organizationService.findByCode(sOrganize).get()));
 		sourceA.remove(memberService.findByMemberId(getCurrentUserId()).get());
 		Collection<Member> sourceD = new ArrayList<Member>(sourceA);
-		for (Member sourceATmp : sourceD) {
+		for (Member sourceDTmp : sourceD) {
 			ReplaceTeach sourceC = replaceTeachService.findByReplaceTeachId(replaceTeachId).get();
 			Collection<Timetable> sourceB = timetableService.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
-					sourceATmp, sourceC.getEssTimetableId().getYears(), sourceC.getEssTimetableId().getSemester(),
+					sourceDTmp, sourceC.getEssTimetableId().getYears(), sourceC.getEssTimetableId().getSemester(),
 					sourceC.getEssTimetableId().getDayOfWeek());
 			Integer j = 0;
 			if (sourceC.getEssTimetableId().getCourseType() == 0) {
@@ -87,19 +87,14 @@ public class ReplaceTeachLogic {
 			}
 			sourceC.getEssTimetableId().getStartTime();
 			if (sourceB != null) {
-				for (Timetable sourceBTmp : sourceB) {
-					boolean breakChecker = false;
+				loop1 : for (Timetable sourceBTmp : sourceB) {
 					for (int i = 0; i < j; i++) {
 						int A = deconvertStartTime(sourceBTmp.getStartTime().toString()) + i;
 						int B = deconvertStartTime(sourceC.getEssTimetableId().getStartTime().toString());
 						if (A == B) {
-							breakChecker = true;
 							sourceA.remove(sourceBTmp.getMemberId());
-							break;
+							break loop1;
 						}
-					}
-					if (breakChecker == true) {
-						break;
 					}
 
 				}

@@ -159,6 +159,10 @@ public class TimetableService {
 		}
 	}
 
+	public Collection<Timetable> findAllByGroupId(Group groupId) {
+		return repository.findAllByGroupId(groupId);
+	}
+
 	public Collection<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years,
 			String semester, Course courseId, Integer courseType, Group groupId, Integer dayOfWeek) {
 
@@ -249,9 +253,18 @@ public class TimetableService {
 
 	}
 
-	public Collection<Timetable> findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime( String years, String semester, Member memberId,
+	public Collection<Timetable> findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(String years,
+			String semester, Member memberId,
 			Integer dayOfWeek, Time startTime) {
-		return repository.findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(years, semester, memberId, dayOfWeek,  startTime);
+		return repository.findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(years, semester, memberId,
+				dayOfWeek, startTime);
+	}
+
+	public Collection<Timetable> find(String years,
+			String semester, Member memberId,
+			Integer dayOfWeek, Time startTime) {
+		return repository.findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(years, semester, memberId,
+				dayOfWeek, startTime);
 	}
 
 	// SET
@@ -264,33 +277,100 @@ public class TimetableService {
 				semester, courseId, groupId, courseType, memberId);
 
 		if (optA.isPresent()) {
+
 			entity = optA.get();
+
 		} else {
 
-			entity.setYears(years);
-			entity.setSemester(semester);
-			entity.setCourseId(courseId);
-			entity.setGroupId(groupId);
-			entity.setCourseType(courseType);
-			entity.setMemberId(memberId);
+			int sourceCourseLect = courseId.getCourseLect();
+			int sourceCoursePerf = courseId.getCoursePerf();
 
-			Collection<Timetable> optB = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
-					semester, courseId, courseType, groupId);
+			if (sourceCourseLect > 3 || sourceCoursePerf > 3) {
 
-			if (!optB.isEmpty()) {
+				if (courseType == 0) {
+					int n = sourceCourseLect / 3;
+					for (int i = 0; i < n; i++) {
+						entity.setYears(years);
+						entity.setSemester(semester);
+						entity.setCourseId(courseId);
+						entity.setGroupId(groupId);
+						entity.setCourseType(courseType);
+						entity.setMemberId(memberId);
 
-				Timetable optBSub = optB.iterator().next();
-				entity.setDayOfWeek(optBSub.getDayOfWeek() == null ? null : optBSub.getDayOfWeek());
-				entity.setStartTime(optBSub.getStartTime() == null ? null : optBSub.getStartTime());
-				entity.setEndTime(optBSub.getEndTime() == null ? null : optBSub.getEndTime());
-				entity.setRoomId(optBSub.getRoomId() == null ? null : optBSub.getRoomId());
-				entity.setTimeLocker(optBSub.isTimeLocker());
-				entity.setRoomLocker(optBSub.isRoomLocker());
+						Collection<Timetable> optB = repository
+								.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+										semester, courseId, courseType, groupId);
+
+						if (!optB.isEmpty()) {
+							Timetable optBSub = optB.iterator().next();
+							entity.setDayOfWeek(optBSub.getDayOfWeek() == null ? null : optBSub.getDayOfWeek());
+							entity.setStartTime(optBSub.getStartTime() == null ? null : optBSub.getStartTime());
+							entity.setEndTime(optBSub.getEndTime() == null ? null : optBSub.getEndTime());
+							entity.setRoomId(optBSub.getRoomId() == null ? null : optBSub.getRoomId());
+							entity.setTimeLocker(optBSub.isTimeLocker());
+							entity.setRoomLocker(optBSub.isRoomLocker());
+						}
+
+						repository.save(entity);
+
+					}
+				} else {
+					int n = sourceCoursePerf / 3;
+					for (int i = 0; i < n; i++) {
+						entity = new Timetable();
+						entity.setYears(years);
+						entity.setSemester(semester);
+						entity.setCourseId(courseId);
+						entity.setGroupId(groupId);
+						entity.setCourseType(courseType);
+						entity.setMemberId(memberId);
+
+						Collection<Timetable> optB = repository
+								.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(years,
+										semester, courseId, courseType, groupId);
+
+						if (!optB.isEmpty()) {
+							Timetable optBSub = optB.iterator().next();
+							entity.setDayOfWeek(optBSub.getDayOfWeek() == null ? null : optBSub.getDayOfWeek());
+							entity.setStartTime(optBSub.getStartTime() == null ? null : optBSub.getStartTime());
+							entity.setEndTime(optBSub.getEndTime() == null ? null : optBSub.getEndTime());
+							entity.setRoomId(optBSub.getRoomId() == null ? null : optBSub.getRoomId());
+							entity.setTimeLocker(optBSub.isTimeLocker());
+							entity.setRoomLocker(optBSub.isRoomLocker());
+						}
+
+						repository.save(entity);
+
+					}
+				}
+
+			} else {
+
+				entity.setYears(years);
+				entity.setSemester(semester);
+				entity.setCourseId(courseId);
+				entity.setGroupId(groupId);
+				entity.setCourseType(courseType);
+				entity.setMemberId(memberId);
+
+				Collection<Timetable> optB = repository.findAllByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupId(
+						years,
+						semester, courseId, courseType, groupId);
+
+				if (!optB.isEmpty()) {
+					Timetable optBSub = optB.iterator().next();
+					entity.setDayOfWeek(optBSub.getDayOfWeek() == null ? null : optBSub.getDayOfWeek());
+					entity.setStartTime(optBSub.getStartTime() == null ? null : optBSub.getStartTime());
+					entity.setEndTime(optBSub.getEndTime() == null ? null : optBSub.getEndTime());
+					entity.setRoomId(optBSub.getRoomId() == null ? null : optBSub.getRoomId());
+					entity.setTimeLocker(optBSub.isTimeLocker());
+					entity.setRoomLocker(optBSub.isRoomLocker());
+				}
+
+				repository.save(entity);
+
 			}
-			repository.save(entity);
-
 		}
-
 	}
 
 	public void updateStaff(String years, String semester, Course courseId, Integer courseType, Group groupId,
@@ -376,7 +456,5 @@ public class TimetableService {
 
 		return result;
 	}
-
-	
 
 }

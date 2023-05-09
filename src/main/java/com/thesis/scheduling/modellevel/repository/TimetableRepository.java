@@ -4,7 +4,10 @@ import java.sql.Time;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.apache.xmlbeans.impl.jam.mutable.MMember;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.thesis.scheduling.modellevel.entity.Course;
@@ -50,6 +53,8 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 
 	Collection<Timetable> findAllByRoomId(Room roomId);
 
+	Collection<Timetable> findAllByGroupId(Group groupId);
+
 	Collection<Timetable> findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(String years, String semester,
 			Member memberId, Integer dayOfWeek, Time startTime);
 
@@ -68,5 +73,7 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 	Collection<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years,
 			String semester,
 			Course courseId, Integer courseType, Group groupId, Integer dayOfWeek);
+
+
 
 }

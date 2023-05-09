@@ -56,35 +56,28 @@ public class LeaveTeachLogic {
 
 	// SET
 	public void createTeacher(M_LeaveTeach_CreateTeacher_Request request) {
-
+		//สร้างรายการงดสอน
 		LeaveTeach sourceLeaveTeach = leaveTeachService.create(memberService.findByMemberId(getCurrentUserId()).get(),
 				(String.valueOf(Integer.parseInt(request.getYear().toString()))),
 				request.getSemester(), request.getDateStart(), request.getDateEnd(), request.getNote());
-
-		Date dateStart = request.getDateStart();
+		Date dateStart = request.getDateStart(); 
 		Date dateEnd = request.getDateEnd();
 		Date dateStartTmp = new Date(dateStart.getYear(), dateStart.getMonth(), dateStart.getDate());
 		Date dateEndTmp = new Date(dateEnd.getYear(), dateEnd.getMonth(), dateEnd.getDate());
-
-		System.out.println(dateStart + ":::" + request.getDateStart());
-
-		// แก้ไขเรื่องวันสิ้นสุดว่าให้สิ้นสุดด้วยเงื่อนไข "ลาถึงวันที่" หรือ
-		// "วันที่กลับมาสอน"
+		//หาคาบเรียน
 		while (dateStartTmp.before(dateEndTmp) || dateStartTmp.equals(dateEndTmp)) {
 			Calendar sourceA = Calendar.getInstance();
 			sourceA.setTime(dateStartTmp);
-			int dayOfWeek = sourceA.get(Calendar.DAY_OF_WEEK);
+			int dayOfWeek = sourceA.get(Calendar.DAY_OF_WEEK); 
 			int dayNumber = dayOfWeek - 1;
 			if (dayNumber == 0) {
 				dayNumber = 7;
 			}
-
 			dateStartTmp.setDate(dateStartTmp.getDate() + 1);
+			//หาวันที่ วัน เดือน ปี
 			Date dateRun = new Date(dateStartTmp.getYear(), dateStartTmp.getMonth(), dateStartTmp.getDate());
-
-			System.out.println((String.valueOf(Integer.parseInt(request.getYear().toString()))) + ":::"
-					+ dateStartTmp.getDate() + ":::" + dateRun);
-			Collection<Timetable> sourceTimetable = timetableService
+			//หาตาราสอน 
+			Collection<Timetable> sourceTimetable = timetableService 
 					.findAllByAndMemberIdAndYearsAndSemesterAndDayOfWeek(
 							memberService.findByMemberId(getCurrentUserId()).get(),
 							(String.valueOf(Integer.parseInt(request.getYear().toString()))),
@@ -92,7 +85,7 @@ public class LeaveTeachLogic {
 
 			if (sourceTimetable != null) {
 				for (Timetable subTimetable : sourceTimetable) {
-					replaceTeachService.create(sourceLeaveTeach, subTimetable, dateRun);
+					replaceTeachService.create(sourceLeaveTeach, subTimetable, dateRun); //<-- สร้างรายการสอนแทน
 				}
 			}
 		}

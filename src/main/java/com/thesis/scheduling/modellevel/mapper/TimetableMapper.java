@@ -152,8 +152,8 @@ public class TimetableMapper {
 		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
 		for (NotTeach sourceATmp : sourceA) {
 
-			int interim = deconvertStartTime(sourceATmp.getTimeEnd().toString())
-					- deconvertStartTime(sourceATmp.getTimeStart().toString());
+			int interim = deconvertEndTime(sourceATmp.getTimeEnd().toString())
+					- deconvertEndTime(sourceATmp.getTimeStart().toString());
 
 			for (int i = 0; i < interim; i++) {
 				M_Timetable_ShowTimeRemain_Response targetSubA = new M_Timetable_ShowTimeRemain_Response();
@@ -163,6 +163,29 @@ public class TimetableMapper {
 				targetSubA.setText(
 						convertStartTime(deconvertStartTime(sourceATmp.getTimeStart().toString()) + (interim - 1 - i)));
 				targetA.add(targetSubA);
+			}
+		}
+		return targetA;
+	}
+
+	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeEndInconvenient(Collection<NotTeach> sourceA) {
+
+		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
+
+		for (NotTeach sourceATmp : sourceA) {
+
+			int interim = deconvertEndTime(sourceATmp.getTimeEnd().toString())
+					- deconvertEndTime(sourceATmp.getTimeStart().toString());
+
+			for (int i = 0; i < interim; i++) {
+				M_Timetable_ShowTimeRemain_Response targetASub = new M_Timetable_ShowTimeRemain_Response();
+				targetASub.setId(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i));
+				targetASub.setValue(
+						convertEndTime(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i)));
+				targetASub
+						.setText(
+								convertEndTime(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i)));
+				targetA.add(targetASub);
 			}
 		}
 		return targetA;
@@ -226,28 +249,7 @@ public class TimetableMapper {
 		return targetA;
 	}
 
-	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeEndInconvenient(Collection<NotTeach> sourceA) {
-
-		Collection<M_Timetable_ShowTimeRemain_Response> targetA = new ArrayList<M_Timetable_ShowTimeRemain_Response>();
-
-		for (NotTeach sourceATmp : sourceA) {
-
-			int interim = deconvertEndTime(sourceATmp.getTimeEnd().toString())
-					- deconvertEndTime(sourceATmp.getTimeStart().toString());
-
-			for (int i = 0; i < interim; i++) {
-				M_Timetable_ShowTimeRemain_Response targetASub = new M_Timetable_ShowTimeRemain_Response();
-				targetASub.setId(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i));
-				targetASub.setValue(
-						convertEndTime(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i)));
-				targetASub
-						.setText(
-								convertEndTime(deconvertEndTime(sourceATmp.getTimeStart().toString()) + (interim - i)));
-				targetA.add(targetASub);
-			}
-		}
-		return targetA;
-	}
+	
 
 	public Collection<M_Timetable_ShowTimeRemain_Response> toMTimeEndEachClassToDay(Collection<Timetable> sourceA) {
 
@@ -696,55 +698,6 @@ public class TimetableMapper {
 		return output;
 	}
 
-	public String convertStartTime(int input) {
-		String output = "08:00:00";
-		switch (input) {
-			case 1:
-				output = "08:00:00";
-				break;
-			case 2:
-				output = "09:00:00";
-				break;
-			case 3:
-				output = "10:00:00";
-				break;
-			case 4:
-				output = "11:00:00";
-				break;
-			case 5:
-				output = "12:00:00";
-				break;
-			case 6:
-				output = "13:00:00";
-				break;
-			case 7:
-				output = "14:00:00";
-				break;
-			case 8:
-				output = "15:00:00";
-				break;
-			case 9:
-				output = "16:00:00";
-				break;
-			case 10:
-				output = "17:00:00";
-				break;
-			case 11:
-				output = "18:00:00";
-				break;
-			case 12:
-				output = "19:00:00";
-				break;
-			case 13:
-				output = "20:00:00";
-				break;
-			case 14:
-				output = "21:00:00";
-				break;
-		}
-		return output;
-	}
-
 	public int deconvertEndTime(String input) {
 		int output = 0;
 		switch (input) {
@@ -794,6 +747,57 @@ public class TimetableMapper {
 		}
 		return output;
 	}
+
+	public String convertStartTime(int input) {
+		String output = "XX:XX:XX";
+		switch (input) {
+			case 1:
+				output = "08:00:00";
+				break;
+			case 2:
+				output = "09:00:00";
+				break;
+			case 3:
+				output = "10:00:00";
+				break;
+			case 4:
+				output = "11:00:00";
+				break;
+			case 5:
+				output = "12:00:00";
+				break;
+			case 6:
+				output = "13:00:00";
+				break;
+			case 7:
+				output = "14:00:00";
+				break;
+			case 8:
+				output = "15:00:00";
+				break;
+			case 9:
+				output = "16:00:00";
+				break;
+			case 10:
+				output = "17:00:00";
+				break;
+			case 11:
+				output = "18:00:00";
+				break;
+			case 12:
+				output = "19:00:00";
+				break;
+			case 13:
+				output = "20:00:00";
+				break;
+			case 14:
+				output = "21:00:00";
+				break;
+		}
+		return output;
+	}
+
+	
 
 	public String convertEndTime(int input) {
 		String output = "XX:XX:XX";
