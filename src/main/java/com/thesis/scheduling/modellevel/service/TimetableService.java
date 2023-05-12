@@ -38,6 +38,10 @@ public class TimetableService {
 		return repository.findAllByYearsAndSemesterAndMemberId(years, semester, memberId);
 	}
 
+	public Collection<Timetable> findAllByYearsAndSemesterAndGroupId(String years, String semester, Group groupId) {
+		return repository.findAllByYearsAndSemesterAndGroupId(years, semester, groupId);
+	}
+
 	public Iterable<Timetable> findAllByRoomId(Room roomId) {
 		return repository.findAllByRoomId(roomId);
 	}

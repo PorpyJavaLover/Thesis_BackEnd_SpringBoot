@@ -12,30 +12,27 @@ import com.thesis.scheduling.modellevel.entity.Plan;
 import com.thesis.scheduling.modellevel.mapper.PlanMapper;
 import com.thesis.scheduling.modellevel.model.M_Plan_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_Plan_ShowAllStaff_Response;
-import com.thesis.scheduling.modellevel.model.M_Plan_ShowAllTeacher_Response;
+import com.thesis.scheduling.modellevel.service.GroupService;
 import com.thesis.scheduling.modellevel.service.PlanService;
-
-import javafx.print.Collation;
 
 @Service
 public class PlanLogic {
 
 	private final PlanMapper mapper;
 	private final PlanService planService;
+	private final GroupService groupService;
 
-	public PlanLogic(PlanService planservice, PlanMapper planmapper) {
-		this.planService = planservice;
-		this.mapper = planmapper;
+
+	public PlanLogic(PlanMapper mapper, PlanService planService, GroupService groupService) {
+		this.mapper = mapper;
+		this.planService = planService;
+		this.groupService = groupService;
 	}
 
 	// GET
-	public Iterable<M_Plan_ShowAllTeacher_Response> showAllTeacher() {
-		return mapper.toMTableResponseTeacher(planService.findAll());
-	}
+	public Iterable<M_Plan_ShowAllStaff_Response> showAll(int years , int semester, Long groupId) {
 
-	public Iterable<M_Plan_ShowAllStaff_Response> showAllStaff(int years , int semester) {
-
-		Iterable<Plan> sourceA = planService.findAllBySemester(semester);
+		Iterable<Plan> sourceA = planService.findAllBySemesterAndGroupId(semester, groupService.findByGroupId(groupId).get());
 
 		Collection<Plan> sourceB = new ArrayList<Plan>();
 

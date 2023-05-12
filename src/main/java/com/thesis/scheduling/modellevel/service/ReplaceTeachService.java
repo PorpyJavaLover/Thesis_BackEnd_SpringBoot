@@ -22,7 +22,7 @@ public class ReplaceTeachService {
 	}
 
 	// GET
-	public Iterable<ReplaceTeach> showAllByMemberId(Member memberId) {
+	public Collection<ReplaceTeach> showAllByMemberId(Member memberId) {
 		return repository.findAllByMemberReplaceId(memberId);
 	}
 

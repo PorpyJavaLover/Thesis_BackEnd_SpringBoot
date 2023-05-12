@@ -458,30 +458,37 @@ public class TimetableMapper {
 		C.removeAll(ABC);
 
 		for (M_Timetable_ShowTimeRemain_Response ASub : A) {
+			ASub.setWarning(true);
 			ASub.setText("🟡 " + ASub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response BSub : B) {
+			BSub.setWarning(true);
 			BSub.setText("⚪️ " + BSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response CSub : C) {
+			CSub.setWarning(false);
 			CSub.setText("🔴 " + CSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ABSub : AB) {
+			ABSub.setWarning(true);
 			ABSub.setText("🟡⚪️ " + ABSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ACSub : AC) {
+			ACSub.setWarning(false);
 			ACSub.setText("🔴🟡 " + ACSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response BCSub : BC) {
+			BCSub.setWarning(false);
 			BCSub.setText("🔴⚪️ " + BCSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ABCSub : ABC) {
+			ABCSub.setWarning(false);
 			ABCSub.setText("🔴🟡⚪️ " + ABCSub.getText());
 		}
 

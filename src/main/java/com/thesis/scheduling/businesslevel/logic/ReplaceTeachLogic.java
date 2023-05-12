@@ -89,14 +89,13 @@ public class ReplaceTeachLogic {
 			if (sourceB != null) {
 				loop1 : for (Timetable sourceBTmp : sourceB) {
 					for (int i = 0; i < j; i++) {
-						int A = deconvertStartTime(sourceBTmp.getStartTime().toString()) + i;
-						int B = deconvertStartTime(sourceC.getEssTimetableId().getStartTime().toString());
+						int A = deconvertStartTime(sourceC.getEssTimetableId().getStartTime().toString());
+						int B = deconvertStartTime(sourceBTmp.getStartTime().toString()) + i;
 						if (A == B) {
 							sourceA.remove(sourceBTmp.getMemberId());
 							break loop1;
 						}
 					}
-
 				}
 			}
 		}

@@ -22,22 +22,22 @@ import com.thesis.scheduling.modellevel.entity.ReplaceTeach;
 import com.thesis.scheduling.modellevel.entity.Room;
 import com.thesis.scheduling.modellevel.entity.Timetable;
 import com.thesis.scheduling.modellevel.mapper.TimetableMapper;
+import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
+import com.thesis.scheduling.modellevel.model.M_Timetable_CreateStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_Timetable_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllStaff_Response;
-import com.thesis.scheduling.modellevel.model.M_Timetable_CreateStaff_Request;
-import com.thesis.scheduling.modellevel.model.M_For_Selection_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowAllTeacher_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTable_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_ShowTimeRemain_Response;
 import com.thesis.scheduling.modellevel.model.M_Timetable_UpdateLockerStaff_Request;
 import com.thesis.scheduling.modellevel.model.M_Timetable_UpdateStaff_Request;
-import com.thesis.scheduling.modellevel.service.RoomService;
 import com.thesis.scheduling.modellevel.service.CourseService;
 import com.thesis.scheduling.modellevel.service.GroupService;
 import com.thesis.scheduling.modellevel.service.LeaveTeachService;
 import com.thesis.scheduling.modellevel.service.MemberService;
 import com.thesis.scheduling.modellevel.service.NotTeachService;
 import com.thesis.scheduling.modellevel.service.ReplaceTeachService;
+import com.thesis.scheduling.modellevel.service.RoomService;
 import com.thesis.scheduling.modellevel.service.TimetableService;
 
 @Service
@@ -410,18 +410,21 @@ public class TimetableLogic {
 
 		cleanAll(yId, sId); // <-- ล้างทั้งหมด
 
-		Collection<Member> sourceB = memberService
-				.findAllBySOrganizationId(memberService.findByMemberId(getCurrentUserId()).get().getOrganizationId());	
-	
-		for (Member sourceBTmp : sourceB) {
+		/*Collection<Member> sourceB = memberService
+				.findAllBySOrganizationId(memberService.findByMemberId(getCurrentUserId()).get().getOrganizationId());*/
 
-			Collection<Timetable> sourceA = timetableService.findAllByYearsAndSemesterAndMemberId(yId, sId, sourceBTmp);
+		Iterable<Group> sourceB = groupService.findAll();
+	
+		for (Group sourceBTmp : sourceB) {
+
+			Collection<Timetable> sourceA = timetableService.findAllByYearsAndSemesterAndGroupId(yId, sId, sourceBTmp);
 			if(sourceA == null ){
 				continue;
 			}
 
 			ArrayList<Timetable> list = new ArrayList<>(sourceA);
 			Integer dayA = 1;
+			Integer teachingTime = 0;
 			Integer preTimeEnd = 0;
 			Integer timeLong = null;
 			Collections.sort(list, Comparator.comparing(t -> t.getGroupId().getGroupId())); // <-- ตัวกำหนดการเรียง
@@ -458,8 +461,7 @@ public class TimetableLogic {
 									&& (preTimeEnd) < timeValueStart.getHours()
 									&& timeValueEnd.getHours() <= 18) {
 								boolean notBussy = true;
-								for (int nextTimes = 1; nextTimes < timeLong; nextTimes++) { // <--
-																								// เช็คว่าว่างจริงถึงจบคาบเรียน
+								for (int nextTimes = 1; nextTimes < timeLong; nextTimes++) { // <--เช็คว่าว่างจริงถึงจบคาบเรียน
 									if (targetA.get(runTimeStart + nextTimes).getText().substring(0, 1).equals("!")
 											|| (runTimeStart + nextTimes) > (targetA.size() - timeLong)) {
 										notBussy = false;
@@ -474,16 +476,16 @@ public class TimetableLogic {
 							runTimeStart++;
 						}
 
-						if (timeValueStart != null) {
-
+						if (timeValueStart != null && teachingTime < 2) {
 							updateAutoPilotStaff(listTmp.getYears(), listTmp.getSemester(),
 									listTmp.getCourseId().getCourseId(), listTmp.getCourseType(),
 									listTmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd,
 									listTmp.getRoomId() == null ? null : listTmp.getRoomId().getRoomId());
 							preTimeEnd = timeValueEnd.getHours();
+							teachingTime++;
 							break; // <-- ไปรายการถัดไป
-
 						} else {
+							teachingTime = 0;
 							preTimeEnd = 0;
 							dayA++;
 						}

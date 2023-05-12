@@ -10,14 +10,16 @@ import com.thesis.scheduling.modellevel.entity.Group;
 import com.thesis.scheduling.modellevel.entity.Plan;
 
 @Repository
-public interface PlanRepository extends CrudRepository<Plan,String>{
-	
+public interface PlanRepository extends CrudRepository<Plan, String> {
+
 	Iterable<Plan> findByGroupId(Group groupId);
 
 	Iterable<Plan> findAllBySemester(int semester);
 
-	Iterable<Plan> findAllByYearsAndSemester(int years , int semester);
+	Iterable<Plan> findAllBySemesterAndGroupId(int semester, Group groupId);
 
-	Optional<Plan> findByYearsAndSemesterAndCourseIdAndGroupId(int years , int semester , Course courseId , Group groupId );
-	
+	Iterable<Plan> findAllByYearsAndSemester(int years, int semester);
+
+	Optional<Plan> findByYearsAndSemesterAndCourseIdAndGroupId(int years, int semester, Course courseId, Group groupId);
+
 }

@@ -27,6 +27,10 @@ public class PlanService {
 		return repository.findAllBySemester(semester);
 	}
 
+	public Iterable<Plan> findAllBySemesterAndGroupId(int semester, Group groupId) {
+		return repository.findAllBySemesterAndGroupId(semester, groupId);
+	}
+
 	public Iterable<Plan> findAllByYearsAndSemester(int years , int semester) {
 		return repository.findAllByYearsAndSemester(years , semester);
 	}

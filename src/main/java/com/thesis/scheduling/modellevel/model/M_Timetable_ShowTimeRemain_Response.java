@@ -11,6 +11,8 @@ public class M_Timetable_ShowTimeRemain_Response implements Comparable<M_Timetab
 	
 	private String text;
 
+    private boolean warning = true;
+
 	@Override
     public int compareTo(M_Timetable_ShowTimeRemain_Response value) {
         return this.getId().compareTo(value.getId());

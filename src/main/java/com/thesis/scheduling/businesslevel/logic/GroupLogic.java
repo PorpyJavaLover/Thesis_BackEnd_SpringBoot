@@ -23,4 +23,8 @@ public class GroupLogic {
         return mapper.toMShowForSelection(groupService.findAll());
     }
 
+    public Iterable<M_For_Selection_Response> showGroupOption() {
+        return mapper.toMShowForSelection(groupService.findAll());
+    }
+
 }

@@ -16,7 +16,6 @@ import com.thesis.scheduling.modellevel.entity.Group;
 import com.thesis.scheduling.modellevel.entity.Plan;
 import com.thesis.scheduling.modellevel.model.M_Plan_CreateTeacher_Request;
 import com.thesis.scheduling.modellevel.model.M_Plan_ShowAllStaff_Response;
-import com.thesis.scheduling.modellevel.model.M_Plan_ShowAllTeacher_Response;
 
 @RestController
 @RequestMapping("/plan")
@@ -29,15 +28,17 @@ public class PlanAPIController {
 	}
 
 	// GET
-	@GetMapping("/teacher/show/all/{years}/{semester}")
-	public ResponseEntity<Iterable<M_Plan_ShowAllStaff_Response>> showAllTeacher(@PathVariable("years") int years, @PathVariable("semester") int semester) throws BaseException {
-		Iterable<M_Plan_ShowAllStaff_Response> response = planLogic.showAllStaff(years, semester);
+	@GetMapping("/teacher/show/all/{years}/{semester}/{group}")
+	public ResponseEntity<Iterable<M_Plan_ShowAllStaff_Response>> showAllTeacher(@PathVariable("years") int years,
+			@PathVariable("semester") int semester , @PathVariable("group") Long group) throws BaseException {
+		Iterable<M_Plan_ShowAllStaff_Response> response = planLogic.showAll(years, semester, group);
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/staff/show/all/{years}/{semester}")
-	public ResponseEntity<Iterable<M_Plan_ShowAllStaff_Response>> showAllStaff(@PathVariable("years") int years, @PathVariable("semester") int semester) throws BaseException {
-		Iterable<M_Plan_ShowAllStaff_Response> response = planLogic.showAllStaff(years, semester);
+	@GetMapping("/staff/show/all/{years}/{semester}/{group}")
+	public ResponseEntity<Iterable<M_Plan_ShowAllStaff_Response>> showAllStaff(@PathVariable("years") int years,
+			@PathVariable("semester") int semester , @PathVariable("group") Long group) throws BaseException {
+		Iterable<M_Plan_ShowAllStaff_Response> response = planLogic.showAll(years, semester, group);
 		return ResponseEntity.ok(response);
 	}
 
