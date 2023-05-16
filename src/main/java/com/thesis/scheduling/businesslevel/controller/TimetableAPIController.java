@@ -128,20 +128,29 @@ public class TimetableAPIController {
 		timetableLogic.autoPilot(yId, sId);
 	}
 
-	@GetMapping("/teacher/show/table/{yId}/{sId}/{dayOfWeek}")
-	public ResponseEntity<Iterable<M_Timetable_ShowTable_Response>> showTableTeacher(@PathVariable("yId") String yId,
+	@GetMapping("/teacher/show/table/teacher/{yId}/{sId}/{dayOfWeek}")
+	public ResponseEntity<Iterable<M_Timetable_ShowTable_Response>> showTableTeacherTeacher(@PathVariable("yId") String yId,
 			@PathVariable("sId") String sId, @PathVariable("dayOfWeek") Integer dayOfWeek)
 			throws BaseException, ParseException {
-		Iterable<M_Timetable_ShowTable_Response> response = timetableLogic.showTableTeacher(yId, sId, dayOfWeek);
+		Iterable<M_Timetable_ShowTable_Response> response = timetableLogic.showTableTeacherTeacher(yId, sId, dayOfWeek);
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/staff/show/table/{yId}/{sId}/{memberId}/{dayOfWeek}")
-	public ResponseEntity<Iterable<M_Timetable_ShowTable_Response>> showTableStaff(@PathVariable("yId") String yId,
+	@GetMapping("/staff/show/table/teacher/{yId}/{sId}/{memberId}/{dayOfWeek}")
+	public ResponseEntity<Iterable<M_Timetable_ShowTable_Response>> showTableTeacherStaff(@PathVariable("yId") String yId,
 			@PathVariable("sId") String sId,
 			@PathVariable("memberId") Integer memberId, @PathVariable("dayOfWeek") Integer dayOfWeek)
 			throws BaseException, ParseException {
-		Iterable<M_Timetable_ShowTable_Response> response = timetableLogic.showTableStaff(yId, sId, memberId,
+		Iterable<M_Timetable_ShowTable_Response> response = timetableLogic.showTableTeacherStaff(yId, sId, memberId,
+				dayOfWeek);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/staff/show/table/student/{yId}/{sId}/{gId}/{dayOfWeek}")
+	public ResponseEntity<Iterable<M_Timetable_ShowTable_Response>> showTableStudentStaff(@PathVariable("yId") String yId,
+			@PathVariable("sId") String sId, @PathVariable("gId") Long gId, @PathVariable("dayOfWeek") Integer dayOfWeek)
+			throws BaseException, ParseException {
+		Iterable<M_Timetable_ShowTable_Response> response = timetableLogic.showTableStudentStaff(yId, sId, gId,
 				dayOfWeek);
 		return ResponseEntity.ok(response);
 	}

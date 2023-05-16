@@ -1,5 +1,6 @@
 package com.thesis.scheduling.modellevel.service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class GroupService {
         this.repository = repository;
     }
 
-    public Iterable<Group> findAll(){
+    public Collection<Group> findAll(){
     	return repository.findAll();
     }
     

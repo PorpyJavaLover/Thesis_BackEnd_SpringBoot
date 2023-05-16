@@ -61,6 +61,9 @@ public class Timetable {
 	
 	@Column(name = "COURSE_TYPE" )
 	private Integer courseType;
+
+    @Column(length = 2 , name = "USED_HOUR")
+	private Integer usedHour;
     
     //<<JOIN ZONE>>
     

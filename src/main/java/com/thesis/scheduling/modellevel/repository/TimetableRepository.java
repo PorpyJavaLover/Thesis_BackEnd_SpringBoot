@@ -60,6 +60,9 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 	Collection<Timetable> findAllByYearsAndSemesterAndMemberIdAndDayOfWeekAndStartTime(String years, String semester,
 			Member memberId, Integer dayOfWeek, Time startTime);
 
+	Collection<Timetable> findAllByYearsAndSemesterAndGroupIdAndDayOfWeekAndStartTime(String years, String semester,
+			Group groupId, Integer dayOfWeek, Time startTime);
+
 	Optional<Timetable> findByYearsAndSemesterAndCourseIdAndGroupId(String years, String semester,
 			Course courseId, Group groupId);
 
@@ -75,7 +78,5 @@ public interface TimetableRepository extends CrudRepository<Timetable, String> {
 	Collection<Timetable> findByYearsAndSemesterAndCourseIdAndCourseTypeAndGroupIdAndDayOfWeek(String years,
 			String semester,
 			Course courseId, Integer courseType, Group groupId, Integer dayOfWeek);
-
-
 
 }

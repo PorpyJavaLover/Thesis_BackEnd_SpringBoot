@@ -559,31 +559,31 @@ public class TimetableMapper {
 		C.removeAll(ABC);
 
 		for (M_Timetable_ShowTimeRemain_Response ASub : A) {
-			ASub.setText("!" + ASub.getText());
+			ASub.setText("!T" + ASub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response BSub : B) {
-			BSub.setText("!" + BSub.getText());
+			BSub.setText("!N" + BSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response CSub : C) {
-			CSub.setText("!" + CSub.getText());
+			CSub.setText("!S" + CSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ABSub : AB) {
-			ABSub.setText("!" + ABSub.getText());
+			ABSub.setText("!TN" + ABSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ACSub : AC) {
-			ACSub.setText("!" + ACSub.getText());
+			ACSub.setText("!ST" + ACSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response BCSub : BC) {
-			BCSub.setText("!" + BCSub.getText());
+			BCSub.setText("!SN" + BCSub.getText());
 		}
 
 		for (M_Timetable_ShowTimeRemain_Response ABCSub : ABC) {
-			ABCSub.setText("!" + ABCSub.getText());
+			ABCSub.setText("!STN" + ABCSub.getText());
 		}
 
 		cSum.addAll(A);
