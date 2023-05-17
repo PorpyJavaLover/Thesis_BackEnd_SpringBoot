@@ -176,6 +176,7 @@ public class TimetableLogic {
 		return mapper
 				.toMTimetableTeacher(timetableService.findAllByMemberId(memberService.findByMemberId(memberId).get()));
 	}
+
 	public Collection<M_Timetable_ShowTimeRemain_Response> showStartTimeOptionStaff(boolean modeForAutoPilot,
 			String yId,
 			String sId, Long cId,
@@ -426,20 +427,24 @@ public class TimetableLogic {
 		Integer timeSplite;
 		Integer GroupIndex = 0;
 
-		Collection<Group> sourceB = groupService.findAll();
-
+		// v--ตัวกำหนดการเรียง
 		Comparator<Group> OrderByAGroupId = Comparator.comparing(t -> t.getGroupId());
 		Comparator<Timetable> OrderByCreditType = Comparator.comparing(t -> t.getCourseType());
 		Comparator<Timetable> OrderByCourseId = Comparator.comparing(t -> t.getCourseId().getCourseId());
 
+		// v-- Query กลุ่มเรียน
+		Collection<Group> sourceB = groupService.findAll();
+
 		listB = new ArrayList<>(sourceB);
 
+		// v--เรียงลำดับกลุ่มเรียน
 		Collections.sort(listB, Collections.reverseOrder(OrderByAGroupId));
 
 		teachingTime = new Integer[7][listB.size()];
 
 		for (Group listBTmp : listB) {
 
+			// v-- Query ตารางเรียน/สอน
 			Collection<Timetable> sourceA = timetableService.findAllByYearsAndSemesterAndGroupId(yId, sId, listBTmp);
 			if (sourceA == null) {
 				continue;
@@ -448,7 +453,7 @@ public class TimetableLogic {
 			listA = new ArrayList<>(sourceA);
 			timeLong = null;
 
-			// v--ตัวกำหนดการเรียง
+			// v--เรียงลำดับเรียน/สอน
 			Collections.sort(listA, OrderByCourseId.thenComparing(OrderByCreditType));
 
 			System.out.println("listA size " + listA.size());
@@ -484,26 +489,28 @@ public class TimetableLogic {
 							timeLong = (listATmp.getCourseId().getCoursePerf());
 						}
 
+						// v-- Query และสรา้งตัวเลือกของตารางเรียน/สอน
 						targetA = new ArrayList<>(showStartTimeOptionStaff(true, listATmp.getYears(),
 								listATmp.getSemester(), listATmp.getCourseId().getCourseId(), listATmp.getCourseType(),
 								listATmp.getGroupId().getGroupId(), dayA));
 
+						// v-- ตัวเลือกของตารางเรียน/สอน ของแต่ละวัน
 						TimeOptionLoop: for (M_Timetable_ShowTimeRemain_Response targetATmp : targetA) {
 
 							timeValueStart = new Time(formatter.parse(targetATmp.getValue()).getTime());
 							timeValueEnd.setHours(timeValueStart.getHours() + timeLong);
 
-							// v--หาวันและเวลาว่าง
+							// v--เช็คว่าเวลานี้ว่างและวันนี้ไม่เกิน 18:00 น. ใช่หรือไม่
 							if (!targetATmp.getText().contains("!")
 									&& timeValueEnd.getHours() <= 18) {
 
-								if (timeSplite > 0 && teachingTime[dayA - 1][GroupIndex] < 2 ) {
+								if (timeSplite > 0 && teachingTime[dayA - 1][GroupIndex] < 2) {
 									timeSplite--;
 									runTimeStart++;
 									continue;
 								}
 
-								// v--เช็คว่าว่างจบคาบเรียน
+								// v--เช็คว่าว่างจบคาบเรียน ใช่หรือไม่
 								for (int nextTimes = 1; nextTimes < (timeLong + 1); nextTimes++) {
 									System.out.println("check time : " + (runTimeStart + nextTimes));
 									if ((runTimeStart + nextTimes) > (targetA.size() - timeLong)
@@ -525,7 +532,9 @@ public class TimetableLogic {
 
 						}
 
+						// v-- เช็กวา่าเรียน/สอนเกิน 3 วิชาต่อวัน ใช่หรือไม่
 						if (timeValueStart != null && teachingTime[dayA - 1][GroupIndex] < 3) {
+							// v-- บันทึก
 							updateAutoPilotStaff(listATmp.getYears(), listATmp.getSemester(),
 									listATmp.getCourseId().getCourseId(), listATmp.getCourseType(),
 									listATmp.getGroupId().getGroupId(), dayA, timeValueStart, timeValueEnd,

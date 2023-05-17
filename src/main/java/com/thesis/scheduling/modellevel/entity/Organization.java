@@ -9,11 +9,105 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Data;
-
-@Data
 @Entity(name = "s_organization")
 public class Organization {
+
+	public String getCode() {
+		return code;
+	}
+
+	public String getParent() {
+		return parent;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getNameEn() {
+		return nameEn;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public List<Member> getMember() {
+		return member;
+	}
+
+	public List<Person> getPerson() {
+		return person;
+	}
+
+	public List<Room> getRoom() {
+		return room;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setNameEn(String nameEn) {
+		this.nameEn = nameEn;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public void setMember(List<Member> member) {
+		this.member = member;
+	}
+
+	public void setPerson(List<Person> person) {
+		this.person = person;
+	}
+
+	public void setRoom(List<Room> room) {
+		this.room = room;
+	}
+
+	public Organization(String code, String parent, String name, String nameEn, int level, int type, int status,
+			List<Member> member, List<Person> person, List<Room> room) {
+		this.code = code;
+		this.parent = parent;
+		this.name = name;
+		this.nameEn = nameEn;
+		this.level = level;
+		this.type = type;
+		this.status = status;
+		this.member = member;
+		this.person = person;
+		this.room = room;
+	}
+
+	public Organization() {
+	}
 
 	@Id
 	@Column(name = "code", nullable = false, length = 8)
