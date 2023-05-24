@@ -759,7 +759,7 @@ public class TimetableLogic {
 						}
 					}
 
-					targetSub.setRoom_name(sourceATmp.getRoomId().getRoomName());
+					targetSub.setRoom_name(sourceATmp.getRoomId() == null ? " " : sourceATmp.getRoomId().getRoomName() );
 					indexB = sourceATmp.getCourseType() == 0 ? sourceATmp.getCourseId().getCourseLect() - 1
 							: sourceATmp.getCourseId().getCoursePerf() - 1;
 				}

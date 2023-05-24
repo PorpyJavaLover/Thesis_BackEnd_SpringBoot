@@ -75,7 +75,7 @@ public class TimetableAPIController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/F/show/end/time/option/{yId}/{sId}/{cId}/{cType}/{gId}/{dayOfWeek}/{startTime}")
+	@GetMapping("/staff/show/end/time/option/{yId}/{sId}/{cId}/{cType}/{gId}/{dayOfWeek}/{startTime}")
 	public ResponseEntity<Iterable<M_Timetable_ShowTimeRemain_Response>> getEndTimeForOption(
 			@PathVariable("yId") String yId,
 			@PathVariable("sId") String sId, @PathVariable("cId") Long cId, @PathVariable("cType") Integer cType,

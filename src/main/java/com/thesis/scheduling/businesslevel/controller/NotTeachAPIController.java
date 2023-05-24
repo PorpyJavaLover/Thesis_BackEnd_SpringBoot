@@ -37,7 +37,7 @@ public class NotTeachAPIController {
 	@GetMapping("/staff/show/all/{years}/{semester}/{memberId}")
 	public ResponseEntity<Iterable<M_NotTeach_ShowAllTeacher_Response>> showAllStaff(@PathVariable("years") String years, @PathVariable("semester") String semester ,@PathVariable("memberId") Integer memberId) throws BaseException {
 		Iterable<M_NotTeach_ShowAllTeacher_Response> response = notteachlogic.showAllStaff(years , semester , memberId);
-		System.out.println("notteach show teacher");
+		System.out.println("notteach show teacher" + years + semester + memberId);
 		return ResponseEntity.ok(response);
 	}
 
